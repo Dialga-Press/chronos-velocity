@@ -126,24 +126,35 @@ h1 {
 }
 
 /* --- AI PERSONALITY (Smylynx) --- */
+/* --- AI PERSONALITY (Smylynx) --- */
 .msg.ai {
-    font-family: 'Birthstone', 'Brush Script MT', cursive; /* Added fallback */
-    font-size: 2.4rem;
+    font-family: 'Birthstone', 'Brush Script MT', cursive;
+    font-size: 2.6rem; /* Slightly larger because this font is delicate */
     line-height: 1.1;
-    color: #ff7eb3;
-    text-shadow: 0 0 15px rgba(255, 126, 179, 0.4);
-    margin: 30px 0;
-    padding-left: 20px;
-    border-left: 2px solid #ff7eb3;
+    
+    /* Dark Mode: A soft, pale Rose-Gold / Copper */
+    color: #e3a6a6; 
+    
+    /* Subtle glow, not neon */
+    text-shadow: 0 0 15px rgba(227, 166, 166, 0.2);
+    
+    margin: 35px 0;
+    padding-left: 25px;
+    
+    /* Border matches the text */
+    border-left: 1px solid #e3a6a6;
+    
     animation: fadeIn 0.8s ease forwards;
-    opacity: 1 !important; /* Force Visibility */
+    opacity: 1 !important;
 }
 
 body.light-mode .msg.ai {
-    color: #c2185b;
-    border-left-color: #c2185b;
+    /* Light Mode: A deep, elegant Burgundy / Dried Ink */
+    color: #8a3b3b; 
+    
+    border-left-color: #8a3b3b;
     text-shadow: none;
-    font-weight: 600;
+    font-weight: 500; /* Adds weight for readability on white */
 }
 
 .class-card {
