@@ -1,0 +1,24 @@
+{
+  "attributes": ["Tech", "Arts", "Guts", "Social"],
+  "starting_points": 5,
+  "backgrounds": [
+    {
+      "id": "engineer",
+      "name": "The Engineer",
+      "bonus": {"Tech": 2, "Social": -1},
+      "desc": "You see the code behind the world. High OSINT skills."
+    },
+    {
+      "id": "architect",
+      "name": "The Architect",
+      "bonus": {"Arts": 2, "Guts": -1},
+      "desc": "You see structure and history. High perception."
+    },
+    {
+      "id": "drifter",
+      "name": "The Drifter",
+      "bonus": {"Guts": 2, "Tech": -1},
+      "desc": "You survive. High adaptability and driving skills."
+    }
+  ]
+}
