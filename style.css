@@ -1,221 +1,294 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
+/* --- 1. FONTS & VARIABLES --- */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500&display=swap');
 
 :root {
-    /* DARK MODE (Default) */
-    --bg-color: #121212;        /* Pure Dark */
-    --content-bg: #1e1e1e;      /* Slightly lighter for the 'page' */
-    --text-primary: #e0e0e0;    /* Soft White */
-    --text-secondary: #a0a0a0;  /* Grey */
-    --accent: #d4af37;          /* Gold */
-    --input-bg: #2a2a2a;
-    --border-color: #333;
+    /* DARK MODE (The Void) */
+    --bg-gradient: radial-gradient(circle at center, #1a1e24 0%, #0f1115 100%);
+    --glass-bg: rgba(20, 23, 28, 0.7); /* Frosted Glass */
+    --glass-border: rgba(255, 255, 255, 0.08);
     
-    --font-head: 'Playfair Display', serif;
-    --font-body: 'Inter', sans-serif;
+    --text-story: #e6e6e6;      /* Soft White */
+    --text-ui: #949aa3;         /* Muted Blue-Grey */
+    --accent: #c5a47e;          /* Antique Gold */
+    --accent-glow: rgba(197, 164, 126, 0.2);
+    
+    --input-bg: rgba(0, 0, 0, 0.3);
+    --selection-bg: rgba(255, 255, 255, 0.03);
+    
+    --font-story: 'Cormorant Garamond', serif; /* Ethereal & Novel-like */
+    --font-ui: 'Montserrat', sans-serif;       /* Clean & Modern */
 }
 
 body.light-mode {
-    /* LIGHT MODE (Fixed) */
-    --bg-color: #e6e6e6;        /* Greyish background for contrast */
-    --content-bg: #ffffff;      /* White 'Page' */
-    --text-primary: #1a1a1a;    /* Dark Ink - VISIBLE NOW */
-    --text-secondary: #555555;  /* Pencil Grey */
-    --accent: #b8860b;          /* Darker Gold */
-    --input-bg: #f5f5f5;
-    --border-color: #ddd;
+    /* LIGHT MODE (The Journal) */
+    --bg-gradient: radial-gradient(circle at center, #fdfbf7 0%, #f0ece6 100%);
+    --glass-bg: rgba(255, 255, 255, 0.6);
+    --glass-border: rgba(0, 0, 0, 0.05);
+    
+    --text-story: #2b2b2b;      /* Deep Ink */
+    --text-ui: #666666;         /* Pencil Grey */
+    --accent: #a88b60;          /* Darker Gold */
+    --accent-glow: rgba(168, 139, 96, 0.1);
+    
+    --input-bg: rgba(255, 255, 255, 0.8);
+    --selection-bg: rgba(0, 0, 0, 0.03);
 }
 
 * { box-sizing: border-box; }
 
+/* --- 2. GLOBAL STRUCTURE --- */
 body {
-    background-color: var(--bg-color);
-    color: var(--text-primary);
-    font-family: var(--font-body);
+    background: var(--bg-gradient);
+    color: var(--text-story);
+    font-family: var(--font-ui);
     margin: 0;
     height: 100vh;
     display: flex;
     justify-content: center;
-    transition: background 0.3s, color 0.3s;
+    transition: background 0.5s ease;
 }
 
-/* --- The Page Layout --- */
+/* The "Glass Sheet" Layout */
 .layout {
     width: 100%;
-    max-width: 800px; /* Book width */
-    height: 100vh;
-    background-color: var(--content-bg);
+    max-width: 750px; /* Limits width to book-size */
+    height: 100%;
     display: flex;
     flex-direction: column;
     position: relative;
-    box-shadow: 0 0 50px rgba(0,0,0,0.1); /* Subtle shadow */
+    background: transparent;
+    /* No borders on sides, feels like floating text */
 }
 
-/* --- Header --- */
+/* --- 3. HEADER --- */
 header {
-    padding: 20px 30px;
+    padding: 30px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--border-color);
-    background: var(--content-bg);
+    backdrop-filter: blur(10px); /* Glass effect */
+    -webkit-backdrop-filter: blur(10px);
     z-index: 10;
+    border-bottom: 1px solid transparent;
+    transition: border 0.3s;
 }
 
-.header-content h1 {
-    font-family: var(--font-head);
+/* Add a subtle line only when scrolling? Optional. Kept clean for now. */
+
+h1 {
+    font-family: var(--font-story);
     color: var(--accent);
     margin: 0;
-    font-size: 1.5rem;
-    letter-spacing: 2px;
+    font-size: 1.6rem;
+    letter-spacing: 1px;
+    font-weight: 600;
+    text-shadow: 0 0 20px var(--accent-glow);
 }
 
 .subtitle {
-    font-size: 0.75rem;
-    color: var(--text-secondary);
+    font-family: var(--font-ui);
+    font-size: 0.7rem;
+    color: var(--text-ui);
     text-transform: uppercase;
-    letter-spacing: 1.5px;
-    margin-top: 5px;
+    letter-spacing: 2px;
+    margin-top: 4px;
 }
 
-/* --- Main Story Area --- */
+/* --- 4. STORY OUTPUT --- */
 #game-output {
     flex-grow: 1;
     overflow-y: auto;
-    padding: 30px 40px 100px 40px; /* Bottom padding for input */
+    padding: 20px 30px 120px 30px; /* Extra bottom padding for input */
     scroll-behavior: smooth;
+    
+    /* Hide Scrollbar for clean look */
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
 }
+#game-output::-webkit-scrollbar { display: none; }
 
 /* Messages */
 .msg {
-    margin-bottom: 25px;
-    line-height: 1.7;
-    animation: fadeIn 0.4s ease forwards;
+    margin-bottom: 30px;
+    opacity: 0;
+    animation: fadeUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
-/* Story Text */
+/* The Novel Text */
 .msg.story {
-    font-family: var(--font-head);
-    font-size: 1.15rem;
-    color: var(--text-primary); /* FIXED: Uses variable now */
+    font-family: var(--font-story);
+    font-size: 1.35rem; /* Large, readable */
+    line-height: 1.6;
+    color: var(--text-story);
 }
 
-/* System Text */
+/* The System/UI Text */
 .msg.system {
-    font-size: 0.9rem;
+    font-family: var(--font-ui);
+    font-size: 0.85rem;
     color: var(--accent);
     text-transform: uppercase;
-    font-weight: 600;
-    letter-spacing: 1px;
-    margin-top: 40px;
+    letter-spacing: 1.5px;
     text-align: center;
-    opacity: 0.8;
+    margin-top: 50px;
+    margin-bottom: 15px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* --- Selection Cards --- */
+/* Nice lines around system text */
+.msg.system::before, .msg.system::after {
+    content: "";
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.3;
+    width: 30px;
+    margin: 0 15px;
+}
+
+/* --- 5. INTERACTIVE ELEMENTS --- */
+/* Selection Lists */
 .class-card {
-    background: var(--bg-color); /* Contrast against page */
-    border: 1px solid var(--border-color);
+    background: var(--selection-bg);
+    border: 1px solid var(--glass-border);
     padding: 15px 20px;
     margin-bottom: 12px;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: default;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.class-card:hover {
+    transform: translateX(5px);
+    background: var(--glass-border);
 }
 
 .class-card strong {
-    color: var(--text-primary);
-    font-size: 1rem;
+    font-family: var(--font-ui);
+    color: var(--accent);
+    font-size: 0.95rem;
     display: block;
     margin-bottom: 4px;
+    letter-spacing: 0.5px;
 }
 
 .class-card span {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-family: var(--font-story);
+    color: var(--text-ui);
+    font-size: 1.1rem;
+    font-style: italic;
 }
 
-/* --- Stat Card --- */
+/* Stat Card */
 .stats-card {
-    background: var(--bg-color);
+    background: var(--selection-bg);
     border: 1px solid var(--accent);
-    border-radius: 8px;
-    padding: 25px;
-    margin: 30px 0;
+    border-radius: 12px;
+    padding: 30px;
+    margin: 40px 0;
+    position: relative;
+    box-shadow: 0 10px 40px var(--accent-glow);
 }
 
 .stats-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px 30px;
+    gap: 15px 40px;
     margin-top: 20px;
 }
 
 .stat-label {
     display: flex;
     justify-content: space-between;
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    margin-bottom: 5px;
+    font-size: 0.75rem;
+    color: var(--text-ui);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
 }
 
 .stat-bar-bg {
-    height: 6px;
-    background: var(--border-color);
-    border-radius: 3px;
-    overflow: hidden;
+    height: 4px;
+    background: var(--glass-border);
+    border-radius: 2px;
 }
 
 .stat-bar-fill {
     height: 100%;
     background: var(--accent);
     width: 0%;
-    transition: width 1s ease-out;
+    transition: width 1.2s ease-out;
+    border-radius: 2px;
+    box-shadow: 0 0 10px var(--accent-glow);
 }
 
-/* --- Floating Input Area --- */
+/* --- 6. FLOATING INPUT --- */
 #input-area {
     position: absolute;
-    bottom: 0;
+    bottom: 30px;
     left: 0;
+    right: 0;
     width: 100%;
-    padding: 20px;
-    background: linear-gradient(to top, var(--content-bg) 80%, transparent);
-    z-index: 20;
+    display: flex;
+    justify-content: center;
+    padding: 0 20px;
+    pointer-events: none; /* Let clicks pass through empty space */
 }
 
 .input-wrapper {
-    max-width: 760px;
-    margin: 0 auto;
+    width: 100%;
+    max-width: 600px;
+    pointer-events: auto;
     position: relative;
 }
 
 input {
     width: 100%;
-    padding: 15px 20px;
+    padding: 18px 25px;
     background: var(--input-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 30px; /* Pill shape */
-    color: var(--text-primary);
-    font-family: var(--font-body);
-    font-size: 1rem;
+    backdrop-filter: blur(15px); /* Strong blur */
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    border-radius: 50px;
+    color: var(--text-story);
+    font-family: var(--font-story);
+    font-size: 1.1rem;
     outline: none;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-    transition: all 0.2s;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: all 0.3s;
+}
+
+input::placeholder {
+    color: var(--text-ui);
+    font-style: italic;
 }
 
 input:focus {
     border-color: var(--accent);
+    box-shadow: 0 10px 40px var(--accent-glow);
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
 }
 
-/* Toggle Button */
+/* --- 7. BUTTONS & ICONS --- */
 #theme-toggle {
     background: transparent;
     border: none;
     cursor: pointer;
-    color: var(--text-secondary);
-    padding: 5px;
+    color: var(--text-ui);
+    padding: 10px;
+    border-radius: 50%;
+    transition: color 0.3s;
 }
-#theme-toggle:hover { color: var(--accent); }
 
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+#theme-toggle:hover {
+    color: var(--accent);
+    background: var(--glass-border);
+}
+
+/* Animations */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
