@@ -1,264 +1,221 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
 
 :root {
-    /* DARK MODE (Default) - "The Void" */
-    --bg-color: #1a1a1a;
-    --card-bg: #252525;
-    --text-primary: #e0e0e0;
-    --text-secondary: #a0a0a0;
-    --accent: #d4af37;
-    --border: rgba(255, 255, 255, 0.1);
-    --input-bg: rgba(255, 255, 255, 0.05);
+    /* DARK MODE (Default) */
+    --bg-color: #121212;        /* Pure Dark */
+    --content-bg: #1e1e1e;      /* Slightly lighter for the 'page' */
+    --text-primary: #e0e0e0;    /* Soft White */
+    --text-secondary: #a0a0a0;  /* Grey */
+    --accent: #d4af37;          /* Gold */
+    --input-bg: #2a2a2a;
+    --border-color: #333;
+    
+    --font-head: 'Playfair Display', serif;
+    --font-body: 'Inter', sans-serif;
 }
 
-/* LIGHT MODE - "The Sketchbook" */
 body.light-mode {
-    --bg-color: #f4f4f0;        /* Cream / Old Paper */
-    --card-bg: #ffffff;         /* Clean White */
-    --text-primary: #2c2c2c;    /* Deep Ink */
-    --text-secondary: #666666;  /* Pencil Grey */
-    --accent: #b8860b;          /* Darker Gold/Bronze for contrast */
-    --border: rgba(0, 0, 0, 0.1);
-    --input-bg: rgba(0, 0, 0, 0.05);
+    /* LIGHT MODE (Fixed) */
+    --bg-color: #e6e6e6;        /* Greyish background for contrast */
+    --content-bg: #ffffff;      /* White 'Page' */
+    --text-primary: #1a1a1a;    /* Dark Ink - VISIBLE NOW */
+    --text-secondary: #555555;  /* Pencil Grey */
+    --accent: #b8860b;          /* Darker Gold */
+    --input-bg: #f5f5f5;
+    --border-color: #ddd;
 }
+
+* { box-sizing: border-box; }
 
 body {
     background-color: var(--bg-color);
     color: var(--text-primary);
     font-family: var(--font-body);
     margin: 0;
-    padding: 0;
     height: 100vh;
     display: flex;
     justify-content: center;
-    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+    transition: background 0.3s, color 0.3s;
 }
 
-/* --- Header Adjustments --- */
-header {
-    padding: 20px;
-    display: flex;
-    justify-content: space-between; /* Space out title and button */
-    align-items: center;
-    border-bottom: 1px solid var(--accent);
-    background: var(--bg-color); /* Match bg for transition */
-}
-
-.header-content {
-    flex-grow: 1;
-    text-align: center;
-    margin-left: 40px; /* Offset the button width to keep title centered */
-}
-
-/* --- Toggle Button --- */
-#theme-toggle {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text-primary);
-    padding: 8px;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#theme-toggle:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-}
-
+/* --- The Page Layout --- */
 .layout {
     width: 100%;
-    max-width: 900px;
-    height: 100%;
+    max-width: 800px; /* Book width */
+    height: 100vh;
+    background-color: var(--content-bg);
     display: flex;
     flex-direction: column;
-    background-color: var(--bg-color);
     position: relative;
-    border-left: 1px solid #333;
-    border-right: 1px solid #333;
+    box-shadow: 0 0 50px rgba(0,0,0,0.1); /* Subtle shadow */
 }
 
 /* --- Header --- */
 header {
-    padding: 25px;
-    text-align: center;
-    border-bottom: 1px solid var(--accent);
-    background: linear-gradient(to bottom, #1f1f1f, #1a1a1a);
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--content-bg);
+    z-index: 10;
 }
 
-h1 {
+.header-content h1 {
     font-family: var(--font-head);
     color: var(--accent);
     margin: 0;
-    font-size: 2rem;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-}
-
-.subtitle {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    margin-top: 8px;
-    text-transform: uppercase;
+    font-size: 1.5rem;
     letter-spacing: 2px;
 }
 
-/* --- Main Content Area --- */
+.subtitle {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-top: 5px;
+}
+
+/* --- Main Story Area --- */
 #game-output {
     flex-grow: 1;
     overflow-y: auto;
-    padding: 30px 40px;
+    padding: 30px 40px 100px 40px; /* Bottom padding for input */
     scroll-behavior: smooth;
-    /* Hide scrollbar but keep functionality */
-    scrollbar-width: thin; 
-    scrollbar-color: #444 var(--bg-color);
 }
 
-/* Messages/Story Blocks */
+/* Messages */
 .msg {
     margin-bottom: 25px;
     line-height: 1.7;
-    animation: fadeIn 0.6s ease forwards;
-    opacity: 0;
+    animation: fadeIn 0.4s ease forwards;
 }
 
-/* The Story Text - Looks like a novel */
+/* Story Text */
 .msg.story {
     font-family: var(--font-head);
-    font-size: 1.2rem;
-    color: #fff;
-    padding-left: 0;
+    font-size: 1.15rem;
+    color: var(--text-primary); /* FIXED: Uses variable now */
 }
 
-/* System prompts - Looks like UI */
+/* System Text */
 .msg.system {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     color: var(--accent);
-    font-weight: 600;
-    text-align: center;
-    margin-top: 40px;
-    margin-bottom: 10px;
     text-transform: uppercase;
+    font-weight: 600;
     letter-spacing: 1px;
+    margin-top: 40px;
+    text-align: center;
+    opacity: 0.8;
 }
 
-/* --- The Selection List (Not CLI anymore) --- */
+/* --- Selection Cards --- */
 .class-card {
-    background: var(--card-bg);
-    border: 1px solid rgba(255,255,255,0.05);
-    padding: 15px;
-    margin-bottom: 10px;
+    background: var(--bg-color); /* Contrast against page */
+    border: 1px solid var(--border-color);
+    padding: 15px 20px;
+    margin-bottom: 12px;
     border-radius: 6px;
-    transition: all 0.2s;
+    cursor: default;
 }
 
 .class-card strong {
     color: var(--text-primary);
-    font-size: 1.1rem;
+    font-size: 1rem;
+    display: block;
+    margin-bottom: 4px;
 }
 
 .class-card span {
-    display: block;
     color: var(--text-secondary);
     font-size: 0.9rem;
-    margin-top: 5px;
 }
 
-/* --- Stats Card (The Isekai Status Screen) --- */
+/* --- Stat Card --- */
 .stats-card {
-    background: #222;
+    background: var(--bg-color);
     border: 1px solid var(--accent);
     border-radius: 8px;
     padding: 25px;
     margin: 30px 0;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    animation: slideUp 0.8s ease forwards;
-    position: relative;
-}
-
-.stats-card::before {
-    content: "STATUS";
-    position: absolute;
-    top: -10px;
-    left: 20px;
-    background: var(--bg-color);
-    padding: 0 10px;
-    color: var(--accent);
-    font-size: 0.8rem;
-    letter-spacing: 2px;
 }
 
 .stats-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-top: 15px;
-}
-
-.stat-row {
-    display: flex;
-    flex-direction: column;
+    gap: 15px 30px;
+    margin-top: 20px;
 }
 
 .stat-label {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    margin-bottom: 6px;
     display: flex;
     justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 5px;
 }
 
 .stat-bar-bg {
-    height: 8px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 4px;
+    height: 6px;
+    background: var(--border-color);
+    border-radius: 3px;
     overflow: hidden;
 }
 
 .stat-bar-fill {
     height: 100%;
     background: var(--accent);
-    width: 0%; 
-    border-radius: 4px;
-    transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+    width: 0%;
+    transition: width 1s ease-out;
 }
 
-/* --- Input Area --- */
+/* --- Floating Input Area --- */
 #input-area {
-    padding: 20px 40px 40px 40px;
-    background: linear-gradient(to top, var(--bg-color) 90%, transparent);
-    border-top: 1px solid rgba(255,255,255,0.05);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+    background: linear-gradient(to top, var(--content-bg) 80%, transparent);
+    z-index: 20;
 }
 
 .input-wrapper {
+    max-width: 760px;
+    margin: 0 auto;
     position: relative;
-    display: flex;
-    align-items: center;
 }
 
 input {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 4px;
+    width: 100%;
+    padding: 15px 20px;
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 30px; /* Pill shape */
     color: var(--text-primary);
     font-family: var(--font-body);
     font-size: 1rem;
-    width: 100%;
     outline: none;
-    padding: 15px;
-    transition: border-color 0.3s;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    transition: all 0.2s;
 }
 
 input:focus {
     border-color: var(--accent);
-    background: rgba(255,255,255,0.08);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
 }
 
-/* Animations */
+/* Toggle Button */
+#theme-toggle {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 5px;
+}
+#theme-toggle:hover { color: var(--accent); }
+
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
