@@ -22,7 +22,7 @@
 body.light-mode {
     /* LIGHT MODE (The Journal) */
     /* High contrast gradient: Bright center, aged edges */
-    --bg-gradient: radial-gradient(circle at center, #ffffff 0%, #e3dacd 100%);
+    --bg-gradient: radial-gradient(circle at center, #d4f736 0%, #e3dacd 100%);
     
     --glass-bg: rgba(255, 255, 255, 0.6);
     --glass-border: rgba(0, 0, 0, 0.08); /* Darker border for visibility */
