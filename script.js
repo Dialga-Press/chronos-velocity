@@ -3,7 +3,8 @@ let gameState = {
     player: {
         name: '',
         class: '',
-        stats: { Tech: 2, Arts: 2, Guts: 2, Social: 2, Bio: 2, Lore: 2 } // Base Human Stats
+        // Initialize with Base Stats (2) for everyone
+        stats: { Tech: 2, Arts: 2, Guts: 2, Social: 2, Bio: 2, Lore: 2 }
     },
     rules: null,
     story: null
@@ -13,48 +14,49 @@ const output = document.getElementById('game-output');
 const input = document.getElementById('player-input');
 
 async function init() {
-    printLine("System Initialization...", 'system');
+    // 1. Load Data
     try {
         const rulesRes = await fetch('data/rules.json');
         gameState.rules = await rulesRes.json();
-        
-        // Update base stats from JSON if exists
-        if(gameState.rules.base_stats) {
-             Object.keys(gameState.player.stats).forEach(key => {
-                 gameState.player.stats[key] = gameState.rules.base_stats;
-             });
-        }
-
-        printLine("Chronos Link Established.", 'system');
-        setTimeout(() => printLine("Please identify yourself, Traveler.", 'story'), 500);
     } catch (e) {
-        console.error(e);
-        printLine("Error: Data Stream Corrupted.", 'system');
+        console.error("Failed to load rules", e);
     }
+
+    // 2. Start Interface
+    printLine("System Connected.", 'system');
+    setTimeout(() => {
+        printLine("Welcome, Traveler. Before we synchronize with the timeline, I need to know who you are.", 'story');
+        printLine("Enter your name:", 'system');
+    }, 800);
 }
 
 input.addEventListener('keydown', function(e) {
     if (e.key === 'Enter') {
-        const val = input.value;
+        const val = input.value.trim();
         if(!val) return;
         input.value = '';
-        
-        // Don't print user input directly, make it feel like a dialogue choice
-        // printLine(`> ${val}`, 'system'); 
         processInput(val);
     }
 });
 
 function processInput(val) {
+    // STEP 1: NAME
     if (gameState.step === 'name') {
         gameState.player.name = val;
-        printLine(`Identity Verified: ${val}`, 'system');
+        
+        // Visual feedback
+        const div = document.createElement('div');
+        div.classList.add('msg', 'story');
+        div.innerHTML = `Identity Verified: <strong>${val}</strong>`;
+        output.appendChild(div);
+
         setTimeout(() => {
-            printLine("Select your Origin Protocol:", 'story');
-            listClasses();
+            printLine("Select your Origin Protocol:", 'system');
+            listClasses(); // Show the new "Card" list
         }, 600);
         gameState.step = 'class';
     } 
+    // STEP 2: CLASS SELECTION
     else if (gameState.step === 'class') {
         const choice = parseInt(val) - 1;
         const classes = gameState.rules.backgrounds;
@@ -63,33 +65,50 @@ function processInput(val) {
             const selected = classes[choice];
             gameState.player.class = selected.id;
             
-            // Apply Bonuses to Base Stats
+            // APPLY BONUSES (The Fix)
+            // Base is already 2. We ADD the bonus.
             for (let [key, value] of Object.entries(selected.bonus)) {
                 if(gameState.player.stats[key] !== undefined) {
                     gameState.player.stats[key] += value;
                 }
             }
             
-            printLine(`Protocol Selected: ${selected.name}`, 'system');
-            
-            // Show the Cool Stat Card
+            // Show the Status Screen
             showStatCard(selected.name, gameState.player.stats);
+            
+            setTimeout(() => {
+                printLine("Volume 1: The Drop", 'system');
+                printLine("Initializing story sequence...", 'story');
+                // Here is where you would load the story text from story.json
+            }, 2000);
 
-            printLine("Loading Volume 1...", 'system');
             gameState.step = 'story';
         } else {
-            printLine("Invalid Selection. Try again.", 'system');
+            printLine("Invalid selection. Please enter a number.", 'system');
         }
     }
 }
 
+// Function to update stats dynamically during the story
+function updateStat(statName, amount) {
+    if (gameState.player.stats[statName] !== undefined) {
+        gameState.player.stats[statName] += amount;
+        // Clamp at 10
+        if(gameState.player.stats[statName] > 10) gameState.player.stats[statName] = 10;
+        
+        printLine(`>> STAT UPDATE: ${statName} +${amount}`, 'system');
+    }
+}
+
+// --- UI FUNCTIONS ---
+
 function listClasses() {
-    let listHTML = '<div class="stats-grid" style="margin-bottom:20px;">';
+    let listHTML = '<div style="margin-bottom:20px;">';
     gameState.rules.backgrounds.forEach((bg, index) => {
         listHTML += `
-            <div style="margin-bottom:10px; padding:10px; background:rgba(255,255,255,0.05); border-radius:5px;">
-                <strong style="color:var(--accent)">[${index + 1}] ${bg.name}</strong><br>
-                <span style="font-size:0.85em; color:#aaa;">${bg.desc}</span>
+            <div class="class-card">
+                <strong>[${index + 1}] ${bg.name}</strong>
+                <span>${bg.desc}</span>
             </div>`;
     });
     listHTML += '</div>';
@@ -98,31 +117,30 @@ function listClasses() {
     div.innerHTML = listHTML;
     div.classList.add('msg');
     output.appendChild(div);
-    output.scrollTop = output.scrollHeight;
+    scrollToBottom();
 }
 
 function showStatCard(className, stats) {
     let html = `
     <div class="stats-card">
-        <div style="text-align:center; margin-bottom:15px; font-family:var(--font-head); font-size:1.2em; color:var(--text-primary)">
-            ${gameState.player.name} <span style="color:var(--text-secondary)">|</span> <span style="color:var(--accent)">${className}</span>
+        <div style="text-align:center; margin-bottom:20px; font-family:var(--font-head); font-size:1.4em; color:var(--text-primary)">
+            ${gameState.player.name}
+            <div style="font-size:0.6em; color:var(--accent); text-transform:uppercase; margin-top:5px; letter-spacing:2px;">${className}</div>
         </div>
         <div class="stats-grid">`;
 
     for (let [key, val] of Object.entries(stats)) {
         // Calculate percentage (max 10)
         let pct = (val / 10) * 100;
-        let color = '#d4af37'; // Default Gold
-        if(val > 7) color = '#4a90e2'; // Blue for high stats
         
         html += `
         <div class="stat-row">
             <div class="stat-label">
                 <span>${key}</span>
-                <span>${val}</span>
+                <span>${val}/10</span>
             </div>
             <div class="stat-bar-bg">
-                <div class="stat-bar-fill" style="width:${pct}%; background:${color}"></div>
+                <div class="stat-bar-fill" style="width:${pct}%"></div>
             </div>
         </div>`;
     }
@@ -131,15 +149,19 @@ function showStatCard(className, stats) {
     const div = document.createElement('div');
     div.innerHTML = html;
     output.appendChild(div);
-    output.scrollTop = output.scrollHeight;
+    scrollToBottom();
 }
 
 function printLine(text, type) {
     const p = document.createElement('div');
-    p.innerHTML = text; // Allow HTML
+    p.innerHTML = text;
     p.classList.add('msg');
     if (type) p.classList.add(type);
     output.appendChild(p);
+    scrollToBottom();
+}
+
+function scrollToBottom() {
     output.scrollTop = output.scrollHeight;
 }
 
