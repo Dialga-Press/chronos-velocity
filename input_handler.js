@@ -129,4 +129,46 @@ function processBioInput(type, val) {
             }, 300);
         }
     }
+
+    // --- 4. HEIGHT LOGIC ---
+    if (type === 'height') {
+        // Regex to find Feet/Inches (e.g. 5'11, 5ft 10, 6 2)
+        const feetRegex = /(\d+)'?(\d*)?/;
+        const match = val.match(feetRegex);
+        
+        let cm = 0;
+        
+        // Check if user entered just numbers (assume CM if > 100, else assume feet)
+        let numVal = parseFloat(val);
+        
+        if (!isNaN(numVal) && val.indexOf("'") === -1 && val.indexOf("ft") === -1) {
+            if (numVal > 100) {
+                cm = numVal; // Entered CM directly
+            } else {
+                // Entered feet as decimal? (e.g. 5.9)
+                cm = numVal * 30.48;
+            }
+        } 
+        else if (match) {
+            // Entered Feet/Inches
+            let feet = parseInt(match[1]);
+            let inches = parseInt(match[2] || 0);
+            cm = (feet * 30.48) + (inches * 2.54);
+        }
+
+        // Response Logic
+        if (cm > 190) {
+            setTimeout(() => {
+                printLine(`Wow. You're a tower. Good for reach, bad for stealth. I'll need to calibrate the teleport bubble to be extra large. 🦒`, 'ai');
+            }, 300);
+        } else if (cm < 160) {
+            setTimeout(() => {
+                printLine(`Compact. Efficient. You fit in air ducts. I like that. Stealth bonus applied. 🐁`, 'ai');
+            }, 300);
+        } else {
+            setTimeout(() => {
+                printLine(`Standard displacement volume confirmed. ${Math.round(cm)}cm. Calibrating spatial anchors. ✅`, 'ai');
+            }, 300);
+        }
+    }
 }
