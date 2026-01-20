@@ -94,57 +94,105 @@ function processInput(val) {
 
 // --- NEW STORY FUNCTIONS ---
 
+// ... (Previous Init and Input Code remains same) ...
+
+// --- STORY ENGINE UPDATE ---
+
 let currentSceneIndex = 0;
 let currentChapterData = null;
 
 async function loadStoryChapter(chapterId) {
-    // Fetch story data if not loaded
+    // 1. Fetch Data if missing
     if(!gameState.story) {
         try {
             const res = await fetch('data/story.json');
             gameState.story = await res.json();
         } catch(e) {
-            printLine("Error loading story chapter.", 'system');
+            printLine("Error: Connection to Timeline Lost.", 'system');
             return;
         }
     }
     
+    // 2. Load Chapter Data
     currentChapterData = gameState.story[chapterId];
+    
     if(currentChapterData) {
-        printLine(currentChapterData.title, 'system');
+        // 3. Render The Cool Telemetry Header
+        renderTelemetry(currentChapterData);
+        
+        currentSceneIndex = 0;
         playNextScene();
     } else {
-        printLine("End of available content.", 'system');
+        printLine(">> NULL POINTER EXCEPTION: Future not written.", 'system');
     }
 }
 
+function renderTelemetry(chapter) {
+    // Visual separator
+    const hr = `<hr style='border:0; border-top:1px solid var(--accent); opacity:0.3; margin:40px 0;'>`;
+    
+    // The Header Block
+    let html = `
+    ${hr}
+    <div style="text-align:center; margin-bottom:30px; letter-spacing:1px;">
+        <div style="font-family:var(--font-head); font-size:1.5em; color:var(--accent); margin-bottom:10px;">
+            ${chapter.title}
+        </div>
+        
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:0.75em; color:var(--text-secondary); font-family:var(--font-body); text-transform:uppercase;">
+            <div style="text-align:right; border-right:1px solid var(--border-color); padding-right:15px;">
+                <div>LOC: ${chapter.telemetry.loc}</div>
+                <div>COORDS: ${chapter.telemetry.coords}</div>
+            </div>
+            <div style="text-align:left; padding-left:15px;">
+                <div>DATE: ${chapter.telemetry.time}</div>
+                <div>COND: ${chapter.telemetry.weather}</div>
+            </div>
+        </div>
+    </div>
+    `;
+    
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    output.appendChild(div);
+    scrollToBottom();
+}
+
 function playNextScene() {
+    // Check if chapter is done
     if (!currentChapterData || currentSceneIndex >= currentChapterData.scenes.length) {
-        printLine(">> END OF VOLUME 1 DEMO", 'system');
+        // CHECK FOR NEXT CHAPTER (Linked List Logic)
+        if (currentChapterData.next_chapter) {
+            printLine("<i>(Syncing next segment... Press Enter)</i>", 'system');
+            // We set a flag or just wait for input to trigger next load
+            gameState.pendingChapter = currentChapterData.next_chapter; 
+        } else {
+            printLine(">> END OF CURRENT ARCHIVE", 'system');
+            gameState.pendingChapter = null;
+        }
         return;
     }
 
     const scene = currentChapterData.scenes[currentSceneIndex];
     const text = resolveTextVariant(scene.text_blocks);
     
-    // Typing delay
     setTimeout(() => {
         printLine(text, 'story');
         currentSceneIndex++;
-        
-        // If there are more scenes, prompt user to continue
-        if (currentSceneIndex < currentChapterData.scenes.length) {
-             printLine("<i>(Press Enter to continue...)</i>", 'system');
-        } else {
-             printLine("<i>(End of Chapter)</i>", 'system');
-        }
     }, 600);
 }
 
 function advanceStory() {
-    playNextScene();
+    // If we finished a chapter and a new one is pending
+    if (gameState.pendingChapter && currentSceneIndex >= currentChapterData.scenes.length) {
+        loadStoryChapter(gameState.pendingChapter);
+        gameState.pendingChapter = null;
+    } else {
+        playNextScene();
+    }
 }
 
+// ... (Rest of resolveTextVariant, printLine, etc. remains same) ...
 function resolveTextVariant(blocks) {
     // 1. Exact Class Match
     let match = blocks.find(b => b.condition === gameState.player.class);
