@@ -3,24 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chronos Velocity // Terminal</title>
+    <title>Chronos Velocity</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="scanlines"></div>
-    <div class="container">
+    <div class="layout">
         <header>
-            <h1>DIALGA-PRESS v1.0</h1>
-            <div id="status">STATUS: DISCONNECTED</div>
+            <h1>CHRONOS VELOCITY</h1>
+            <div class="subtitle">Global Archives // Volume 1</div>
         </header>
         
         <main id="game-output">
-            <!-- Dynamic Content Goes Here -->
+            <!-- Content will flow here -->
         </main>
 
         <div id="input-area">
-            <span class="prompt">></span>
-            <input type="text" id="player-input" autocomplete="off" autofocus>
+            <div class="input-wrapper">
+                <span class="prompt-icon">◈</span>
+                <input type="text" id="player-input" autocomplete="off" autofocus placeholder="Type here...">
+            </div>
         </div>
     </div>
     <script src="script.js"></script>
