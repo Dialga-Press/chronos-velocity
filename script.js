@@ -199,18 +199,30 @@ function playNextScene() {
 }
 
 function handleStoryInput(val) {
-    // Save the data
+    // 1. Save the data
     const type = gameState.currentInputType;
     gameState.player[type] = val;
     
+    // 2. Visual confirmation
     printLine(`>> DATA LOGGED: ${val.toUpperCase()}`, 'system');
     
-    // Reset state and move to next scene
+    // 3. TRIGGER SMYLYNX'S BRAIN (The New Part)
+    if (typeof processBioInput === "function") {
+        processBioInput(type, val);
+    }
+    
+    // 4. Reset state and move to next scene
+    // Increase delay slightly so the user can read Smylynx's reaction before the story moves on
     gameState.step = 'reading';
     gameState.currentInputType = null;
     input.placeholder = "Write your response...";
+    
     currentSceneIndex++;
-    playNextScene();
+    
+    // Delay next scene to let AI finish talking
+    setTimeout(() => {
+        playNextScene();
+    }, 2500); 
 }
 
 function advanceStory() {
