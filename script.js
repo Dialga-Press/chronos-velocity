@@ -10,7 +10,7 @@ let gameState = {
     currentInputType: null,
     driver: '',
     passenger: '',
-    history: [] // Stores previous scene indexes
+    history: [] 
 };
 
 const output = document.getElementById('game-output');
@@ -29,8 +29,6 @@ async function init() {
 }
 
 input.addEventListener('keydown', function(e) {
-    // Handle Back Command (Left Arrow key if empty, or specific command)
-    // For now, let's keep it simple with a button in UI, or a command
     if (e.key === 'Enter') {
         const val = input.value.trim();
         input.value = '';
@@ -40,26 +38,41 @@ input.addEventListener('keydown', function(e) {
     }
 });
 
-// --- BACK BUTTON LOGIC ---
+// --- FIXED BACK BUTTON LOGIC ---
 function goBack() {
+    // We need at least 2 items in history to go back (The current one, and the previous one)
+    // Or if we are at the first scene, we just reload it.
     if (gameState.history.length > 0) {
-        const prevState = gameState.history.pop();
-        currentSceneIndex = prevState.index;
-        // Clear output to redraw (optional, or just append "Reverting..." line)
-        // A full redraw is hard in this simple engine, so we just reset the index and replay the scene
-        // We will clear the last message to simulate "undo"
-        if(output.lastChild) output.removeChild(output.lastChild); 
         
-        // Replay
-        playNextScene(false); // false = don't save to history
+        // 1. Remove the text from screen
+        if(output.lastChild) output.removeChild(output.lastChild);
+        
+        // 2. Discard the CURRENT scene from history
+        gameState.history.pop();
+        
+        // 3. Get the PREVIOUS scene index (if it exists)
+        let prevIndex = 0;
+        if (gameState.history.length > 0) {
+            const prevState = gameState.history.pop(); // Remove it so playNextScene re-adds it correctly
+            prevIndex = prevState.index;
+        } else {
+            // If we popped everything, restart chapter (Index 0)
+            prevIndex = 0; 
+        }
+
+        // 4. RESET STATE (Crucial for Input/Story modes)
+        currentSceneIndex = prevIndex;
+        gameState.step = 'reading'; // Reset from 'story_input'
+        gameState.currentInputType = null;
+        input.placeholder = "Write your response..."; // Reset prompt
+        gameState.waitingForEnter = false;
+
+        // 5. Replay
+        playNextScene(true); // true = add back to history
     }
 }
 
-// Add Back Button to UI via HTML injection in init or manually in HTML file
-// For this code, I'll add a listener if you add the button in HTML
-
 function processInput(val) {
-    // (Mode/Player/Partner Selection logic remains same as previous turn - shortened for brevity here)
     if (gameState.step === 'mode') {
         if (val === '1') { gameState.mode = 'solo'; startCharCreation('player'); }
         else if (val === '2') { gameState.mode = 'coop'; startCharCreation('player'); }
@@ -83,7 +96,6 @@ function processInput(val) {
     }
 }
 
-// ... (Helper functions applyClassSelection, startCharCreation same as before) ...
 function startCharCreation(target) {
     printLine(target === 'player' ? "ENTER NAME (PROTAGONIST 1):" : "ENTER NAME (PROTAGONIST 2):", 'system');
     gameState.step = target + '_name';
@@ -111,7 +123,6 @@ function startGame() {
     setTimeout(() => { printLine("<hr style='opacity:0.3'>", 'system'); gameState.storyActive = true; loadStoryChapter('chapter_1_p1'); }, 1000);
 }
 
-// --- STORY ENGINE ---
 let currentSceneIndex = 0;
 let currentChapterData = null;
 
@@ -127,7 +138,6 @@ async function loadStoryChapter(chapterId) {
 }
 
 function renderTelemetry(chapter) {
-    // (Same Telemetry HTML)
     const hr = `<hr style='border:0; border-top:1px solid var(--accent); opacity:0.3; margin:40px 0;'>`;
     let html = `${hr}<div style="text-align:center; margin-bottom:30px; letter-spacing:1px;"><div style="font-family:var(--font-head); font-size:1.5em; color:var(--accent); margin-bottom:10px;">${chapter.title}</div><div style="font-size:0.75em; color:var(--text-secondary); text-transform:uppercase;">LOC: ${chapter.telemetry.loc} // DATE: ${chapter.telemetry.time}</div></div>`;
     const div = document.createElement('div'); div.innerHTML = html; output.appendChild(div);
@@ -142,22 +152,26 @@ function playNextScene(saveHistory = true) {
 
     const scene = currentChapterData.scenes[currentSceneIndex];
     
-    // Save state for BACK button
     if (saveHistory) {
-        gameState.history.push({
-            chapterId: currentChapterData.id,
-            index: currentSceneIndex
-        });
+        gameState.history.push({ chapterId: currentChapterData.id, index: currentSceneIndex });
     }
 
-    // Input Handling
+    // MODE CHECK SKIP
+    if (scene.mode_req && scene.mode_req !== gameState.mode) {
+        // Remove the history entry we just added because we are skipping this scene
+        if (saveHistory) gameState.history.pop();
+        currentSceneIndex++;
+        playNextScene(saveHistory);
+        return;
+    }
+
+    // INPUT HANDLING
     if (scene.input_prompt) {
         let promptText = resolveTextVariant(scene.text_blocks, scene.focus);
         printLine(replacePlaceholders(promptText), scene.focus === 'ai' ? 'ai' : 'story');
         gameState.step = 'story_input';
         gameState.currentInputType = scene.input_prompt;
         
-        // Height prompt specific text
         if (scene.input_prompt === 'height') input.placeholder = "E.g., 5'11 or 180";
         else input.placeholder = `Enter ${scene.input_prompt}...`;
         return; 
@@ -172,7 +186,6 @@ function playNextScene(saveHistory = true) {
     setTimeout(() => {
         printLine(text, msgType);
         currentSceneIndex++;
-        // Prompt
         if (currentSceneIndex <= currentChapterData.scenes.length) {
              printLine("<i>(Press Enter...)</i>", 'system');
         }
@@ -182,8 +195,13 @@ function playNextScene(saveHistory = true) {
 
 function handleStoryInput(val) {
     const type = gameState.currentInputType;
-    if (type === 'shotgun') { /* Driver logic same as before */ } 
-    else {
+    if (type === 'shotgun') { 
+        let inputName = val.toLowerCase();
+        let p1Name = gameState.player.name.toLowerCase();
+        if (inputName.includes(p1Name)) { gameState.passenger = gameState.player.name; gameState.driver = gameState.partner.name; } 
+        else { gameState.passenger = gameState.partner.name; gameState.driver = gameState.player.name; }
+        printLine(`>> DRIVER CONFIRMED: ${gameState.driver.toUpperCase()}`, 'system');
+    } else {
         printLine(`>> DATA LOGGED: ${val.toUpperCase()}`, 'system');
         if (typeof processBioInput === "function") processBioInput(type, val);
     }
@@ -205,7 +223,6 @@ function replacePlaceholders(text) {
     return text;
 }
 
-// ... (ResolveTextVariant, ListClasses, ShowStatCard same as previous) ...
 function resolveTextVariant(blocks, focus) {
     let targetClass = gameState.player.class;
     let targetStats = gameState.player.stats;
