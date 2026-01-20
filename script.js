@@ -1,9 +1,9 @@
 let gameState = {
-    step: 'name', // name, class, story
+    step: 'name', 
     player: {
         name: '',
         class: '',
-        stats: { Tech: 0, Arts: 0, Guts: 0, Social: 0 }
+        stats: { Tech: 2, Arts: 2, Guts: 2, Social: 2, Bio: 2, Lore: 2 } // Base Human Stats
     },
     rules: null,
     story: null
@@ -12,43 +12,47 @@ let gameState = {
 const output = document.getElementById('game-output');
 const input = document.getElementById('player-input');
 
-// 1. Initialize
 async function init() {
-    printLine("INITIALIZING CHRONOS LINK...");
+    printLine("System Initialization...", 'system');
     try {
         const rulesRes = await fetch('data/rules.json');
         gameState.rules = await rulesRes.json();
         
-        // Load Story Data later, for now just rules
-        printLine("CONNECTION ESTABLISHED.");
-        printLine("ENTER AGENT NAME:");
+        // Update base stats from JSON if exists
+        if(gameState.rules.base_stats) {
+             Object.keys(gameState.player.stats).forEach(key => {
+                 gameState.player.stats[key] = gameState.rules.base_stats;
+             });
+        }
+
+        printLine("Chronos Link Established.", 'system');
+        setTimeout(() => printLine("Please identify yourself, Traveler.", 'story'), 500);
     } catch (e) {
-        printLine("ERROR: DATA CORRUPTION DETECTED.");
+        console.error(e);
+        printLine("Error: Data Stream Corrupted.", 'system');
     }
 }
 
-// 2. Handle Input
 input.addEventListener('keydown', function(e) {
     if (e.key === 'Enter') {
         const val = input.value;
+        if(!val) return;
         input.value = '';
-        printLine(`> ${val}`, 'user-text');
+        
+        // Don't print user input directly, make it feel like a dialogue choice
+        // printLine(`> ${val}`, 'system'); 
         processInput(val);
     }
 });
 
-// 3. Logic Processor
 function processInput(val) {
     if (gameState.step === 'name') {
         gameState.player.name = val;
-        printLine(`IDENTITY CONFIRMED: ${val}`);
-        printLine("SELECT BACKGROUND PROTOCOL:");
-        
-        // List classes from JSON
-        gameState.rules.backgrounds.forEach((bg, index) => {
-            printLine(`[${index + 1}] ${bg.name}: ${bg.desc}`);
-        });
-        
+        printLine(`Identity Verified: ${val}`, 'system');
+        setTimeout(() => {
+            printLine("Select your Origin Protocol:", 'story');
+            listClasses();
+        }, 600);
         gameState.step = 'class';
     } 
     else if (gameState.step === 'class') {
@@ -59,63 +63,84 @@ function processInput(val) {
             const selected = classes[choice];
             gameState.player.class = selected.id;
             
-            // Apply Bonuses
+            // Apply Bonuses to Base Stats
             for (let [key, value] of Object.entries(selected.bonus)) {
-                gameState.player.stats[key] += value;
+                if(gameState.player.stats[key] !== undefined) {
+                    gameState.player.stats[key] += value;
+                }
             }
             
-            printLine(`PROTOCOL LOADED: ${selected.name.toUpperCase()}`);
-            printLine(`STATS UPDATED: Tech:${gameState.player.stats.Tech} | Arts:${gameState.player.stats.Arts}`);
-            printLine("--------------------------------");
-            printLine("STARTING VOLUME 1...");
-            // Here you would trigger the story engine
+            printLine(`Protocol Selected: ${selected.name}`, 'system');
+            
+            // Show the Cool Stat Card
+            showStatCard(selected.name, gameState.player.stats);
+
+            printLine("Loading Volume 1...", 'system');
             gameState.step = 'story';
         } else {
-            printLine("ERROR: INVALID PROTOCOL. RETRY.");
+            printLine("Invalid Selection. Try again.", 'system');
         }
     }
 }
 
-// Helper to print text to screen
-function printLine(text, className = '') {
-    const p = document.createElement('div');
-    p.textContent = text;
-    if (className) p.classList.add(className);
-    output.appendChild(p);
-    output.scrollTop = output.scrollHeight; // Auto scroll
+function listClasses() {
+    let listHTML = '<div class="stats-grid" style="margin-bottom:20px;">';
+    gameState.rules.backgrounds.forEach((bg, index) => {
+        listHTML += `
+            <div style="margin-bottom:10px; padding:10px; background:rgba(255,255,255,0.05); border-radius:5px;">
+                <strong style="color:var(--accent)">[${index + 1}] ${bg.name}</strong><br>
+                <span style="font-size:0.85em; color:#aaa;">${bg.desc}</span>
+            </div>`;
+    });
+    listHTML += '</div>';
+    
+    const div = document.createElement('div');
+    div.innerHTML = listHTML;
+    div.classList.add('msg');
+    output.appendChild(div);
+    output.scrollTop = output.scrollHeight;
 }
 
-// Start
-init();
+function showStatCard(className, stats) {
+    let html = `
+    <div class="stats-card">
+        <div style="text-align:center; margin-bottom:15px; font-family:var(--font-head); font-size:1.2em; color:var(--text-primary)">
+            ${gameState.player.name} <span style="color:var(--text-secondary)">|</span> <span style="color:var(--accent)">${className}</span>
+        </div>
+        <div class="stats-grid">`;
 
-// ... (Previous Init Code) ...
-
-function renderScene(sceneId) {
-    const chapter = gameState.story.chapter_1; // simplified for MVP
-    const scene = chapter.scenes.find(s => s.id === sceneId);
-    
-    if (scene) {
-        scene.text_blocks.forEach(block => {
-            const text = resolveTextVariant(block);
-            printLine(text, 'story-text');
-        });
+    for (let [key, val] of Object.entries(stats)) {
+        // Calculate percentage (max 10)
+        let pct = (val / 10) * 100;
+        let color = '#d4af37'; // Default Gold
+        if(val > 7) color = '#4a90e2'; // Blue for high stats
+        
+        html += `
+        <div class="stat-row">
+            <div class="stat-label">
+                <span>${key}</span>
+                <span>${val}</span>
+            </div>
+            <div class="stat-bar-bg">
+                <div class="stat-bar-fill" style="width:${pct}%; background:${color}"></div>
+            </div>
+        </div>`;
     }
+    html += `</div></div>`;
+
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    output.appendChild(div);
+    output.scrollTop = output.scrollHeight;
 }
 
-function resolveTextVariant(blockObj) {
-    // 1. Check for specific Class ID match
-    let match = blockObj.find(t => t.condition === gameState.player.class);
-    if (match) return match.text;
-
-    // 2. Check for Stat Match (e.g., "high_tech")
-    // Find highest stat
-    const stats = gameState.player.stats;
-    const maxStat = Object.keys(stats).reduce((a, b) => stats[a] > stats[b] ? a : b);
-    
-    match = blockObj.find(t => t.condition === `high_${maxStat.toLowerCase()}`);
-    if (match) return match.text;
-
-    // 3. Fallback to default
-    match = blockObj.find(t => t.condition === 'default');
-    return match ? match.text : "ERROR: TEXT NOT FOUND";
+function printLine(text, type) {
+    const p = document.createElement('div');
+    p.innerHTML = text; // Allow HTML
+    p.classList.add('msg');
+    if (type) p.classList.add(type);
+    output.appendChild(p);
+    output.scrollTop = output.scrollHeight;
 }
+
+init();
