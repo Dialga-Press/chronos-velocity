@@ -1,1 +1,45 @@
-
+{
+  "chapter_1": {
+    "title": "Protocol: The Drop",
+    "scenes": [
+      {
+        "id": "intro_01",
+        "text_blocks": [
+          {
+            "condition": "default",
+            "text": "The air in the room tore open. It wasn't a portal; it was a glitch in reality. A silver sphere fell onto your desk with a heavy thud."
+          },
+          {
+            "condition": "mech_eng",
+            "text": "The object hit your desk. It didn't bounce. High-density alloy. The seam lines were microscopic—machining tolerances that don't exist in 2026. It smelled like ozone and burnt clutch plates."
+          },
+          {
+            "condition": "historian",
+            "text": "The object fell like an omen from a Greek tragedy. It sat there, anachronistic and rude, interrupting your reading. It looked like something Da Vinci sketched but never had the titanium to build."
+          },
+          {
+            "condition": "popstar",
+            "text": "The shiny thing crashed your vibe. It was silver, sleek, and honestly? It looked better than the jewelry you wore to the Met Gala. It demanded attention."
+          }
+        ]
+      },
+      {
+        "id": "intro_02",
+        "text_blocks": [
+          {
+            "condition": "default",
+            "text": "The sphere split open. A voice echoed in your head. Not AI. Something older."
+          },
+          {
+            "condition": "high_social", // For Actors, Popstars, Artists
+            "text": "The voice in your head sounded like a sarcastic auntie who knows you haven't eaten lunch. 'Synchronization Required,' it quipped. It felt like the machine was judging your outfit."
+          },
+          {
+            "condition": "high_tech", // For Engineers
+            "text": "The voice bypassed your ears and hit the auditory cortex. 'Handshake Protocol Initiated.' It felt like a direct SQL injection into your brain."
+          }
+        ]
+      }
+    ]
+  }
+}
