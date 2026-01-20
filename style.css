@@ -1,0 +1,60 @@
+body {
+    background-color: #0d0d0d;
+    color: #33ff33; /* Classic Terminal Green */
+    font-family: 'Courier New', Courier, monospace;
+    margin: 0;
+    padding: 20px;
+    height: 100vh;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    border-bottom: 2px solid #33ff33;
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+#game-output {
+    flex-grow: 1;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    padding-bottom: 20px;
+}
+
+#input-area {
+    display: flex;
+    border-top: 1px dashed #33ff33;
+    padding-top: 10px;
+}
+
+input {
+    background: transparent;
+    border: none;
+    color: #33ff33;
+    font-family: inherit;
+    font-size: 1.1em;
+    flex-grow: 1;
+    outline: none;
+    margin-left: 10px;
+}
+
+/* Optional: Scanline effect for that CRT look */
+.scanlines {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 2px, 3px 100%;
+    pointer-events: none;
+    z-index: 10;
+}
