@@ -1,14 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
 :root {
-    --bg-color: #1a1a1a;        /* Deep Charcoal (Moleskine notebook color) */
-    --card-bg: #252525;         /* Slightly lighter card */
-    --text-primary: #e0e0e0;    /* Soft White */
-    --text-secondary: #a0a0a0;  /* Grey */
-    --accent: #d4af37;          /* Gold/Bronze for magic/time */
-    --highlight: #4a90e2;       /* Soft Blue for interface */
-    --font-head: 'Playfair Display', serif; /* The "Story" Font */
-    --font-body: 'Inter', sans-serif;       /* The "UI" Font */
+    /* DARK MODE (Default) - "The Void" */
+    --bg-color: #1a1a1a;
+    --card-bg: #252525;
+    --text-primary: #e0e0e0;
+    --text-secondary: #a0a0a0;
+    --accent: #d4af37;
+    --border: rgba(255, 255, 255, 0.1);
+    --input-bg: rgba(255, 255, 255, 0.05);
+}
+
+/* LIGHT MODE - "The Sketchbook" */
+body.light-mode {
+    --bg-color: #f4f4f0;        /* Cream / Old Paper */
+    --card-bg: #ffffff;         /* Clean White */
+    --text-primary: #2c2c2c;    /* Deep Ink */
+    --text-secondary: #666666;  /* Pencil Grey */
+    --accent: #b8860b;          /* Darker Gold/Bronze for contrast */
+    --border: rgba(0, 0, 0, 0.1);
+    --input-bg: rgba(0, 0, 0, 0.05);
 }
 
 body {
@@ -20,7 +33,42 @@ body {
     height: 100vh;
     display: flex;
     justify-content: center;
-    overflow: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+}
+
+/* --- Header Adjustments --- */
+header {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between; /* Space out title and button */
+    align-items: center;
+    border-bottom: 1px solid var(--accent);
+    background: var(--bg-color); /* Match bg for transition */
+}
+
+.header-content {
+    flex-grow: 1;
+    text-align: center;
+    margin-left: 40px; /* Offset the button width to keep title centered */
+}
+
+/* --- Toggle Button --- */
+#theme-toggle {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#theme-toggle:hover {
+    border-color: var(--accent);
+    color: var(--accent);
 }
 
 .layout {
