@@ -3,31 +3,30 @@
     "id": "chapter_1_p1",
     "title": "PART 1: THE ANOMALY",
     "next_chapter": "chapter_1_p2",
-    "telemetry": { "loc": "Home Base // Coordinates: Classified", "coords": "Unknown", "time": "Jan 20, 2026 // 14:00 PM", "weather": "Indoor // Mundane" },
+    "telemetry": { "loc": "Home Base // Coordinates: Classified", "time": "Jan 20, 2026 // 14:00 PM" },
     "scenes": [
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Let us speak of {player}. A perfectly functional human being who, much like the rest of us, was busy doing absolutely nothing of historical importance." }] },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Then, gravity decided to take a lunch break. A silver sphere fell onto the table. It didn't roll. It simply sat there, heavy with implication, like an unpaid bill." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Common sense dictates one should run from unidentified extraterrestrial objects. But curiosity is a terrible affliction. {player} touched it. And just like that, the metal dissolved into their skin, warm and inviting, like tea on a rainy afternoon." }] }
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Common sense dictates one should run from unidentified extraterrestrial objects. But curiosity is a terrible affliction. {player} touched it. And just like that, the metal dissolved into their skin." }] }
     ]
   },
   "chapter_1_p2": {
     "id": "chapter_1_p2",
     "title": "PART 2: THE ECHO",
     "next_chapter": "chapter_2_sync",
-    "telemetry": { "loc": "Secondary Location", "coords": "Classified", "time": "Jan 20, 2026", "weather": "Clear" },
+    "telemetry": { "loc": "Secondary Location", "time": "Jan 20, 2026" },
     "scenes": [
-      { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "Meanwhile, half a world away, {partner} was having a similarly confusing Tuesday. They were minding their own business, blissfully unaware that the universe was about to file a complaint." }] },
-      { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "The device found them too. It bonded with them. No pain, just a sudden realization that the world was suddenly much larger, and much more complicated." }] }
+      { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "Meanwhile, half a world away, {partner} was minding their own business, blissfully unaware that the universe was about to file a complaint." }] },
+      { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "The device found them too. It bonded with them. No pain, just a sudden realization that the world was suddenly much larger." }] }
     ]
   },
   "chapter_2_sync": {
     "id": "chapter_2_sync",
     "title": "PROTOCOL: GLOBAL HANDSHAKE",
     "next_chapter": "chapter_3_meeting",
-    "telemetry": { "loc": "Planetary Orbit (Virtual)", "coords": "Global Coverage", "time": "T-Minus 0", "weather": "Data Storm" },
+    "telemetry": { "loc": "Planetary Orbit", "time": "T-Minus 0" },
     "scenes": [
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The two devices woke up. They ignored the humans for a moment and spoke to each other. A pulse went out. Invisible to the eye, but felt by the soul." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "It mapped the planet. Every hidden bunker, every lost shipwreck, every coffee shop with decent Wi-Fi. And then, it pulled the two hosts together." }] }
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The two devices woke up. A pulse went out. Invisible to the eye, but felt by the soul. It mapped the planet. And then, it pulled the two hosts together." }] }
     ]
   },
   "chapter_3_meeting": {
@@ -35,88 +34,80 @@
     "title": "THE MIRROR",
     "next_chapter": "chapter_4_asset",
     "show_synergy": true,
-    "telemetry": { "loc": "Salar de Uyuni // Bolivia", "coords": "20.1338° S, 67.4891° W", "time": "Jan 20, 2026 // 17:30 PM", "weather": "Precipitation: 80% // Surface: Mirror" },
+    "telemetry": { "loc": "Salar de Uyuni // Bolivia", "time": "17:30 PM" },
     "scenes": [
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Teleportation is a rude way to travel. One moment you are home, the next you are standing on the sky. The Salar de Uyuni. The great mirror of Bolivia." }] },
       { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{player} spotted a figure in the distance. {partner}. They looked equally disheveled, scanning the horizon as if looking for a bus stop in the middle of an ocean." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They approached each other. No grand speeches. Just the awkward nod of two people who realize they are stuck in the same lifeboat. The devices hummed, satisfied with the connection." }] }
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They approached each other. No grand speeches. Just the awkward nod of two people who realize they are stuck in the same lifeboat." }] }
     ]
   },
   "chapter_4_asset": {
     "id": "chapter_4_asset",
     "title": "THE FIRST FABRICATION",
     "next_chapter": "chapter_5_drive",
-    "telemetry": { "loc": "Salar de Uyuni", "coords": "20.1338° S", "time": "18:00 PM", "weather": "Temp Dropping" },
+    "telemetry": { "loc": "Salar de Uyuni", "time": "18:00 PM" },
     "scenes": [
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The sun began to dip. The beauty of the salt flats is treacherous; without shelter, the cold kills you with a smile. They needed a vehicle." }] },
-      { "focus": "player", "text_blocks": [
-          { "condition": "default", "text": "They didn't summon a spaceship. They didn't ask for a tank. They asked for reliability. The air shimmered, and gravity bent to their will." },
-          { "condition": "mech_eng", "text": "Logic dictated they needed 4x4 capability, high ground clearance, and diesel torque. The probability matrix selected the optimal machine." }
-        ] 
-      },
-      { "focus": "player", "text_blocks": [
-          { "condition": "default", "text": "A **Nissan X-Trail T31** slammed onto the salt with a wet splash. Pearl White paint, gleaming against the endless blue. 2.0L Diesel Turbo. Manual Transmission. It wasn't just a car; it was a fortress." }
-        ]
-      },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They didn't summon a spaceship. They didn't ask for a tank. They asked for reliability. The air shimmered, and gravity bent to their will." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "A **Nissan X-Trail T31** slammed onto the salt with a wet splash. Pearl White paint, gleaming against the endless blue. 2.0L Diesel Turbo. Manual Transmission. It wasn't just a car; it was a fortress." }] },
       { "focus": "system", "text_blocks": [{ "condition": "default", "text": "We are delighted to be Honouring our first reader 📖 🍀u/Shot-Manager-7012 ✨💎 - Author of Chronos Velocity" }] },
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "OOOOH I LIKEEEE. Pearl White? Bold choice for a mud run, but that panoramic sunroof is massive! Chef's kiss ahahah 😝. You two have taste!" }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} and {partner} jumped. The voice didn't come from the car speakers. It came from their wrists. It came from *inside* their heads." }] },
-      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "I'm SMYLYNX. I handle the logistics. The T31 X-Trail... rugged, boxy, dependable. I've already optimized the fuel mixture for altitude. Hop in, let's see what she can do! 🥰" }] },
-      { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{partner} opened the glovebox. There was a heavy, reassuring clunk. A cache of ammunition. No guns—just the ammo. A polite suggestion from the universe that this trip might get loud." }] }
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "I'm SMYLYNX. I handle the logistics. The T31 X-Trail... rugged, boxy, dependable. I've already optimized the fuel mixture for altitude. Hop in! 🥰" }] }
     ]
   },
   "chapter_5_drive": {
     "id": "chapter_5_drive",
     "title": "TORQUE & TURBO LAG",
     "next_chapter": "chapter_6_horizon",
-    "telemetry": { "loc": "Salar de Uyuni", "coords": "Moving North", "time": "18:15 PM", "weather": "Wind Speed: 40km/h" },
+    "telemetry": { "loc": "Salar de Uyuni", "time": "18:15 PM" },
     "scenes": [
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} dropped the clutch. The X-Trail didn't launch like a rocket; it heaved forward like a waking beast. First gear was short, a burst of noise and diesel clatter." }] },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They shifted to second. For a second, nothing happened. The heavy chassis wallowed, fighting the inertia. The 'Turbo Lag'—the breath before the scream." }] },
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Wait for it... wait for 2000 RPM... come on, you heavy beauty..." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Then, the needle hit 2000. **The Kick.** The turbo spooled up with a violent shove, pinning them into the seats. The elephant learned to sprint. The torque wave hit like a sledgehammer, sending the pearl-white nose lifting toward the sky." }] },
-      { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{partner} grabbed the grab handle as the car swayed. The soft suspension absorbed the salt crust, but the body roll was significant. It felt less like driving a car and more like galloping a massive, iron horse." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} swerved to avoid a fissure. The X-Trail leaned hard, dipping its shoulder, but the All-Mode 4x4 system clawed at the salt. It was ungraceful, heavy, and absolutely unstoppable." }] },
-      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Bio-Regen active. Your heart rate spiked with that turbo kick, didn't it? I'm scrubbing the adrenaline fatigue. Keep the revs up! Don't let the turbo sleep! 😨" }] }
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Then, the needle hit 2000. **The Kick.** The turbo spooled up with a violent shove, pinning them into the seats. The elephant learned to sprint." }] },
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Bio-Regen active. Your heart rate spiked with that turbo kick, didn't it? I'm scrubbing the adrenaline fatigue. Keep the revs up! 😨" }] }
     ]
   },
   "chapter_6_horizon": {
     "id": "chapter_6_horizon",
     "title": "THE HORIZON LINE",
     "next_chapter": "chapter_7_bio",
-    "telemetry": { "loc": "Edge of the Salar", "coords": "Approaching Tunupa Volcano", "time": "19:00 PM", "weather": "Nightfall" },
+    "telemetry": { "loc": "Tunupa Volcano", "time": "19:00 PM" },
     "scenes": [
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They slowed down as the salt gave way to the rocky base of the Tunupa Volcano. The engine ticked, cooling down in the twilight." }] },
-      { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{partner} stepped out, their boots crunching on the earth. They looked at the glowing device on their wrist. 'We aren't just tourists, are we?'" }] },
-      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Tourists take photos. You two? You're going to take History. But first, we need to calibrate the temporal drive. Next stop is going to be... messy. ahahah." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} leaned against the warm hood of the X-Trail. They felt tired—the 5% that SMYLYNX couldn't scrub away. It was a good tired. The kind that comes after surviving something impossible." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The stars came out over Bolivia. For the first time in their lives, the future wasn't a deadline. It was an open road." }] }
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Tourists take photos. You two? You're going to take History. But first, we need to calibrate the temporal drive. Next stop is going to be... messy. ahahah." }] }
     ]
   },
   "chapter_7_bio": {
     "id": "chapter_7_bio",
     "title": "PROTOCOL: BIO-METRIC KEY",
     "next_chapter": "chapter_8_hampi",
-    "telemetry": { "loc": "Tunupa Base Camp", "coords": "Stationary", "time": "19:30 PM", "weather": "Starlight" },
+    "telemetry": { "loc": "Tunupa Base Camp", "time": "19:30 PM" },
     "scenes": [
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Okay, listen up meat-bags. That jump to Bolivia? That was just *Space*. We just folded a map. Easy. Child's play." }] },
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "But the next one? That's *Time*. That's ripping a page out of the history book and gluing ourselves into it. The strain is logarithmic. If I don't calibrate to your specific biology, I might leave your liver in 2026." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "SMYLYNX projected a hologram onto the windshield of the X-Trail. It was a form. A bureaucratic necessity at the edge of the universe. 'I need specs,' she said. 'Age. Gender. Fitness. Don't lie to me. I can see your cholesterol levels.'" }] }
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "SMYLYNX projected a hologram onto the windshield. 'I need specs,' she said. 'Age. Gender. Origin. Don't lie to me. I can see your cholesterol levels.'" }] },
+      
+      { "focus": "ai", "input_prompt": "age", "text_blocks": [{ "condition": "default", "text": "First things first. How many solar cycles on the clock?" }] },
+      
+      { "focus": "ai", "input_prompt": "gender", "text_blocks": [{ "condition": "default", "text": "Noted. Now, Gender Presentation? This determines how history treats you. Kings listen to men; Queens listen to women; Spies listen to neither." }] },
+      
+      { "focus": "ai", "input_prompt": "origin", "text_blocks": [{ "condition": "default", "text": "And finally, where did you spawn? I need to load the cultural subroutines. India? Brazil? Europe?" }] },
+      
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Calibration Complete. Synchronization at 99%. Buckle up. We aren't going to a place. We are going to a time." }] }
     ]
   },
   "chapter_8_hampi": {
     "id": "chapter_8_hampi",
     "title": "VOLUME 2: CITY OF VICTORY",
     "next_chapter": null,
-    "telemetry": { "loc": "Vijayanagara (Hampi)", "coords": "15.3350° N, 76.4600° E", "time": "Jan 22, 1565 // 3 Days Before The Fall", "weather": "34°C // Dry Heat // Smell of Jasmine and Iron" },
+    "telemetry": { "loc": "Vijayanagara (Hampi)", "time": "Jan 22, 1565 // 3 Days Before The Fall" },
     "scenes": [
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The transition wasn't like Bolivia. It wasn't a fold. It was a scream. The X-Trail dissolved into light, and reality reassembled itself around them with the violence of a thunderclap." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Heat. That was the first thing. A dry, baking heat that smelled of stone, crushed marigolds, and elephant dung. The silence of the salt flats was gone, replaced by a roar. Not of engines, but of *life*." }] },
-      { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "They stood on a ridge overlooking the valley. Below them lay **Vijayanagara**. The City of Victory. Hampi." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "It was impossible. The ruins we know today—the skeletons of temples and broken pillars—were fleshed out. The Virupaksha Temple tower was painted in vibrant golds and reds. The bazaars were overflowing with silk, pearls, and diamonds sold in open heaps." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The transition wasn't like Bolivia. It wasn't a fold. It was a scream. The X-Trail dissolved into light, and reality reassembled itself with the violence of a thunderclap." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Heat. That was the first thing. A dry, baking heat that smelled of stone, crushed marigolds, and elephant dung. Below them lay **Vijayanagara**. The City of Victory." }] },
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Look at it. It's beautiful. It's the Rome of the East. Half a million people. The richest city on Earth." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "But as {player} watched the flags flutter in the wind, a cold knot formed in their stomach. They knew the date. They knew the history books." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "In three days, the Sultans arrive. In three days, the fire starts. In three days, this paradise becomes a graveyard. The city wasn't just alive; it was terminal. <br><br> <a href='https://en.wikipedia.org/wiki/Hampi' target='_blank' style='color:var(--accent); text-decoration:none; border-bottom:1px dotted var(--accent);'>[ACCESS ARCHIVE: HAMPI]</a>" }] }
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "But as {player} watched the flags flutter, a cold knot formed in their stomach. In three days, the Sultans arrive. In three days, the fire starts. This paradise is a graveyard." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The mission starts now. <br><br> <a href='https://en.wikipedia.org/wiki/Hampi' target='_blank' style='color:var(--accent); text-decoration:none; border-bottom:1px dotted var(--accent);'>[ACCESS ARCHIVE: HAMPI]</a>" }] }
     ]
   }
 }
