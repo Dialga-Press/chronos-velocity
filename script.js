@@ -221,6 +221,7 @@ function renderTelemetry(chapter) {
 function playNextScene() {
     if (!currentChapterData || currentSceneIndex >= currentChapterData.scenes.length) {
         if (currentChapterData.next_chapter) {
+            // Auto-load next chapter
             loadStoryChapter(currentChapterData.next_chapter);
         } else {
             printLine(">> END OF CURRENT UPDATE", 'system');
@@ -236,14 +237,16 @@ function playNextScene() {
     text = text.replace(/{player}/g, gameState.player.name);
     text = text.replace(/{partner}/g, gameState.partner.name);
     
-    // Check for AI Focus to apply special styling
-    let msgType = 'story'; // Default
+    // CHECK FOR AI FOCUS
+    let msgType = 'story'; 
     if (scene.focus === 'ai') msgType = 'ai';
 
     gameState.waitingForEnter = true;
     setTimeout(() => {
-        printLine(text, msgType); // Pass the correct class
+        printLine(text, msgType);
         currentSceneIndex++;
+        
+        // Show "Press Enter" if there is more content
         if (currentSceneIndex <= currentChapterData.scenes.length || currentChapterData.next_chapter) {
              printLine("<i>(Press Enter...)</i>", 'system');
         }
