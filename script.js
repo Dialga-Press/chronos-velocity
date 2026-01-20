@@ -132,7 +132,7 @@ function startGame() {
     setTimeout(() => {
         printLine("<hr style='border:0; border-top:1px solid var(--accent); opacity:0.3; margin:30px 0;'>", 'system'); 
         gameState.storyActive = true;
-        loadStoryChapter('chapter_1_p1'); // Start with Player 1 Intro
+        loadStoryChapter('chapter_1_p1'); 
     }, 1000);
 }
 
@@ -141,10 +141,7 @@ function showSynergyCard() {
     const p1 = gameState.player.stats;
     const p2 = gameState.partner.stats;
     let synergy = {};
-    
-    for (let key in p1) {
-        synergy[key] = p1[key] + p2[key];
-    }
+    for (let key in p1) { synergy[key] = p1[key] + p2[key]; }
 
     let html = `
     <div class="stats-card" style="border-color: #fff;">
@@ -155,18 +152,11 @@ function showSynergyCard() {
         <div class="stats-grid">`;
 
     for (let [key, val] of Object.entries(synergy)) {
-        let pct = (val / 20) * 100; // Max is now 20
-        html += `
-        <div class="stat-row">
-            <div class="stat-label"><span>${key}</span><span>${val}/20</span></div>
-            <div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${pct}%; background:#fff;"></div></div>
-        </div>`;
+        let pct = (val / 20) * 100;
+        html += `<div class="stat-row"><div class="stat-label"><span>${key}</span><span>${val}/20</span></div><div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${pct}%; background:#fff;"></div></div></div>`;
     }
     html += `</div></div>`;
-    
-    const div = document.createElement('div');
-    div.innerHTML = html;
-    output.appendChild(div);
+    const div = document.createElement('div'); div.innerHTML = html; output.appendChild(div);
 }
 
 // --- STORY ENGINE ---
@@ -180,12 +170,10 @@ async function loadStoryChapter(chapterId) {
             gameState.story = await res.json();
         } catch(e) { return; }
     }
-    
     currentChapterData = gameState.story[chapterId];
     if(currentChapterData) {
         if(currentChapterData.telemetry) renderTelemetry(currentChapterData);
-        if(currentChapterData.show_synergy) showSynergyCard(); // Trigger Synergy Card
-        
+        if(currentChapterData.show_synergy) showSynergyCard();
         currentSceneIndex = 0;
         playNextScene();
     } else {
@@ -213,18 +201,15 @@ function renderTelemetry(chapter) {
             </div>
         </div>
     </div>`;
-    const div = document.createElement('div');
-    div.innerHTML = html;
-    output.appendChild(div);
+    const div = document.createElement('div'); div.innerHTML = html; output.appendChild(div);
 }
 
 function playNextScene() {
     if (!currentChapterData || currentSceneIndex >= currentChapterData.scenes.length) {
         if (currentChapterData.next_chapter) {
-            // Auto-load next chapter
             loadStoryChapter(currentChapterData.next_chapter);
         } else {
-            printLine(">> END OF CURRENT UPDATE", 'system');
+            printLine(">> END OF VOLUME 1", 'system');
             gameState.storyActive = false;
         }
         return;
@@ -237,16 +222,18 @@ function playNextScene() {
     text = text.replace(/{player}/g, gameState.player.name);
     text = text.replace(/{partner}/g, gameState.partner.name);
     
-    // CHECK FOR AI FOCUS
+    // FORMAT THE TEXT (Bold **text**)
+    text = formatText(text);
+    
+    // CHECK FOR FOCUS TYPES
     let msgType = 'story'; 
     if (scene.focus === 'ai') msgType = 'ai';
+    if (scene.focus === 'system') msgType = 'system'; // New type for tribute
 
     gameState.waitingForEnter = true;
     setTimeout(() => {
         printLine(text, msgType);
         currentSceneIndex++;
-        
-        // Show "Press Enter" if there is more content
         if (currentSceneIndex <= currentChapterData.scenes.length || currentChapterData.next_chapter) {
              printLine("<i>(Press Enter...)</i>", 'system');
         }
@@ -254,6 +241,11 @@ function playNextScene() {
     }, 400);
 }
 
+// Simple Markdown Formatter
+function formatText(text) {
+    // Bold: **text** -> <strong>text</strong>
+    return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+}
 
 function advanceStory() {
     if (gameState.waitingForEnter) return;
@@ -261,7 +253,6 @@ function advanceStory() {
 }
 
 function resolveTextVariant(blocks, focus) {
-    // Determine which stats to check based on scene focus
     let targetClass = gameState.player.class;
     let targetStats = gameState.player.stats;
 
@@ -277,7 +268,6 @@ function resolveTextVariant(blocks, focus) {
     // 2. High Stat Match
     const sortedStats = Object.keys(targetStats).sort((a,b) => targetStats[b] - targetStats[a]);
     const topStat = sortedStats[0].toLowerCase();
-    
     match = blocks.find(b => b.condition === `high_${topStat}`);
     if(match) return match.text;
 
@@ -286,7 +276,7 @@ function resolveTextVariant(blocks, focus) {
     return match ? match.text : "Data Corrupted.";
 }
 
-// UI Functions same as before...
+// UI Functions
 function listClasses() {
     let listHTML = '<div style="margin-bottom:20px;">';
     gameState.rules.backgrounds.forEach((bg, index) => {
@@ -295,7 +285,7 @@ function listClasses() {
     listHTML += '</div>';
     const div = document.createElement('div'); div.innerHTML = listHTML; div.classList.add('msg'); output.appendChild(div); scrollToBottom();
 }
-function showStatCard(className, stats, name) { /* Same as before */ 
+function showStatCard(className, stats, name) {
     let html = `<div class="stats-card"><div style="text-align:center; margin-bottom:20px; font-family:var(--font-head); font-size:1.4em; color:var(--text-primary)">${name}<div style="font-size:0.6em; color:var(--accent); text-transform:uppercase; margin-top:5px; letter-spacing:2px;">${className}</div></div><div class="stats-grid">`;
     for (let [key, val] of Object.entries(stats)) { let pct = (val/10)*100; html += `<div class="stat-row"><div class="stat-label"><span>${key}</span><span>${val}/10</span></div><div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${pct}%"></div></div></div>`; }
     html += `</div></div>`;
@@ -303,7 +293,8 @@ function showStatCard(className, stats, name) { /* Same as before */
 }
 function printLine(text, type) { const p = document.createElement('div'); p.innerHTML = text; p.classList.add('msg'); if (type) p.classList.add(type); output.appendChild(p); scrollToBottom(); }
 function scrollToBottom() { setTimeout(() => { output.scrollTop = output.scrollHeight; }, 50); }
-// Theme Toggler same as before...
+
+// Theme Toggler
 const themeBtn = document.getElementById('theme-toggle');
 if(themeBtn) { themeBtn.addEventListener('click', function() { document.body.classList.toggle('light-mode'); }); }
 init();
