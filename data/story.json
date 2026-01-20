@@ -1,123 +1,166 @@
 {
-  "chapter_1": {
-    "id": "chapter_1",
-    "title": "PROTOCOL: THE DROP",
-    "next_chapter": "chapter_2",
+  "chapter_1_p1": {
+    "id": "chapter_1_p1",
+    "title": "PART 1: THE ANOMALY",
+    "next_chapter": "chapter_1_p2",
     "telemetry": {
-      "loc": "Home Base // Current Timeline",
+      "loc": "Home Base // Coordinates: Classified",
       "coords": "Unknown",
-      "time": "Jan 20, 2026 // 02:00 AM",
-      "weather": "Indoor // Controlled"
+      "time": "Jan 20, 2026 // 14:00 PM",
+      "weather": "Indoor // Mundane"
     },
     "scenes": [
       {
-        "id": "intro_01",
+        "focus": "player",
         "text_blocks": [
-          { "condition": "default", "text": "The air in the room tore open. It wasn't a portal; it was a glitch in reality. A silver sphere fell onto your desk with a heavy thud, cracking the surface." },
-          { "condition": "mech_eng", "text": "The object hit your desk. It didn't bounce. High-density alloy. The seam lines were microscopic—machining tolerances that don't exist in 2026. It smelled like ozone and burnt clutch plates." },
-          { "condition": "historian", "text": "The object fell like an omen from a Greek tragedy. It sat there, anachronistic and rude, interrupting your reading. It looked like something Da Vinci sketched but never had the titanium to build." }
+          { "condition": "default", "text": "Let us speak of {player}. A perfectly functional human being who, much like the rest of us, was busy doing absolutely nothing of historical importance." },
+          { "condition": "mech_eng", "text": "Let us speak of {player}. A creature of grease and logic. They sat in a room that smelled faintly of soldering iron, staring at a machine part with the intensity of a lover staring at a sunset." },
+          { "condition": "popstar", "text": "Let us speak of {player}. The center of attention, even when alone. They were currently rehearsing a look of 'casual indifference' in the mirror, which ironically takes a lot of effort." }
         ]
       },
       {
-        "id": "intro_03",
+        "focus": "player",
         "text_blocks": [
-          { "condition": "default", "text": "The metal turned to liquid mercury the moment it touched your skin. It didn't clasp around your wrist; it sank IN." },
-          { "condition": "high_tech", "text": "Nano-assemblers. Millions of them. You watched in horror as the silver liquid dissolved into your epidermis, weaving itself into your nervous system. No pain, just a terrifying sense of connection." },
-          { "condition": "high_arts", "text": "It moved like living ink. The silver washed over your skin and disappeared beneath it, leaving a faint, glowing geometric tattoo that pulsed with your heartbeat." }
+          { "condition": "default", "text": "Then, gravity decided to take a lunch break. A silver sphere fell onto the table. It didn't roll. It simply sat there, heavy with implication, like an unpaid bill." },
+          { "condition": "high_tech", "text": "A silver sphere crashed the party. It hit the desk with a sound that wasn't metallic—it was dense, like a neutron star wrapped in chrome. {player}'s first instinct wasn't fear; it was to find calipers." }
         ]
       },
       {
-        "id": "intro_05",
+        "focus": "player",
         "text_blocks": [
-          { "condition": "default", "text": "A notification flared in your vision. A single ping from halfway across the world. <br><br><strong>[SIGNAL DETECTED. PARTNER FOUND: {partner}]</strong>" }
+          { "condition": "default", "text": "Common sense dictates one should run from unidentified extraterrestrial objects. But curiosity is a terrible affliction. {player} touched it. And just like that, the metal dissolved into their skin, warm and inviting, like tea on a rainy afternoon." }
         ]
       }
     ]
   },
 
-  "chapter_2": {
-    "id": "chapter_2",
-    "title": "PROTOCOL: THE MIRROR",
-    "next_chapter": "chapter_3", 
+  "chapter_1_p2": {
+    "id": "chapter_1_p2",
+    "title": "PART 2: THE ECHO",
+    "next_chapter": "chapter_2_sync",
+    "telemetry": {
+      "loc": "Secondary Location // Coordinates: Classified",
+      "coords": "Unknown",
+      "time": "Jan 20, 2026 // 05:30 AM",
+      "weather": "Clear // Expectation of Chaos"
+    },
+    "scenes": [
+      {
+        "focus": "partner",
+        "text_blocks": [
+          { "condition": "default", "text": "Meanwhile, half a world away, {partner} was having a similarly confusing Tuesday. They were minding their own business, blissfully unaware that the universe was about to file a complaint." },
+          { "condition": "architect", "text": "Meanwhile, {partner} was staring at a building. Not looking at it, but dissecting it. Judging the load-bearing walls. They were interrupted by a silver object crashing through their model." }
+        ]
+      },
+      {
+        "focus": "partner",
+        "text_blocks": [
+          { "condition": "default", "text": "The device found them too. It bonded with them. No pain, just a sudden realization that the world was suddenly much larger, and much more complicated." }
+        ]
+      }
+    ]
+  },
+
+  "chapter_2_sync": {
+    "id": "chapter_2_sync",
+    "title": "PROTOCOL: GLOBAL HANDSHAKE",
+    "next_chapter": "chapter_3_meeting",
+    "telemetry": {
+      "loc": "Planetary Orbit (Virtual)",
+      "coords": "Global Coverage",
+      "time": "T-Minus 0",
+      "weather": "Data Storm"
+    },
+    "scenes": [
+      {
+        "focus": "player",
+        "text_blocks": [
+          { "condition": "default", "text": "The two devices woke up. They ignored the humans for a moment and spoke to each other. A pulse went out. Invisible to the eye, but felt by the soul." },
+          { "condition": "high_tech", "text": "A handshake protocol initiated. The devices utilized the hosts' nervous systems as antennas. A wave of telemetry swept across the globe—scanning mountains, oceans, and encrypted servers in milliseconds." }
+        ]
+      },
+      {
+        "focus": "player",
+        "text_blocks": [
+          { "condition": "default", "text": "It mapped the planet. Every hidden bunker, every lost shipwreck, every coffee shop with decent Wi-Fi. And then, it pulled the two hosts together." }
+        ]
+      }
+    ]
+  },
+
+  "chapter_3_meeting": {
+    "id": "chapter_3_meeting",
+    "title": "THE MIRROR",
+    "next_chapter": "chapter_4_asset",
+    "show_synergy": true,
     "telemetry": {
       "loc": "Salar de Uyuni // Bolivia",
       "coords": "20.1338° S, 67.4891° W",
       "time": "Jan 20, 2026 // 17:30 PM",
-      "weather": "Temp: 12°C // Precipitation: 80% // Surface: Water Mirror"
+      "weather": "Precipitation: 80% // Surface: Mirror"
     },
     "scenes": [
       {
-        "id": "ch2_01",
+        "focus": "player",
         "text_blocks": [
-          { "condition": "default", "text": "You accepted the coordinate request. The world didn't fade to black; it folded. One moment you were in your room, the next, the air pressure dropped and the light blinded you." }
+          { "condition": "default", "text": "Teleportation is a rude way to travel. One moment you are home, the next you are standing on the sky. The Salar de Uyuni. The great mirror of Bolivia." }
         ]
       },
       {
-        "id": "ch2_02",
+        "focus": "partner",
         "text_blocks": [
-          { "condition": "default", "text": "You are standing on water, but you aren't sinking. The Salt Flats. It's the rainy season. The thin layer of water reflects the sky perfectly. There is no horizon. Just infinite blue above and below." }
+          { "condition": "default", "text": "{player} spotted a figure in the distance. {partner}. They looked equally disheveled, scanning the horizon as if looking for a bus stop in the middle of an ocean." }
         ]
       },
       {
-        "id": "ch2_03",
+        "focus": "player",
         "text_blocks": [
-          { "condition": "default", "text": "You see a figure standing fifty meters away. {partner} looks just as confused as you." },
-          { "condition": "high_tech", "text": "Telemetry picks up a bio-signature ahead. {partner} is standing there. They aren't checking stats or looking at the tech; they are scanning the horizon, trying to process the logic of this place." },
-          { "condition": "high_arts", "text": "A figure materializes ahead. {partner}. They look stressed, frantically tapping at the air, trying to debug the holographic interface that only they can see." }
-        ]
-      },
-      {
-        "id": "ch2_04",
-        "text_blocks": [
-          { "condition": "default", "text": "They walk towards you, their footsteps rippling the water-mirror. They hold up their left wrist. It glows with the same silver tattoo as yours." }
+          { "condition": "default", "text": "They approached each other. No grand speeches. Just the awkward nod of two people who realize they are stuck in the same lifeboat. The devices hummed, satisfied with the connection." }
         ]
       }
     ]
   },
 
-  "chapter_3": {
-    "id": "chapter_3",
-    "title": "PROTOCOL: THE ASSET TEST",
+  "chapter_4_asset": {
+    "id": "chapter_4_asset",
+    "title": "THE ASSET",
     "next_chapter": null,
     "telemetry": {
       "loc": "Salar de Uyuni // Bolivia",
       "coords": "20.1338° S, 67.4891° W",
       "time": "Jan 20, 2026 // 18:00 PM",
-      "weather": "Condition: Sunset // Visibility: Perfect"
+      "weather": "Temp dropping // Need Transport"
     },
     "scenes": [
       {
-        "id": "ch3_01",
+        "focus": "player",
         "text_blocks": [
-          { "condition": "default", "text": "The sun is setting. The temperature is dropping fast. You are stranded in the middle of the largest salt desert on Earth with no supplies." },
-          { "condition": "high_guts", "text": "Survival analysis: You have no water, no thermal gear, and night is coming. Hypothermia risk is rising. You need shelter, or you need to move." }
+          { "condition": "default", "text": "The sun began to dip. The beauty of the salt flats is treacherous; without shelter, the cold kills you with a smile. They needed a vehicle." }
         ]
       },
       {
-        "id": "ch3_02",
+        "focus": "player",
         "text_blocks": [
-          { "condition": "default", "text": "{partner} taps their wrist interface. 'The manual says we have an Asset Library. It says we can fabricate things.' They look at you. 'What do we need?'" }
+          { "condition": "default", "text": "They didn't summon a spaceship. They didn't ask for a tank. They asked for reliability. The air shimmered, and gravity bent to their will." }
         ]
       },
       {
-        "id": "ch3_03",
+        "focus": "player",
         "text_blocks": [
-          { "condition": "default", "text": "You open your menu. It's a mental catalog of every machine you understand. You visualize a vehicle. Something rugged. Something classic." },
-          { "condition": "mech_eng", "text": "You close your eyes. You visualize a 1995 Land Rover Defender 90. Diesel engine. Snorkel intake. Diff locks. You don't just imagine it; you build it in your mind, bolt by bolt." },
-          { "condition": "artist", "text": "You imagine a shape. Not just a car, but an aesthetic. A vintage jeep, battered but reliable, contrasting beautifully against the mirror-glass floor of the salt flat." }
+          { "condition": "default", "text": "It landed with a solid thud. A **Nissan X-Trail T31**. Not the new plastic ones. The boxy legend. Pearl White. Manual Transmission. 2.0L Diesel Turbo. The kind of car that says, 'I have a mortgage, but I can cross a river.'" },
+          { "condition": "mech_eng", "text": "A **Nissan X-Trail T31** materialized. Pearl White. The M9R diesel engine ticked over with a rhythmic clatter—pure mechanical music. It was the top-spec model, complete with the hyper-roof rails with integrated high-beam lights." }
         ]
       },
       {
-        "id": "ch3_04",
+        "focus": "partner",
         "text_blocks": [
-          { "condition": "default", "text": "The air crackles with static. Digital dust swirls in front of you, coalescing into solid matter. A Land Rover slams onto the salt with a wet splash." },
-          { "condition": "high_tech", "text": "Matter rearrangement complete. The vehicle is physically perfect. The engine is warm. It didn't just appear; the machine pulled it from a probability stream where it already existed." }
+          { "condition": "default", "text": "{partner} opened the glovebox. There was a heavy, reassuring clunk. A small cache of ammunition. No guns visible—just the ammo. A polite suggestion from the universe that things might get dangerous later." }
         ]
       },
       {
-        "id": "ch3_05",
+        "focus": "player",
         "text_blocks": [
-          { "condition": "default", "text": "{partner} laughs, a sound of pure disbelief. They open the driver's door. 'Shotgun,' they call out. 'Let's see if this thing actually runs.' You climb in. The adventure begins." }
+          { "condition": "default", "text": "{player} took the driver's seat. The gear stick felt cold and precise. They looked at {partner}. 'Shotgun?' The engine roared to life, echoing across the endless mirror." }
         ]
       }
     ]
