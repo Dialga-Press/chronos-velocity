@@ -1,13 +1,13 @@
 {
   "chapter_1": {
-    "title": "Protocol: The Drop",
+    "title": "PROTOCOL: THE DROP",
     "scenes": [
       {
         "id": "intro_01",
         "text_blocks": [
           {
             "condition": "default",
-            "text": "The air in the room tore open. It wasn't a portal; it was a glitch in reality. A silver sphere fell onto your desk with a heavy thud."
+            "text": "The air in the room tore open. It wasn't a portal; it was a glitch in reality. A silver sphere fell onto your desk with a heavy thud, cracking the surface."
           },
           {
             "condition": "mech_eng",
@@ -28,15 +28,58 @@
         "text_blocks": [
           {
             "condition": "default",
-            "text": "The sphere split open. A voice echoed in your head. Not AI. Something older."
+            "text": "You reached out to touch it. Bad idea."
           },
           {
-            "condition": "high_social", // For Actors, Popstars, Artists
-            "text": "The voice in your head sounded like a sarcastic auntie who knows you haven't eaten lunch. 'Synchronization Required,' it quipped. It felt like the machine was judging your outfit."
+            "condition": "doctor",
+            "text": "Your instincts screamed 'biohazard,' but curiosity is a dangerous pathology. You reached out."
           },
           {
-            "condition": "high_tech", // For Engineers
-            "text": "The voice bypassed your ears and hit the auditory cortex. 'Handshake Protocol Initiated.' It felt like a direct SQL injection into your brain."
+            "condition": "adventurer",
+            "text": "You've touched cursed idols and unexploded ordnance before. This didn't seem any worse. You reached out."
+          }
+        ]
+      },
+      {
+        "id": "intro_03_transformation",
+        "text_blocks": [
+          {
+            "condition": "default",
+            "text": "The metal didn't feel cold. It felt... hungry. It turned to liquid mercury the moment it touched your skin. It didn't clasp around your wrist; it sank IN."
+          },
+          {
+            "condition": "high_tech",
+            "text": "Nano-assemblers. Millions of them. You watched in horror as the silver liquid dissolved into your epidermis, weaving itself into your nervous system. No pain, just a terrifying sense of connection. You are the hardware now."
+          },
+          {
+            "condition": "high_arts",
+            "text": "It moved like living ink. The silver washed over your skin and disappeared beneath it, leaving a faint, glowing geometric tattoo that pulsed with your heartbeat. It felt less like technology and more like a pact."
+          }
+        ]
+      },
+      {
+        "id": "intro_04_hud",
+        "text_blocks": [
+          {
+            "condition": "default",
+            "text": "You blinked. The world looked different. Text was floating in the air. A Retinal HUD."
+          },
+          {
+            "condition": "comp_eng",
+            "text": "System boot sequence initialized. Your vision was overlaid with telemetry data. Heart rate, ambient temperature, time dilation... it was an OS running directly on your optic nerve."
+          },
+          {
+            "condition": "artist",
+            "text": "The world gained a new layer of paint. Golden lines traced the geometry of the room. You could see the structure of reality itself, overlaid with symbols you somehow understood."
+          }
+        ]
+      },
+      {
+        "id": "intro_05_message",
+        "text_blocks": [
+          {
+            "condition": "default",
+            "text": "A notification flared in your vision. A single ping from halfway across the world. <br><br><strong>[SIGNAL DETECTED. PARTNER FOUND.]</strong>"
           }
         ]
       }
