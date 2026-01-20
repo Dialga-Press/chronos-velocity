@@ -54,14 +54,14 @@
     "scenes": [
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The sun began to dip. The beauty of the salt flats is treacherous; without shelter, the cold kills you with a smile. They needed a vehicle." }] },
       { "focus": "player", "text_blocks": [
-          { "condition": "default", "text": "They didn't summon a spaceship. They didn't ask for a tank. They asked for reliability. The air shimmered, and gravity bent to their will." },
-          { "condition": "mech_eng", "text": "Logic dictated they needed 4x4 capability, high ground clearance, and diesel torque. The probability matrix selected the optimal machine." }
+          { "condition": "default", "text": "They didn't summon a spaceship. They didn't ask for a tank. They asked for reliability. The air shimmered, and gravity bent to their will." }
         ] 
       },
       { "focus": "player", "text_blocks": [
           { "condition": "default", "text": "A **Nissan X-Trail T31** slammed onto the salt with a wet splash. Pearl White paint, gleaming against the endless blue. 2.0L Diesel Turbo. Manual Transmission. It wasn't just a car; it was a fortress." }
         ]
       },
+      { "focus": "system", "text_blocks": [{ "condition": "default", "text": "We are delighted to be Honouring our first reader 📖 🍀u/Shot-Manager-7012 ✨💎 - Author of Chronos Velocity" }] },
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "OOOOH I LIKEEEE. Pearl White? Bold choice for a mud run, but that panoramic sunroof is massive! Chef's kiss ahahah 😝. You two have taste!" }] },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} and {partner} jumped. The voice didn't come from the car speakers. It came from their wrists. It came from *inside* their heads." }] },
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "I'm Smylynx. I handle the logistics. The T31 X-Trail... rugged, boxy, dependable. I've already optimized the fuel mixture for altitude. Hop in, let's see what she can do! 🥰" }] },
