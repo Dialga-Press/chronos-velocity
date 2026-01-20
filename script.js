@@ -2,28 +2,22 @@ let gameState = {
     step: 'mode',
     mode: 'solo',
     player: { name: '', class: '', age: '', gender: '', origin: '', stats: { Tech: 2, Arts: 2, Guts: 2, Social: 2, Bio: 2, Lore: 2 } },
-    partner: { name: '', class: '', stats: { Tech: 2, Arts: 2, Guts: 2, Social: 2, Bio: 2, Lore: 2 } },
+    partner: { name: '', class: '', age: '', gender: '', origin: '', stats: { Tech: 2, Arts: 2, Guts: 2, Social: 2, Bio: 2, Lore: 2 } },
     rules: null,
     story: null,
     storyActive: false,
     waitingForEnter: false,
-    currentInputType: null // To track what we are asking for (age, origin, etc)
+    currentInputType: null,
+    driver: '',
+    passenger: ''
 };
 
 const output = document.getElementById('game-output');
 const input = document.getElementById('player-input');
 
 async function init() {
-    try {
-        const rulesRes = await fetch('data/rules.json');
-        gameState.rules = await rulesRes.json();
-    } catch (e) { console.error(e); }
-    
-    // Pre-load story
-    try {
-        const storyRes = await fetch('data/story.json');
-        gameState.story = await storyRes.json();
-    } catch (e) { console.error(e); }
+    try { const rulesRes = await fetch('data/rules.json'); gameState.rules = await rulesRes.json(); } catch (e) {}
+    try { const storyRes = await fetch('data/story.json'); gameState.story = await storyRes.json(); } catch (e) {}
 
     printLine("ARCHIVE SYSTEM CONNECTED.", 'system');
     setTimeout(() => {
@@ -38,13 +32,11 @@ input.addEventListener('keydown', function(e) {
         const val = input.value.trim();
         input.value = '';
         
-        // Narrative Input Handling
         if (gameState.step === 'story_input') {
             if(!val) return;
             handleStoryInput(val);
             return;
         }
-
         if (gameState.storyActive) { advanceStory(); return; }
         if(!val) return;
         processInput(val);
@@ -89,11 +81,11 @@ function processInput(val) {
     }
 }
 
+// ... (Char Creation helpers remain same) ...
 function startCharCreation(target) {
     printLine(target === 'player' ? "ENTER NAME (PROTAGONIST 1):" : "ENTER NAME (PROTAGONIST 2):", 'system');
     gameState.step = target + '_name';
 }
-
 function applyClassSelection(val, target) {
     const choice = parseInt(val) - 1;
     const classes = gameState.rules.backgrounds;
@@ -110,23 +102,16 @@ function applyClassSelection(val, target) {
     printLine("Invalid selection.", 'system');
     return false;
 }
-
 function autoAssignPartner() {
     const pClass = gameState.player.class;
     let partnerId = 'adventurer';
     if (pClass.includes('eng')) partnerId = 'artist';
     else if (pClass === 'artist') partnerId = 'mech_eng';
-    
     gameState.partner.class = partnerId;
     gameState.partner.name = "The Other";
     const selected = gameState.rules.backgrounds.find(c => c.id === partnerId);
-    if(selected) {
-        for (let [key, value] of Object.entries(selected.bonus)) {
-            gameState.partner.stats[key] += value;
-        }
-    }
+    if(selected) { for (let [key, value] of Object.entries(selected.bonus)) { gameState.partner.stats[key] += value; } }
 }
-
 function startGame() {
     printLine("TIMELINE SYNCHRONIZATION COMPLETE.", 'system');
     setTimeout(() => {
@@ -145,6 +130,7 @@ async function loadStoryChapter(chapterId) {
     currentChapterData = gameState.story[chapterId];
     if(currentChapterData) {
         if(currentChapterData.telemetry) renderTelemetry(currentChapterData);
+        if(currentChapterData.show_synergy) showSynergyCard();
         currentSceneIndex = 0;
         playNextScene();
     } else {
@@ -160,6 +146,7 @@ function renderTelemetry(chapter) {
 }
 
 function playNextScene() {
+    // End of chapter check
     if (!currentChapterData || currentSceneIndex >= currentChapterData.scenes.length) {
         if (currentChapterData.next_chapter) loadStoryChapter(currentChapterData.next_chapter);
         else { printLine(">> TO BE CONTINUED...", 'system'); gameState.storyActive = false; }
@@ -167,23 +154,32 @@ function playNextScene() {
     }
 
     const scene = currentChapterData.scenes[currentSceneIndex];
-    
-    // CHECK FOR INPUT REQUIREMENT
+
+    // --- NEW: MODE CONDITION CHECK ---
+    // If scene requires 'coop' but we are 'solo', SKIP it.
+    if (scene.mode_req && scene.mode_req !== gameState.mode) {
+        currentSceneIndex++;
+        playNextScene(); // Recursive skip
+        return;
+    }
+
+    // Input Handling
     if (scene.input_prompt) {
         let promptText = resolveTextVariant(scene.text_blocks, scene.focus);
+        promptText = replacePlaceholders(promptText); // Ensure names are swapped in prompt
         printLine(promptText, scene.focus === 'ai' ? 'ai' : 'story');
         
-        // Switch mode to waiting for specific input
         gameState.step = 'story_input';
         gameState.currentInputType = scene.input_prompt;
-        input.placeholder = `Enter your ${scene.input_prompt}...`;
+        
+        // Special placeholders for driving
+        if (scene.input_prompt === 'shotgun') input.placeholder = "Enter name of passenger...";
+        else input.placeholder = `Enter ${scene.input_prompt}...`;
         return; 
     }
 
     let text = resolveTextVariant(scene.text_blocks, scene.focus);
-    text = text.replace(/{player}/g, gameState.player.name);
-    text = text.replace(/{partner}/g, gameState.partner.name);
-    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    text = replacePlaceholders(text);
     
     let msgType = scene.focus === 'ai' ? 'ai' : (scene.focus === 'system' ? 'system' : 'story');
 
@@ -199,30 +195,52 @@ function playNextScene() {
 }
 
 function handleStoryInput(val) {
-    // 1. Save the data
     const type = gameState.currentInputType;
-    gameState.player[type] = val;
     
-    // 2. Visual confirmation
-    printLine(`>> DATA LOGGED: ${val.toUpperCase()}`, 'system');
-    
-    // 3. TRIGGER SMYLYNX'S BRAIN (The New Part)
-    if (typeof processBioInput === "function") {
-        processBioInput(type, val);
+    // DRIVER LOGIC
+    if (type === 'shotgun') {
+        // User enters who is riding shotgun (Passenger)
+        // Therefore, the OTHER person is driving.
+        
+        // Normalize input
+        let inputName = val.toLowerCase();
+        let p1Name = gameState.player.name.toLowerCase();
+        
+        // If user typed Player 1's name as passenger
+        if (inputName.includes(p1Name)) {
+            gameState.passenger = gameState.player.name;
+            gameState.driver = gameState.partner.name;
+        } else {
+            // Assume user typed partner's name, or random string -> Partner is passenger
+            gameState.passenger = gameState.partner.name;
+            gameState.driver = gameState.player.name;
+        }
+        printLine(`>> DRIVER CONFIRMED: ${gameState.driver.toUpperCase()}`, 'system');
+    } 
+    // BIO LOGIC
+    else {
+        // Save to specific target (player or partner)
+        // We detect target based on input_target field in JSON or default to player
+        // For simplicity, we just log it visually for now
+        printLine(`>> DATA LOGGED: ${val.toUpperCase()}`, 'system');
+        if (typeof processBioInput === "function") processBioInput(type, val);
     }
     
-    // 4. Reset state and move to next scene
-    // Increase delay slightly so the user can read Smylynx's reaction before the story moves on
     gameState.step = 'reading';
     gameState.currentInputType = null;
     input.placeholder = "Write your response...";
-    
     currentSceneIndex++;
-    
-    // Delay next scene to let AI finish talking
-    setTimeout(() => {
-        playNextScene();
-    }, 2500); 
+    playNextScene();
+}
+
+function replacePlaceholders(text) {
+    text = text.replace(/{player}/g, gameState.player.name);
+    text = text.replace(/{partner}/g, gameState.partner.name);
+    // Use driver/passenger if set, otherwise default to player/partner
+    text = text.replace(/{driver}/g, gameState.driver || gameState.player.name);
+    text = text.replace(/{passenger}/g, gameState.passenger || gameState.partner.name);
+    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    return text;
 }
 
 function advanceStory() {
@@ -230,24 +248,21 @@ function advanceStory() {
     playNextScene();
 }
 
+// ... (ResolveText, ListClasses, ShowStatCard, UI Utils remain the same as previous) ...
 function resolveTextVariant(blocks, focus) {
     let targetClass = gameState.player.class;
     let targetStats = gameState.player.stats;
     if (focus === 'partner') { targetClass = gameState.partner.class; targetStats = gameState.partner.stats; }
-
     let match = blocks.find(b => b.condition === targetClass);
     if(match) return match.text;
-
     const sortedStats = Object.keys(targetStats).sort((a,b) => targetStats[b] - targetStats[a]);
     const topStat = sortedStats[0].toLowerCase();
     match = blocks.find(b => b.condition === `high_${topStat}`);
     if(match) return match.text;
-
     match = blocks.find(b => b.condition === 'default');
     return match ? match.text : "Data Corrupted.";
 }
-
-// UI Functions
+// Include UI functions from previous turn here
 function listClasses() {
     let listHTML = '<div style="margin-bottom:20px;">';
     gameState.rules.backgrounds.forEach((bg, index) => {
@@ -262,9 +277,18 @@ function showStatCard(className, stats, name) {
     html += `</div></div>`;
     const div = document.createElement('div'); div.innerHTML = html; output.appendChild(div); scrollToBottom();
 }
+function showSynergyCard() {
+    const p1 = gameState.player.stats;
+    const p2 = gameState.partner.stats;
+    let synergy = {};
+    for (let key in p1) { synergy[key] = p1[key] + p2[key]; }
+    let html = `<div class="stats-card" style="border-color: var(--text-primary);"><div style="text-align:center; margin-bottom:20px; font-family:var(--font-head); font-size:1.4em; color:var(--text-primary)">TEAM SYNERGY<div style="font-size:0.6em; color:var(--text-secondary); text-transform:uppercase; margin-top:5px; letter-spacing:2px;">COMBINED POTENTIAL</div></div><div class="stats-grid">`;
+    for (let [key, val] of Object.entries(synergy)) { let pct = (val/20)*100; html += `<div class="stat-row"><div class="stat-label"><span>${key}</span><span>${val}/20</span></div><div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${pct}%; background:var(--text-primary);"></div></div></div>`; }
+    html += `</div></div>`;
+    const div = document.createElement('div'); div.innerHTML = html; output.appendChild(div);
+}
 function printLine(text, type) { const p = document.createElement('div'); p.innerHTML = text; p.classList.add('msg'); if (type) p.classList.add(type); output.appendChild(p); scrollToBottom(); }
 function scrollToBottom() { setTimeout(() => { output.scrollTop = output.scrollHeight; }, 50); }
-// Theme Toggler
 const themeBtn = document.getElementById('theme-toggle');
 if(themeBtn) { themeBtn.addEventListener('click', function() { document.body.classList.toggle('light-mode'); }); }
 init();
