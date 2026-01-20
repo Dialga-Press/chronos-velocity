@@ -2,74 +2,74 @@
   "game_title": "CHRONOS VELOCITY",
   "version": "2.0",
   "attributes": ["Tech", "Arts", "Guts", "Social", "Bio", "Lore"],
-  "base_stats": 2,  
+  "base_stats": 2,
   "max_stats": 10,
   "backgrounds": [
     {
       "id": "mech_eng",
       "name": "Mechanical Engineer",
       "bonus": {"Tech": 4, "Guts": 2, "Bio": 1},
-      "desc": "Language of pistons. You fix things with percussive maintenance."
+      "desc": "Language of pistons. You believe anything can be fixed with percussive maintenance and a wrench."
     },
     {
       "id": "comp_eng",
       "name": "Computer Engineer",
-      "bonus": {"Tech": 5, "Social": 0, "Lore": 2},
-      "desc": "OSINT wizard. You see the world as data streams."
+      "bonus": {"Tech": 5, "Lore": 2, "Social": 0},
+      "desc": "OSINT Wizard. You see the world as data streams and backdoors. You prefer terminals to people."
     },
     {
       "id": "architect",
       "name": "The Architect",
       "bonus": {"Arts": 4, "Tech": 3, "Lore": 1},
-      "desc": "Structure and Beauty. You judge civilizations by their walls."
+      "desc": "Structure and Beauty. You judge civilizations by their load-bearing walls and aesthetics."
     },
     {
       "id": "doctor",
       "name": "The Doctor",
-      "bonus": {"Bio": 5, "Guts": 1, "Social": 2},
-      "desc": "Healer of hardware. Steady hands, zero patience for stupidity."
+      "bonus": {"Bio": 5, "Guts": 2, "Social": 1},
+      "desc": "Healer of biological hardware. You have steady hands, steel nerves, and zero patience for stupidity."
     },
     {
       "id": "historian",
       "name": "The Historian",
       "bonus": {"Lore": 5, "Social": 2, "Arts": 1},
-      "desc": "Time is your library. You know why they died and what they wore."
+      "desc": "Time is your library. You know who died, when they died, and why their hat was fashionable."
     },
     {
       "id": "artist",
       "name": "The Artist",
       "bonus": {"Arts": 5, "Social": 2, "Bio": 1},
-      "desc": "You capture the soul of the timeline. You see colors others ignore."
+      "desc": "You see colors others ignore. You are here to capture the soul of the timeline, not just the facts."
     },
     {
       "id": "popstar",
       "name": "The Popstar",
       "bonus": {"Social": 5, "Arts": 3, "Guts": 1},
-      "desc": "Charisma weaponized. You can start a riot with a microphone."
+      "desc": "Charisma weaponized. You can charm a king, distract a guard, or start a riot with a microphone."
     },
     {
       "id": "actor",
       "name": "The Actor",
       "bonus": {"Social": 4, "Lore": 2, "Bio": 1},
-      "desc": "Master of disguise. You don't just visit history; you blend in."
+      "desc": "Master of disguise. You don't just visit history; you blend in. The timeline is your stage."
     },
     {
       "id": "athlete",
       "name": "The Athlete",
-      "bonus": {"Guts": 4, "Bio": 3, "Social": 1},
-      "desc": "Peak condition. You run toward explosions while others run away."
+      "bonus": {"Guts": 4, "Bio": 4, "Social": 1},
+      "desc": "Peak physical condition. You run toward explosions while others run away. Stamina is your superpower."
     },
     {
       "id": "adventurer",
       "name": "The Adventurer",
       "bonus": {"Guts": 3, "Lore": 2, "Tech": 2, "Bio": 1},
-      "desc": "Jack of all trades. A map in your head and a multitool in your pocket."
+      "desc": "Jack of all trades. You have a map in your head, a multitool in your pocket, and questionable survival instincts."
     },
     {
       "id": "sailor",
       "name": "The Sailor",
       "bonus": {"Tech": 2, "Guts": 3, "Lore": 2, "Bio": 1},
-      "desc": "Navigator of stars. You know the ocean is scarier than time."
+      "desc": "Navigator of stars and seas. You know that the ocean is the only thing scarier than time itself."
     }
   ]
 }
