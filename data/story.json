@@ -6,8 +6,8 @@
     "telemetry": { "loc": "Home Base // Coordinates: Classified", "time": "Jan 20, 2026 // 14:00 PM" },
     "scenes": [
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Let us speak of {player}. A perfectly functional human being who, much like the rest of us, was busy doing absolutely nothing of historical importance." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Then, gravity decided to take a lunch break. A silver sphere fell onto the table. It didn't roll. It simply sat there, heavy with implication." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} touched it. And just like that, the metal dissolved into their skin, warm and inviting, like tea on a rainy afternoon." }] }
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Then, gravity decided to take a lunch break. A silver sphere fell onto the table. It didn't roll. It simply sat there, heavy with implication, like an unpaid bill." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Common sense dictates one should run from unidentified extraterrestrial objects. But curiosity is a terrible affliction. {player} touched it. And just like that, the metal dissolved into their skin, warm and inviting, like tea on a rainy afternoon." }] }
     ]
   },
   "chapter_1_p2": {
@@ -48,14 +48,12 @@
     "telemetry": { "loc": "Salar de Uyuni", "time": "18:00 PM" },
     "scenes": [
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The sun began to dip. The beauty of the salt flats is treacherous; without shelter, the cold kills you with a smile. They needed a vehicle." }] },
-      { "focus": "player", "text_blocks": [
-          { "condition": "default", "text": "A **Nissan X-Trail T31** slammed onto the salt with a wet splash. Pearl White paint, gleaming against the endless blue. 2.0L Diesel Turbo. Manual Transmission. It wasn't just a car; it was a fortress." }
-        ]
-      },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They didn't summon a spaceship. They didn't ask for a tank. They asked for reliability. The air shimmered, and gravity bent to their will." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "A **Nissan X-Trail T31** slammed onto the salt with a wet splash. Pearl White paint, gleaming against the endless blue. 2.0L Diesel Turbo. Manual Transmission. It wasn't just a car; it was a fortress." }] },
       { "focus": "system", "text_blocks": [{ "condition": "default", "text": "We are delighted to be Honouring our first reader 📖 🍀u/Shot-Manager-7012 ✨💎 - Author of Chronos Velocity" }] },
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "OOOOH I LIKEEEE. Pearl White? Bold choice for a mud run, but that panoramic sunroof is massive! Chef's kiss ahahah 😝. You two have taste!" }] },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} and {partner} jumped. The voice didn't come from the car speakers. It came from their wrists. It came from *inside* their heads." }] },
-      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "I'm SMYLYNX. I handle the logistics. The T31 X-Trail... rugged, boxy, dependable. I've already optimized the fuel mixture for altitude. Hop in! 🥰" }] },
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "I'm SMYLNYX. I handle the logistics. The T31 X-Trail... rugged, boxy, dependable. I've already optimized the fuel mixture for altitude. Hop in! 🥰" }] },
       { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{partner} opened the glovebox. There was a heavy, reassuring clunk. A cache of ammunition. No guns—just the ammo. A polite suggestion from the universe." }] },
       
       { "focus": "ai", "input_prompt": "shotgun", "text_blocks": [{ "condition": "default", "text": "Alright, team. We are burning daylight. Who is calling **Shotgun**? (I need to know who the Passenger is so I can calibrate the airbags)." }] }
@@ -83,7 +81,8 @@
     "scenes": [
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They slowed down as the salt gave way to the rocky base of the Tunupa Volcano. The engine ticked, cooling down in the twilight." }] },
       { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{passenger} stepped out, their boots crunching on the earth. They looked at the glowing device on their wrist. 'We aren't just tourists, are we?'" }] },
-      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Tourists take photos. You two? You're going to take History. But first, we need to calibrate the temporal drive. Next stop is going to be... messy. ahahah." }] }
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Tourists take photos. You two? You're going to take History. But first, we need to calibrate the temporal drive. Next stop is going to be... messy. ahahah." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{driver} leaned against the warm hood of the X-Trail. They felt tired—the 5% that SMYLNYX couldn't scrub away. It was a good tired. The kind that comes after surviving something impossible." }] }
     ]
   },
   "chapter_7_bio": {
