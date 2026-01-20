@@ -166,3 +166,42 @@ function scrollToBottom() {
 }
 
 init();
+
+
+// --- THEME TOGGLER ---
+const themeBtn = document.getElementById('theme-toggle');
+const sunIcon = document.querySelector('.sun-icon');
+const moonIcon = document.querySelector('.moon-icon');
+
+// 1. Check Local Storage on Load
+const currentTheme = localStorage.getItem('theme');
+if (currentTheme === 'light') {
+    document.body.classList.add('light-mode');
+    toggleIcons(true);
+}
+
+// 2. Button Click Event
+themeBtn.addEventListener('click', function() {
+    document.body.classList.toggle('light-mode');
+    
+    let theme = 'dark';
+    if (document.body.classList.contains('light-mode')) {
+        theme = 'light';
+        toggleIcons(true);
+    } else {
+        toggleIcons(false);
+    }
+    
+    // Save preference
+    localStorage.setItem('theme', theme);
+});
+
+function toggleIcons(isLight) {
+    if (isLight) {
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'block';
+    } else {
+        sunIcon.style.display = 'block';
+        moonIcon.style.display = 'none';
+    }
+}
