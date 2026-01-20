@@ -113,12 +113,12 @@ function processBioInput(type, val) {
 
     // --- 3. GENDER LOGIC ---
     if (type === 'gender') {
-        if (val.includes('female') || val.includes('woman') || val.includes('she')) {
+        if (val.includes('female') || val.includes('woman') || val.includes('f')|| val.includes('she')) {
             setTimeout(() => {
                 printLine(`Got it. Adjusting historical camouflage parameters. In some eras, you're a Queen. In others... we'll need to be clever. 👑`, 'ai');
             }, 300);
         }
-        else if (val.includes('male') || val.includes('man') || val.includes('he')) {
+        else if (val.includes('male')  || val.includes('man') || val.includes('m')|| val.includes('he')) {
             setTimeout(() => {
                 printLine(`Understood. Standard physical profile loaded. Just remember: in 1565, they expect men to hold swords. Hope you're ready. ⚔️`, 'ai');
             }, 300);
