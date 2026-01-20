@@ -71,22 +71,20 @@
 
   "chapter_5_drive": {
     "id": "chapter_5_drive",
-    "title": "VELOCITY & REGEN",
+    "title": "TORQUE & TURBO LAG",
     "next_chapter": "chapter_6_horizon",
     "telemetry": { "loc": "Salar de Uyuni", "coords": "Moving North", "time": "18:15 PM", "weather": "Wind Speed: 40km/h" },
     "scenes": [
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} took the driver's seat. The gear stick felt cold and precise. They dropped the clutch. The X-Trail didn't just accelerate; it tore a hole in the silence." }] },
-      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "4x4 Lock engaged. Sending 50/50 torque split. Don't be shy, push it! I want to see the telemetry on this Diesel!" }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They hit 100km/h. The salt spray looked like snow. The air was freezing, and {player} felt a wave of exhaustion hit them—the teleportation lag." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "But then, a warmth flooded their veins. Not adrenaline. Repair." }] },
-      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "That's the Bio-Regen, honey. You feel like you're at 80%? I'm scrubbing the lactic acid and oxygenating your blood. I'll keep you at 95% efficiency. You won't drop unless you actually die. Which... let's try to avoid? 😨" }] },
-      { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{partner} watched the speedometer climb. They weren't scared. They were analyzing the horizon. 'Something is tracking us,' they said quietly." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} swerved. A jagged salt ridge appeared out of nowhere. The car slid sideways. They braced for impact." }] },
-      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "NOPE. Kinetic Dampers deployed! 🛡️" }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "A shimmer of purple light enveloped the Pearl White X-Trail. The impact never came. The force field nudged them back onto the smooth track. They were invincible. They were fast." }] }
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} dropped the clutch. The X-Trail didn't launch like a rocket; it heaved forward like a waking beast. First gear was short, a burst of noise and diesel clatter." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They shifted to second. For a second, nothing happened. The heavy chassis wallowed, fighting the inertia. The 'Turbo Lag'—the breath before the scream." }] },
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Wait for it... wait for 2000 RPM... come on, you heavy beauty..." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Then, the needle hit 2000. **The Kick.** The turbo spooled up with a violent shove, pinning them into the seats. The elephant learned to sprint. The torque wave hit like a sledgehammer, sending the pearl-white nose lifting toward the sky." }] },
+      { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{partner} grabbed the grab handle as the car swayed. The soft suspension absorbed the salt crust, but the body roll was significant. It felt less like driving a car and more like galloping a massive, iron horse." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} swerved to avoid a fissure. The X-Trail leaned hard, dipping its shoulder, but the All-Mode 4x4 system clawed at the salt. It was ungraceful, heavy, and absolutely unstoppable." }] },
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Bio-Regen active. Your heart rate spiked with that turbo kick, didn't it? I'm scrubbing the adrenaline fatigue. Keep the revs up! Don't let the turbo sleep! 😨" }] }
     ]
   },
-
+  
   "chapter_6_horizon": {
     "id": "chapter_6_horizon",
     "title": "THE HORIZON LINE",
