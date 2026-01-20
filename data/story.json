@@ -97,6 +97,11 @@
       { "focus": "ai", "input_prompt": "age", "text_blocks": [{ "condition": "default", "text": "How many solar cycles on the clock?" }] },
       { "focus": "ai", "input_prompt": "gender", "text_blocks": [{ "condition": "default", "text": "Gender Presentation? Kings listen to men; Queens listen to women; Spies listen to neither." }] },
       { "focus": "ai", "input_prompt": "origin", "text_blocks": [{ "condition": "default", "text": "Where did you spawn? I need to load the cultural subroutines." }] },
+      {
+  "focus": "ai", 
+  "input_prompt": "height", 
+  "text_blocks": [{ "condition": "default", "text": "Displacement Volume Check. How tall are you? (Use CM or Feet/Inches)." }] 
+},
       
       { "mode_req": "coop", "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Alright, {partner}. Your turn. Don't let {player} have all the fun." }] },
       { "mode_req": "coop", "focus": "ai", "input_prompt": "age", "text_blocks": [{ "condition": "default", "text": "Age check. Are you vintage or fresh off the line?" }] },
