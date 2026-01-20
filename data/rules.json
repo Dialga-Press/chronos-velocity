@@ -1,24 +1,74 @@
 {
-  "attributes": ["Tech", "Arts", "Guts", "Social"],
-  "starting_points": 5,
+  "game_title": "CHRONOS VELOCITY",
+  "version": "1.0",
+  "attributes": ["Tech", "Arts", "Guts", "Social", "Bio", "Lore"],
+  "starting_points": 10,
   "backgrounds": [
     {
-      "id": "engineer",
-      "name": "The Engineer",
-      "bonus": {"Tech": 2, "Social": -1},
-      "desc": "You see the code behind the world. High OSINT skills."
+      "id": "mech_eng",
+      "name": "Mechanical Engineer",
+      "bonus": {"Tech": 3, "Guts": 1},
+      "desc": "You speak the language of pistons and gears. You believe anything can be fixed with percussive maintenance."
+    },
+    {
+      "id": "comp_eng",
+      "name": "Computer Engineer",
+      "bonus": {"Tech": 3, "Social": -1},
+      "desc": "OSINT wizard. You see the world as matrix code. You prefer terminals to people."
     },
     {
       "id": "architect",
       "name": "The Architect",
-      "bonus": {"Arts": 2, "Guts": -1},
-      "desc": "You see structure and history. High perception."
+      "bonus": {"Arts": 2, "Tech": 2},
+      "desc": "Structure and Beauty. You judge civilizations by their load-bearing walls."
     },
     {
-      "id": "drifter",
-      "name": "The Drifter",
-      "bonus": {"Guts": 2, "Tech": -1},
-      "desc": "You survive. High adaptability and driving skills."
+      "id": "doctor",
+      "name": "The Doctor",
+      "bonus": {"Bio": 3, "Guts": 1},
+      "desc": "Healer of biological hardware. You have steady hands and zero patience for stupidity."
+    },
+    {
+      "id": "historian",
+      "name": "The Historian",
+      "bonus": {"Lore": 4},
+      "desc": "You know who died, when they died, and why their hat was fashionable. Time is your library."
+    },
+    {
+      "id": "artist",
+      "name": "The Artist",
+      "bonus": {"Arts": 3, "Social": 1},
+      "desc": "You see colors others ignore. You're here to capture the soul of the timeline."
+    },
+    {
+      "id": "popstar",
+      "name": "The Popstar",
+      "bonus": {"Social": 4, "Arts": 1},
+      "desc": "Charisma weaponized. You can charm a king or start a riot with a microphone."
+    },
+    {
+      "id": "actor",
+      "name": "The Actor",
+      "bonus": {"Social": 3, "Lore": 1},
+      "desc": "Master of disguise. You don't just visit history; you blend in."
+    },
+    {
+      "id": "athlete",
+      "name": "The Athlete",
+      "bonus": {"Guts": 3, "Bio": 1},
+      "desc": "Peak physical condition. You run towards explosions while others run away."
+    },
+    {
+      "id": "adventurer",
+      "name": "The Adventurer",
+      "bonus": {"Guts": 2, "Lore": 1, "Tech": 1},
+      "desc": "Jack of all trades. You have a map in your head and a multitool in your pocket."
+    },
+    {
+      "id": "sailor",
+      "name": "The Sailor",
+      "bonus": {"Tech": 1, "Guts": 2, "Lore": 1},
+      "desc": "Navigator of stars and seas. You know that the ocean is the only thing scarier than time."
     }
   ]
 }
