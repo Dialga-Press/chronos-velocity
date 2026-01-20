@@ -169,16 +169,27 @@ body.light-mode .msg.ai {
 .class-card strong { font-family: var(--font-ui); color: var(--accent); font-size: 0.95rem; display: block; margin-bottom: 4px; letter-spacing: 0.5px; }
 .class-card span { font-family: var(--font-story); color: var(--text-ui); font-size: 1.1rem; font-style: italic; }
 
+/* Stat Card */
 .stats-card {
     background: var(--selection-bg);
-    border: 1px solid var(--accent);
+    border: 1px solid var(--accent); /* Ensure border is gold */
     border-radius: 12px;
     padding: 30px;
     margin: 40px 0;
     box-shadow: 0 10px 40px var(--accent-glow);
+    color: var(--text-story); /* Force text color to match story text */
+}
+
+.stat-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--text-ui); /* Muted color for labels */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
 }
 .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px 40px; margin-top: 20px; }
-.stat-label { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-ui); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
 .stat-bar-bg { height: 4px; background: var(--glass-border); border-radius: 2px; }
 .stat-bar-fill { height: 100%; background: var(--accent); width: 0%; transition: width 1.2s ease-out; border-radius: 2px; box-shadow: 0 0 10px var(--accent-glow); }
 
