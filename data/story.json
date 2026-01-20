@@ -19,7 +19,7 @@
         ]
       },
       {
-        "id": "intro_03_transformation",
+        "id": "intro_03",
         "text_blocks": [
           { "condition": "default", "text": "The metal turned to liquid mercury the moment it touched your skin. It didn't clasp around your wrist; it sank IN." },
           { "condition": "high_tech", "text": "Nano-assemblers. Millions of them. You watched in horror as the silver liquid dissolved into your epidermis, weaving itself into your nervous system. No pain, just a terrifying sense of connection." },
@@ -27,9 +27,9 @@
         ]
       },
       {
-        "id": "intro_05_message",
+        "id": "intro_05",
         "text_blocks": [
-          { "condition": "default", "text": "A notification flared in your vision. A single ping from halfway across the world. <br><br><strong>[SIGNAL DETECTED. PARTNER FOUND.]</strong>" }
+          { "condition": "default", "text": "A notification flared in your vision. A single ping from halfway across the world. <br><br><strong>[SIGNAL DETECTED. PARTNER FOUND: {partner}]</strong>" }
         ]
       }
     ]
@@ -38,7 +38,7 @@
   "chapter_2": {
     "id": "chapter_2",
     "title": "PROTOCOL: THE MIRROR",
-    "next_chapter": null, 
+    "next_chapter": "chapter_3", 
     "telemetry": {
       "loc": "Salar de Uyuni // Bolivia",
       "coords": "20.1338° S, 67.4891° W",
@@ -47,35 +47,77 @@
     },
     "scenes": [
       {
-        "id": "ch2_01_teleport",
+        "id": "ch2_01",
         "text_blocks": [
-          { "condition": "default", "text": "You accepted the coordinate request. The world didn't fade to black; it folded. One moment you were in your room, the next, the air pressure dropped and the light blinded you." },
-          { "condition": "high_tech", "text": "You tapped [EXECUTE]. Your internal equilibrium shattered. It felt like being compressed into a .zip file and unzipped instantly on the other side of the planet." },
-          { "condition": "high_lore", "text": "You stepped through the fold. It felt like walking through a heavy velvet curtain, only to step out onto the ceiling of the world." }
+          { "condition": "default", "text": "You accepted the coordinate request. The world didn't fade to black; it folded. One moment you were in your room, the next, the air pressure dropped and the light blinded you." }
         ]
       },
       {
-        "id": "ch2_02_setting",
+        "id": "ch2_02",
         "text_blocks": [
-          { "condition": "default", "text": "You are standing on water, but you aren't sinking. The Salt Flats. It's the rainy season. The thin layer of water reflects the sky perfectly. There is no horizon. Just infinite blue above and below." },
-          { "condition": "architect", "text": "The Salar de Uyuni. The largest mirror on Earth. The structural integrity of the salt crust holds your weight, but the water creates a seamless visual loop. It is nature's most perfect minimalist design." }
+          { "condition": "default", "text": "You are standing on water, but you aren't sinking. The Salt Flats. It's the rainy season. The thin layer of water reflects the sky perfectly. There is no horizon. Just infinite blue above and below." }
         ]
       },
       {
-        "id": "ch2_03_partner_intro",
+        "id": "ch2_03",
         "text_blocks": [
-          { "condition": "default", "text": "You see a figure standing fifty meters away. They look just as confused as you." },
-          { "condition": "high_tech", "text": "Telemetry picks up a bio-signature ahead. A girl is standing there. She isn't checking stats or looking at the tech; she's sketching the horizon in a notebook. <strong>[CONTACT: THE ARCHITECT]</strong>" },
-          { "condition": "high_arts", "text": "A figure materializes ahead. A tall guy. He looks stressed. He's frantically tapping at the air, trying to debug the holographic interface. <strong>[CONTACT: THE ENGINEER]</strong>" },
-          { "condition": "high_guts", "text": "Someone else is here. They are scanning the perimeter, assessing threats. They look ready for a fight. <strong>[CONTACT: THE DRIFTER]</strong>" }
+          { "condition": "default", "text": "You see a figure standing fifty meters away. {partner} looks just as confused as you." },
+          { "condition": "high_tech", "text": "Telemetry picks up a bio-signature ahead. {partner} is standing there. They aren't checking stats or looking at the tech; they are scanning the horizon, trying to process the logic of this place." },
+          { "condition": "high_arts", "text": "A figure materializes ahead. {partner}. They look stressed, frantically tapping at the air, trying to debug the holographic interface that only they can see." }
         ]
       },
       {
-        "id": "ch2_04_meeting",
+        "id": "ch2_04",
         "text_blocks": [
-          { "condition": "default", "text": "They walk towards you, their footsteps rippling the water-mirror. They hold up their left wrist. It glows with the same silver tattoo as yours." },
-          { "condition": "high_tech", "text": "'You're the signal?' she asks. Her accent is Brazilian. 'I was expecting something more... <i>Terminator</i>, less... college student.'" },
-          { "condition": "high_arts", "text": "'You're the signal?' he asks. His accent is Indian. 'I assume you didn't press the button by accident? The probability of two users syncing is astronomical.'" }
+          { "condition": "default", "text": "They walk towards you, their footsteps rippling the water-mirror. They hold up their left wrist. It glows with the same silver tattoo as yours." }
+        ]
+      }
+    ]
+  },
+
+  "chapter_3": {
+    "id": "chapter_3",
+    "title": "PROTOCOL: THE ASSET TEST",
+    "next_chapter": null,
+    "telemetry": {
+      "loc": "Salar de Uyuni // Bolivia",
+      "coords": "20.1338° S, 67.4891° W",
+      "time": "Jan 20, 2026 // 18:00 PM",
+      "weather": "Condition: Sunset // Visibility: Perfect"
+    },
+    "scenes": [
+      {
+        "id": "ch3_01",
+        "text_blocks": [
+          { "condition": "default", "text": "The sun is setting. The temperature is dropping fast. You are stranded in the middle of the largest salt desert on Earth with no supplies." },
+          { "condition": "high_guts", "text": "Survival analysis: You have no water, no thermal gear, and night is coming. Hypothermia risk is rising. You need shelter, or you need to move." }
+        ]
+      },
+      {
+        "id": "ch3_02",
+        "text_blocks": [
+          { "condition": "default", "text": "{partner} taps their wrist interface. 'The manual says we have an Asset Library. It says we can fabricate things.' They look at you. 'What do we need?'" }
+        ]
+      },
+      {
+        "id": "ch3_03",
+        "text_blocks": [
+          { "condition": "default", "text": "You open your menu. It's a mental catalog of every machine you understand. You visualize a vehicle. Something rugged. Something classic." },
+          { "condition": "mech_eng", "text": "You close your eyes. You visualize a 1995 Land Rover Defender 90. Diesel engine. Snorkel intake. Diff locks. You don't just imagine it; you build it in your mind, bolt by bolt." },
+          { "condition": "artist", "text": "You imagine a shape. Not just a car, but an aesthetic. A vintage jeep, battered but reliable, contrasting beautifully against the mirror-glass floor of the salt flat." }
+        ]
+      },
+      {
+        "id": "ch3_04",
+        "text_blocks": [
+          { "condition": "default", "text": "The air crackles with static. Digital dust swirls in front of you, coalescing into solid matter. A Land Rover slams onto the salt with a wet splash." },
+          { "condition": "high_tech", "text": "Matter rearrangement complete. The vehicle is physically perfect. The engine is warm. It didn't just appear; the machine pulled it from a probability stream where it already existed." }
+        ]
+      },
+      {
+        "id": "ch3_05",
+        "text_blocks": [
+          { "condition": "default", "text": "{partner} laughs, a sound of pure disbelief. They open the driver's door. 'Shotgun,' they call out. 'Let's see if this thing actually runs.' You climb in. The adventure begins." }
         ]
       }
     ]
