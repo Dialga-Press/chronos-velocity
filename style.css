@@ -1,60 +1,177 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root {
+    --bg-color: #1a1a1a;        /* Deep Charcoal */
+    --card-bg: #252525;         /* Slightly lighter card */
+    --text-primary: #e0e0e0;    /* Soft White */
+    --text-secondary: #a0a0a0;  /* Grey */
+    --accent: #d4af37;          /* Gold/Bronze for magic/time */
+    --highlight: #4a90e2;       /* Soft Blue for interface */
+    --font-head: 'Playfair Display', serif;
+    --font-body: 'Inter', sans-serif;
+}
+
 body {
-    background-color: #0d0d0d;
-    color: #33ff33; /* Classic Terminal Green */
-    font-family: 'Courier New', Courier, monospace;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: var(--font-body);
     margin: 0;
-    padding: 20px;
+    padding: 0;
     height: 100vh;
-    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
     overflow: hidden;
 }
 
-.container {
-    max-width: 800px;
-    margin: 0 auto;
+.layout {
+    width: 100%;
+    max-width: 900px;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-color);
+    position: relative;
+}
+
+/* --- Header --- */
+header {
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+h1 {
+    font-family: var(--font-head);
+    color: var(--accent);
+    margin: 0;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+}
+
+.subtitle {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* --- Main Content Area --- */
+#game-output {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 20px 40px;
+    scroll-behavior: smooth;
+}
+
+/* Messages/Story Blocks */
+.msg {
+    margin-bottom: 20px;
+    line-height: 1.6;
+    animation: fadeIn 0.5s ease forwards;
+    opacity: 0;
+}
+
+.msg.story {
+    font-family: var(--font-head);
+    font-size: 1.1rem;
+    color: #fff;
+    border-left: 2px solid var(--accent);
+    padding-left: 15px;
+}
+
+.msg.system {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+/* --- Stats Card (Isekai Style) --- */
+.stats-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    animation: slideUp 0.6s ease forwards;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.stat-row {
     display: flex;
     flex-direction: column;
 }
 
-header {
-    border-bottom: 2px solid #33ff33;
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
     display: flex;
     justify-content: space-between;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
 }
 
-#game-output {
-    flex-grow: 1;
-    overflow-y: auto;
-    white-space: pre-wrap;
-    padding-bottom: 20px;
+.stat-bar-bg {
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+    overflow: hidden;
 }
 
+.stat-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    width: 0%; /* Animate this via JS */
+    border-radius: 3px;
+    transition: width 1s ease-out;
+}
+
+/* --- Input Area --- */
 #input-area {
+    padding: 20px 40px 40px 40px;
+    background: linear-gradient(to top, var(--bg-color) 80%, transparent);
+}
+
+.input-wrapper {
+    position: relative;
     display: flex;
-    border-top: 1px dashed #33ff33;
-    padding-top: 10px;
+    align-items: center;
+    border-bottom: 2px solid rgba(255,255,255,0.2);
+    transition: border-color 0.3s;
+}
+
+.input-wrapper:focus-within {
+    border-color: var(--accent);
+}
+
+.prompt-icon {
+    color: var(--accent);
+    font-size: 1.2rem;
+    margin-right: 10px;
 }
 
 input {
     background: transparent;
     border: none;
-    color: #33ff33;
-    font-family: inherit;
-    font-size: 1.1em;
-    flex-grow: 1;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    width: 100%;
     outline: none;
-    margin-left: 10px;
+    padding: 10px 0;
 }
 
-/* Optional: Scanline effect for that CRT look */
-.scanlines {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-    background-size: 100% 2px, 3px 100%;
-    pointer-events: none;
-    z-index: 10;
-}
+/* Animations */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-color); }
+::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
