@@ -223,7 +223,7 @@ function playNextScene() {
         if (currentChapterData.next_chapter) {
             loadStoryChapter(currentChapterData.next_chapter);
         } else {
-            printLine(">> END OF VOLUME 1", 'system');
+            printLine(">> END OF CURRENT UPDATE", 'system');
             gameState.storyActive = false;
         }
         return;
@@ -236,9 +236,13 @@ function playNextScene() {
     text = text.replace(/{player}/g, gameState.player.name);
     text = text.replace(/{partner}/g, gameState.partner.name);
     
+    // Check for AI Focus to apply special styling
+    let msgType = 'story'; // Default
+    if (scene.focus === 'ai') msgType = 'ai';
+
     gameState.waitingForEnter = true;
     setTimeout(() => {
-        printLine(text, 'story');
+        printLine(text, msgType); // Pass the correct class
         currentSceneIndex++;
         if (currentSceneIndex <= currentChapterData.scenes.length || currentChapterData.next_chapter) {
              printLine("<i>(Press Enter...)</i>", 'system');
@@ -246,6 +250,7 @@ function playNextScene() {
         gameState.waitingForEnter = false;
     }, 400);
 }
+
 
 function advanceStory() {
     if (gameState.waitingForEnter) return;
