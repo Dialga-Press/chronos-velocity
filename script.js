@@ -20,6 +20,7 @@ async function init() {
         gameState.rules = await rulesRes.json();
     } catch (e) {
         console.error("Failed to load rules", e);
+        printLine("Error: Could not load game data.", 'system');
     }
 
     // 2. Start Interface
@@ -33,7 +34,7 @@ async function init() {
 input.addEventListener('keydown', function(e) {
     if (e.key === 'Enter') {
         const val = input.value.trim();
-        if(!val) return;
+        if(!val && gameState.step !== 'reading') return; // Allow empty enter for reading
         input.value = '';
         processInput(val);
     }
@@ -52,7 +53,7 @@ function processInput(val) {
 
         setTimeout(() => {
             printLine("Select your Origin Protocol:", 'system');
-            listClasses(); // Show the new "Card" list
+            listClasses(); 
         }, 600);
         gameState.step = 'class';
     } 
@@ -65,28 +66,102 @@ function processInput(val) {
             const selected = classes[choice];
             gameState.player.class = selected.id;
             
-            // APPLY BONUSES (The Fix)
-            // Base is already 2. We ADD the bonus.
+            // Apply Bonuses
             for (let [key, value] of Object.entries(selected.bonus)) {
                 if(gameState.player.stats[key] !== undefined) {
                     gameState.player.stats[key] += value;
                 }
             }
             
-            // Show the Status Screen
             showStatCard(selected.name, gameState.player.stats);
             
+            // START THE STORY ENGINE
             setTimeout(() => {
-                printLine("Volume 1: The Drop", 'system');
-                printLine("Initializing story sequence...", 'story');
-                // Here is where you would load the story text from story.json
-            }, 2000);
+                printLine("<hr style='border:0; border-top:1px solid var(--accent); opacity:0.3; margin:30px 0;'>", 'system'); 
+                loadStoryChapter('chapter_1');
+            }, 1000);
 
-            gameState.step = 'story';
+            gameState.step = 'reading'; 
         } else {
-            printLine("Invalid selection. Please enter a number.", 'system');
+            printLine("Invalid selection. Please enter the number.", 'system');
         }
     }
+    // STEP 3: READING STORY
+    else if (gameState.step === 'reading') {
+        advanceStory();
+    }
+}
+
+// --- NEW STORY FUNCTIONS ---
+
+let currentSceneIndex = 0;
+let currentChapterData = null;
+
+async function loadStoryChapter(chapterId) {
+    // Fetch story data if not loaded
+    if(!gameState.story) {
+        try {
+            const res = await fetch('data/story.json');
+            gameState.story = await res.json();
+        } catch(e) {
+            printLine("Error loading story chapter.", 'system');
+            return;
+        }
+    }
+    
+    currentChapterData = gameState.story[chapterId];
+    if(currentChapterData) {
+        printLine(currentChapterData.title, 'system');
+        playNextScene();
+    } else {
+        printLine("End of available content.", 'system');
+    }
+}
+
+function playNextScene() {
+    if (!currentChapterData || currentSceneIndex >= currentChapterData.scenes.length) {
+        printLine(">> END OF VOLUME 1 DEMO", 'system');
+        return;
+    }
+
+    const scene = currentChapterData.scenes[currentSceneIndex];
+    const text = resolveTextVariant(scene.text_blocks);
+    
+    // Typing delay
+    setTimeout(() => {
+        printLine(text, 'story');
+        currentSceneIndex++;
+        
+        // If there are more scenes, prompt user to continue
+        if (currentSceneIndex < currentChapterData.scenes.length) {
+             printLine("<i>(Press Enter to continue...)</i>", 'system');
+        } else {
+             printLine("<i>(End of Chapter)</i>", 'system');
+        }
+    }, 600);
+}
+
+function advanceStory() {
+    playNextScene();
+}
+
+function resolveTextVariant(blocks) {
+    // 1. Exact Class Match
+    let match = blocks.find(b => b.condition === gameState.player.class);
+    if(match) return match.text;
+
+    // 2. High Stat Match (Check top stat)
+    const stats = gameState.player.stats;
+    // Sort keys by value descending
+    const sortedStats = Object.keys(stats).sort((a,b) => stats[b] - stats[a]);
+    const topStat = sortedStats[0].toLowerCase();
+    
+    match = blocks.find(b => b.condition === `high_${topStat}`);
+    if(match) return match.text;
+
+    // 3. Default
+    match = blocks.find(b => b.condition === 'default');
+    return match ? match.text : "Data Corrupted.";
 }
 
 // Function to update stats dynamically during the story
@@ -162,11 +237,13 @@ function printLine(text, type) {
 }
 
 function scrollToBottom() {
-    output.scrollTop = output.scrollHeight;
+    // Small delay to ensure DOM is rendered before scrolling
+    setTimeout(() => {
+        output.scrollTop = output.scrollHeight;
+    }, 50);
 }
 
 init();
-
 
 // --- THEME TOGGLER ---
 const themeBtn = document.getElementById('theme-toggle');
@@ -181,27 +258,31 @@ if (currentTheme === 'light') {
 }
 
 // 2. Button Click Event
-themeBtn.addEventListener('click', function() {
-    document.body.classList.toggle('light-mode');
-    
-    let theme = 'dark';
-    if (document.body.classList.contains('light-mode')) {
-        theme = 'light';
-        toggleIcons(true);
-    } else {
-        toggleIcons(false);
-    }
-    
-    // Save preference
-    localStorage.setItem('theme', theme);
-});
+if(themeBtn) {
+    themeBtn.addEventListener('click', function() {
+        document.body.classList.toggle('light-mode');
+        
+        let theme = 'dark';
+        if (document.body.classList.contains('light-mode')) {
+            theme = 'light';
+            toggleIcons(true);
+        } else {
+            toggleIcons(false);
+        }
+        
+        // Save preference
+        localStorage.setItem('theme', theme);
+    });
+}
 
 function toggleIcons(isLight) {
-    if (isLight) {
-        sunIcon.style.display = 'none';
-        moonIcon.style.display = 'block';
-    } else {
-        sunIcon.style.display = 'block';
-        moonIcon.style.display = 'none';
+    if(sunIcon && moonIcon) {
+        if (isLight) {
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'block';
+        } else {
+            sunIcon.style.display = 'block';
+            moonIcon.style.display = 'none';
+        }
     }
 }
