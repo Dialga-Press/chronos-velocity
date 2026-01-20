@@ -10,7 +10,6 @@
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Common sense dictates one should run from unidentified extraterrestrial objects. But curiosity is a terrible affliction. {player} touched it. And just like that, the metal dissolved into their skin, warm and inviting, like tea on a rainy afternoon." }] }
     ]
   },
-
   "chapter_1_p2": {
     "id": "chapter_1_p2",
     "title": "PART 2: THE ECHO",
@@ -21,7 +20,6 @@
       { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "The device found them too. It bonded with them. No pain, just a sudden realization that the world was suddenly much larger, and much more complicated." }] }
     ]
   },
-
   "chapter_2_sync": {
     "id": "chapter_2_sync",
     "title": "PROTOCOL: GLOBAL HANDSHAKE",
@@ -32,7 +30,6 @@
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "It mapped the planet. Every hidden bunker, every lost shipwreck, every coffee shop with decent Wi-Fi. And then, it pulled the two hosts together." }] }
     ]
   },
-
   "chapter_3_meeting": {
     "id": "chapter_3_meeting",
     "title": "THE MIRROR",
@@ -45,7 +42,6 @@
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They approached each other. No grand speeches. Just the awkward nod of two people who realize they are stuck in the same lifeboat. The devices hummed, satisfied with the connection." }] }
     ]
   },
-
   "chapter_4_asset": {
     "id": "chapter_4_asset",
     "title": "THE FIRST FABRICATION",
@@ -69,11 +65,25 @@
       { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{partner} opened the glovebox. There was a heavy, reassuring clunk. A cache of ammunition. No guns—just the ammo. A polite suggestion from the universe that this trip might get loud." }] }
     ]
   },
-
+  "chapter_5_drive": {
+    "id": "chapter_5_drive",
+    "title": "TORQUE & TURBO LAG",
+    "next_chapter": "chapter_6_horizon",
+    "telemetry": { "loc": "Salar de Uyuni", "coords": "Moving North", "time": "18:15 PM", "weather": "Wind Speed: 40km/h" },
+    "scenes": [
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} dropped the clutch. The X-Trail didn't launch like a rocket; it heaved forward like a waking beast. First gear was short, a burst of noise and diesel clatter." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They shifted to second. For a second, nothing happened. The heavy chassis wallowed, fighting the inertia. The 'Turbo Lag'—the breath before the scream." }] },
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Wait for it... wait for 2000 RPM... come on, you heavy beauty..." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Then, the needle hit 2000. **The Kick.** The turbo spooled up with a violent shove, pinning them into the seats. The elephant learned to sprint. The torque wave hit like a sledgehammer, sending the pearl-white nose lifting toward the sky." }] },
+      { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{partner} grabbed the grab handle as the car swayed. The soft suspension absorbed the salt crust, but the body roll was significant. It felt less like driving a car and more like galloping a massive, iron horse." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} swerved to avoid a fissure. The X-Trail leaned hard, dipping its shoulder, but the All-Mode 4x4 system clawed at the salt. It was ungraceful, heavy, and absolutely unstoppable." }] },
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Bio-Regen active. Your heart rate spiked with that turbo kick, didn't it? I'm scrubbing the adrenaline fatigue. Keep the revs up! Don't let the turbo sleep! 😨" }] }
+    ]
+  },
   "chapter_6_horizon": {
     "id": "chapter_6_horizon",
     "title": "THE HORIZON LINE",
-    "next_chapter": null,
+    "next_chapter": "chapter_7_bio",
     "telemetry": { "loc": "Edge of the Salar", "coords": "Approaching Tunupa Volcano", "time": "19:00 PM", "weather": "Nightfall" },
     "scenes": [
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They slowed down as the salt gave way to the rocky base of the Tunupa Volcano. The engine ticked, cooling down in the twilight." }] },
@@ -82,4 +92,31 @@
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} leaned against the warm hood of the X-Trail. They felt tired—the 5% that SMYLYNX couldn't scrub away. It was a good tired. The kind that comes after surviving something impossible." }] },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The stars came out over Bolivia. For the first time in their lives, the future wasn't a deadline. It was an open road." }] }
     ]
+  },
+  "chapter_7_bio": {
+    "id": "chapter_7_bio",
+    "title": "PROTOCOL: BIO-METRIC KEY",
+    "next_chapter": "chapter_8_hampi",
+    "telemetry": { "loc": "Tunupa Base Camp", "coords": "Stationary", "time": "19:30 PM", "weather": "Starlight" },
+    "scenes": [
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Okay, listen up meat-bags. That jump to Bolivia? That was just *Space*. We just folded a map. Easy. Child's play." }] },
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "But the next one? That's *Time*. That's ripping a page out of the history book and gluing ourselves into it. The strain is logarithmic. If I don't calibrate to your specific biology, I might leave your liver in 2026." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "SMYLYNX projected a hologram onto the windshield of the X-Trail. It was a form. A bureaucratic necessity at the edge of the universe. 'I need specs,' she said. 'Age. Gender. Fitness. Don't lie to me. I can see your cholesterol levels.'" }] }
+    ]
+  },
+  "chapter_8_hampi": {
+    "id": "chapter_8_hampi",
+    "title": "VOLUME 2: CITY OF VICTORY",
+    "next_chapter": null,
+    "telemetry": { "loc": "Vijayanagara (Hampi)", "coords": "15.3350° N, 76.4600° E", "time": "Jan 22, 1565 // 3 Days Before The Fall", "weather": "34°C // Dry Heat // Smell of Jasmine and Iron" },
+    "scenes": [
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The transition wasn't like Bolivia. It wasn't a fold. It was a scream. The X-Trail dissolved into light, and reality reassembled itself around them with the violence of a thunderclap." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Heat. That was the first thing. A dry, baking heat that smelled of stone, crushed marigolds, and elephant dung. The silence of the salt flats was gone, replaced by a roar. Not of engines, but of *life*." }] },
+      { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "They stood on a ridge overlooking the valley. Below them lay **Vijayanagara**. The City of Victory. Hampi." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "It was impossible. The ruins we know today—the skeletons of temples and broken pillars—were fleshed out. The Virupaksha Temple tower was painted in vibrant golds and reds. The bazaars were overflowing with silk, pearls, and diamonds sold in open heaps." }] },
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Look at it. It's beautiful. It's the Rome of the East. Half a million people. The richest city on Earth." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "But as {player} watched the flags flutter in the wind, a cold knot formed in their stomach. They knew the date. They knew the history books." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "In three days, the Sultans arrive. In three days, the fire starts. In three days, this paradise becomes a graveyard. The city wasn't just alive; it was terminal. <br><br> <a href='https://en.wikipedia.org/wiki/Hampi' target='_blank' style='color:var(--accent); text-decoration:none; border-bottom:1px dotted var(--accent);'>[ACCESS ARCHIVE: HAMPI]</a>" }] }
+    ]
   }
+}
