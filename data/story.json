@@ -54,7 +54,8 @@
     "scenes": [
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The sun began to dip. The beauty of the salt flats is treacherous; without shelter, the cold kills you with a smile. They needed a vehicle." }] },
       { "focus": "player", "text_blocks": [
-          { "condition": "default", "text": "They didn't summon a spaceship. They didn't ask for a tank. They asked for reliability. The air shimmered, and gravity bent to their will." }
+          { "condition": "default", "text": "They didn't summon a spaceship. They didn't ask for a tank. They asked for reliability. The air shimmered, and gravity bent to their will." },
+          { "condition": "mech_eng", "text": "Logic dictated they needed 4x4 capability, high ground clearance, and diesel torque. The probability matrix selected the optimal machine." }
         ] 
       },
       { "focus": "player", "text_blocks": [
@@ -64,27 +65,11 @@
       { "focus": "system", "text_blocks": [{ "condition": "default", "text": "We are delighted to be Honouring our first reader 📖 🍀u/Shot-Manager-7012 ✨💎 - Author of Chronos Velocity" }] },
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "OOOOH I LIKEEEE. Pearl White? Bold choice for a mud run, but that panoramic sunroof is massive! Chef's kiss ahahah 😝. You two have taste!" }] },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} and {partner} jumped. The voice didn't come from the car speakers. It came from their wrists. It came from *inside* their heads." }] },
-      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "I'm Smylynx. I handle the logistics. The T31 X-Trail... rugged, boxy, dependable. I've already optimized the fuel mixture for altitude. Hop in, let's see what she can do! 🥰" }] },
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "I'm SMYLYNX. I handle the logistics. The T31 X-Trail... rugged, boxy, dependable. I've already optimized the fuel mixture for altitude. Hop in, let's see what she can do! 🥰" }] },
       { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{partner} opened the glovebox. There was a heavy, reassuring clunk. A cache of ammunition. No guns—just the ammo. A polite suggestion from the universe that this trip might get loud." }] }
     ]
   },
 
-  "chapter_5_drive": {
-    "id": "chapter_5_drive",
-    "title": "TORQUE & TURBO LAG",
-    "next_chapter": "chapter_6_horizon",
-    "telemetry": { "loc": "Salar de Uyuni", "coords": "Moving North", "time": "18:15 PM", "weather": "Wind Speed: 40km/h" },
-    "scenes": [
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} dropped the clutch. The X-Trail didn't launch like a rocket; it heaved forward like a waking beast. First gear was short, a burst of noise and diesel clatter." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They shifted to second. For a second, nothing happened. The heavy chassis wallowed, fighting the inertia. The 'Turbo Lag'—the breath before the scream." }] },
-      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Wait for it... wait for 2000 RPM... come on, you heavy beauty..." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Then, the needle hit 2000. **The Kick.** The turbo spooled up with a violent shove, pinning them into the seats. The elephant learned to sprint. The torque wave hit like a sledgehammer, sending the pearl-white nose lifting toward the sky." }] },
-      { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{partner} grabbed the grab handle as the car swayed. The soft suspension absorbed the salt crust, but the body roll was significant. It felt less like driving a car and more like galloping a massive, iron horse." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} swerved to avoid a fissure. The X-Trail leaned hard, dipping its shoulder, but the All-Mode 4x4 system clawed at the salt. It was ungraceful, heavy, and absolutely unstoppable." }] },
-      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Bio-Regen active. Your heart rate spiked with that turbo kick, didn't it? I'm scrubbing the adrenaline fatigue. Keep the revs up! Don't let the turbo sleep! 😨" }] }
-    ]
-  },
-  
   "chapter_6_horizon": {
     "id": "chapter_6_horizon",
     "title": "THE HORIZON LINE",
@@ -94,8 +79,7 @@
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They slowed down as the salt gave way to the rocky base of the Tunupa Volcano. The engine ticked, cooling down in the twilight." }] },
       { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{partner} stepped out, their boots crunching on the earth. They looked at the glowing device on their wrist. 'We aren't just tourists, are we?'" }] },
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Tourists take photos. You two? You're going to take History. But first, we need to calibrate the temporal drive. Next stop is going to be... messy. ahahah." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} leaned against the warm hood of the X-Trail. They felt tired—the 5% that Smylynx couldn't scrub away. It was a good tired. The kind that comes after surviving something impossible." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} leaned against the warm hood of the X-Trail. They felt tired—the 5% that SMYLYNX couldn't scrub away. It was a good tired. The kind that comes after surviving something impossible." }] },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The stars came out over Bolivia. For the first time in their lives, the future wasn't a deadline. It was an open road." }] }
     ]
   }
-}
