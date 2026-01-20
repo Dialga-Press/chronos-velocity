@@ -16,13 +16,19 @@ async function init() {
     try {
         const rulesRes = await fetch('data/rules.json');
         gameState.rules = await rulesRes.json();
-    } catch (e) { console.error(e); }
+    } catch (e) { console.error("Rules Error:", e); printLine("ERROR: RULES DATA CORRUPTED.", 'system'); }
+
+    // Pre-load story to check for errors immediately
+    try {
+        const storyRes = await fetch('data/story.json');
+        gameState.story = await storyRes.json();
+    } catch (e) { console.error("Story Error:", e); printLine("ERROR: STORY JSON INVALID. CHECK CONSOLE.", 'system'); }
 
     printLine("ARCHIVE SYSTEM CONNECTED.", 'system');
     setTimeout(() => {
         printLine("SELECT NARRATIVE MODE:", 'system');
-        printLine("[1] SOLO CHRONICLE (The System assigns a partner)", 'story');
-        printLine("[2] DUAL CHRONICLE (Manual configuration for two souls)", 'story');
+        printLine("[1] SOLO CHRONICLE", 'story');
+        printLine("[2] DUAL CHRONICLE (Two Players)", 'story');
     }, 800);
 }
 
@@ -37,7 +43,7 @@ input.addEventListener('keydown', function(e) {
 });
 
 function processInput(val) {
-    // 1. MODE
+    // 1. MODE SELECTION
     if (gameState.step === 'mode') {
         if (val === '1') {
             gameState.mode = 'solo';
@@ -49,27 +55,40 @@ function processInput(val) {
             startCharCreation('player');
         } else { printLine("Invalid Input.", 'system'); }
     } 
-    // 2. PLAYER
+    // 2. PLAYER CREATION
     else if (gameState.step === 'player_name') {
         gameState.player.name = val;
-        printLine(`Protagonist 1 identified: <strong>${val}</strong>`, 'story');
+        printLine(`Protagonist 1: <strong>${val}</strong>`, 'story');
         setTimeout(() => { printLine("Select Origin Protocol:", 'system'); listClasses(); }, 500);
         gameState.step = 'player_class';
     }
     else if (gameState.step === 'player_class') {
         if (applyClassSelection(val, 'player')) {
-            if (gameState.mode === 'coop') {
-                setTimeout(() => startCharCreation('partner'), 800);
+            // LOGIC CHANGE: Ask solo players if they want to customize partner
+            if (gameState.mode === 'solo') {
+                setTimeout(() => {
+                    printLine("Do you wish to manually configure the Secondary Asset? [Y/N]", 'system');
+                    gameState.step = 'partner_query';
+                }, 800);
             } else {
-                autoAssignPartner();
-                startGame();
+                setTimeout(() => startCharCreation('partner'), 800);
             }
         }
     }
-    // 3. PARTNER
+    // 3. PARTNER QUERY (New Logic)
+    else if (gameState.step === 'partner_query') {
+        if (val.toLowerCase() === 'y' || val.toLowerCase() === 'yes') {
+            startCharCreation('partner');
+        } else {
+            printLine("Acknowledged. System will auto-assign compatible partner.", 'story');
+            autoAssignPartner();
+            startGame();
+        }
+    }
+    // 4. PARTNER CREATION
     else if (gameState.step === 'partner_name') {
         gameState.partner.name = val;
-        printLine(`Protagonist 2 identified: <strong>${val}</strong>`, 'story');
+        printLine(`Protagonist 2: <strong>${val}</strong>`, 'story');
         setTimeout(() => { printLine("Select Origin Protocol:", 'system'); listClasses(); }, 500);
         gameState.step = 'partner_class';
     }
@@ -132,11 +151,11 @@ function startGame() {
     setTimeout(() => {
         printLine("<hr style='border:0; border-top:1px solid var(--accent); opacity:0.3; margin:30px 0;'>", 'system'); 
         gameState.storyActive = true;
-        loadStoryChapter('chapter_1_p1'); 
+        loadStoryChapter('chapter_1_p1');
     }, 1000);
 }
 
-// --- SYNERGY SYSTEM ---
+// --- SYNERGY ---
 function showSynergyCard() {
     const p1 = gameState.player.stats;
     const p2 = gameState.partner.stats;
@@ -144,7 +163,7 @@ function showSynergyCard() {
     for (let key in p1) { synergy[key] = p1[key] + p2[key]; }
 
     let html = `
-    <div class="stats-card" style="border-color: #fff;">
+    <div class="stats-card" style="border-color: var(--text-primary);">
         <div style="text-align:center; margin-bottom:20px; font-family:var(--font-head); font-size:1.4em; color:var(--text-primary)">
             TEAM SYNERGY
             <div style="font-size:0.6em; color:var(--text-secondary); text-transform:uppercase; margin-top:5px; letter-spacing:2px;">COMBINED POTENTIAL</div>
@@ -153,7 +172,7 @@ function showSynergyCard() {
 
     for (let [key, val] of Object.entries(synergy)) {
         let pct = (val / 20) * 100;
-        html += `<div class="stat-row"><div class="stat-label"><span>${key}</span><span>${val}/20</span></div><div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${pct}%; background:#fff;"></div></div></div>`;
+        html += `<div class="stat-row"><div class="stat-label"><span>${key}</span><span>${val}/20</span></div><div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${pct}%; background:var(--text-primary);"></div></div></div>`;
     }
     html += `</div></div>`;
     const div = document.createElement('div'); div.innerHTML = html; output.appendChild(div);
@@ -164,12 +183,9 @@ let currentSceneIndex = 0;
 let currentChapterData = null;
 
 async function loadStoryChapter(chapterId) {
-    if(!gameState.story) {
-        try {
-            const res = await fetch('data/story.json');
-            gameState.story = await res.json();
-        } catch(e) { return; }
-    }
+    // Story is pre-loaded in init(), but check just in case
+    if(!gameState.story) return;
+    
     currentChapterData = gameState.story[chapterId];
     if(currentChapterData) {
         if(currentChapterData.telemetry) renderTelemetry(currentChapterData);
@@ -218,17 +234,13 @@ function playNextScene() {
     const scene = currentChapterData.scenes[currentSceneIndex];
     let text = resolveTextVariant(scene.text_blocks, scene.focus);
     
-    // Replace names
     text = text.replace(/{player}/g, gameState.player.name);
     text = text.replace(/{partner}/g, gameState.partner.name);
-    
-    // FORMAT THE TEXT (Bold **text**)
     text = formatText(text);
     
-    // CHECK FOR FOCUS TYPES
     let msgType = 'story'; 
     if (scene.focus === 'ai') msgType = 'ai';
-    if (scene.focus === 'system') msgType = 'system'; // New type for tribute
+    if (scene.focus === 'system') msgType = 'system';
 
     gameState.waitingForEnter = true;
     setTimeout(() => {
@@ -241,9 +253,7 @@ function playNextScene() {
     }, 400);
 }
 
-// Simple Markdown Formatter
 function formatText(text) {
-    // Bold: **text** -> <strong>text</strong>
     return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 }
 
@@ -261,17 +271,14 @@ function resolveTextVariant(blocks, focus) {
         targetStats = gameState.partner.stats;
     }
 
-    // 1. Exact Class Match
     let match = blocks.find(b => b.condition === targetClass);
     if(match) return match.text;
 
-    // 2. High Stat Match
     const sortedStats = Object.keys(targetStats).sort((a,b) => targetStats[b] - targetStats[a]);
     const topStat = sortedStats[0].toLowerCase();
     match = blocks.find(b => b.condition === `high_${topStat}`);
     if(match) return match.text;
 
-    // 3. Default
     match = blocks.find(b => b.condition === 'default');
     return match ? match.text : "Data Corrupted.";
 }
