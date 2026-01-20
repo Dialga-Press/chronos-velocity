@@ -126,26 +126,26 @@ h1 {
 }
 
 /* --- AI PERSONALITY (Smylynx) --- */
-/* --- AI PERSONALITY (Smylynx) --- */
+/* --- AI PERSONALITY (SMYLYNX) --- */
 .msg.ai {
-    font-family: 'Birthstone', 'Brush Script MT', cursive;
-    font-size: 2.6rem; /* Slightly larger because this font is delicate */
+    /* Reverted to pure Birthstone as requested */
+    font-family: 'Birthstone', cursive; 
+    font-size: 2.6rem;
     line-height: 1.1;
-    
-    /* Dark Mode: A soft, pale Rose-Gold / Copper */
-    color: #e3a6a6; 
-    
-    /* Subtle glow, not neon */
+    color: #e3a6a6; /* Rose Gold */
     text-shadow: 0 0 15px rgba(227, 166, 166, 0.2);
-    
     margin: 35px 0;
     padding-left: 25px;
-    
-    /* Border matches the text */
     border-left: 1px solid #e3a6a6;
-    
     animation: fadeIn 0.8s ease forwards;
     opacity: 1 !important;
+}
+
+body.light-mode .msg.ai {
+    color: #8a3b3b; /* Ink Red */
+    border-left-color: #8a3b3b;
+    text-shadow: none;
+    font-weight: 500;
 }
 
 body.light-mode .msg.ai {
