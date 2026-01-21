@@ -149,47 +149,83 @@ function renderTelemetry(chapter) {
     const div = document.createElement('div'); div.innerHTML = html; output.appendChild(div);
 }
 
-function playNextScene() {
+function playNextScene(saveHistory = true) {
+    // 1. END OF CHAPTER CHECK
     if (!currentChapterData || currentSceneIndex >= currentChapterData.scenes.length) {
-        if (currentChapterData.next_chapter) loadStoryChapter(currentChapterData.next_chapter);
-        else { printLine(">> TO BE CONTINUED...", 'system'); gameState.storyActive = false; }
+        
+        // --- CITATION LOGIC ---
+        // If the chapter has sources and we haven't shown them yet
+        if (currentChapterData.sources && !gameState.citationsShown) {
+            printLine("<br><strong style='color:var(--accent); letter-spacing:1px;'>>> HISTORICAL ARCHIVE:</strong>", 'system');
+            
+            currentChapterData.sources.forEach(src => {
+                // Renders clickable links for sources
+                printLine(`<a href="${src.link}" target="_blank" style="color:var(--text-secondary); text-decoration:none; border-bottom:1px dotted var(--accent); font-size:0.9em; display:block; margin-bottom:5px;">[📄] ${src.title}</a>`, 'system');
+            });
+            
+            gameState.citationsShown = true; // Mark as shown so we don't loop
+            printLine("<i>(Press Enter to continue journey...)</i>", 'system');
+            return; // Stop here, wait for user input to trigger next block
+        }
+        
+        // Reset citation flag for the next chapter
+        gameState.citationsShown = false;
+
+        // Load Next Chapter or End Game
+        if (currentChapterData.next_chapter) {
+            loadStoryChapter(currentChapterData.next_chapter);
+        } else {
+            printLine(">> TO BE CONTINUED...", 'system');
+            gameState.storyActive = false;
+        }
         return;
     }
 
     const scene = currentChapterData.scenes[currentSceneIndex];
     
-    // SKIP LOGIC (Mode Check)
+    // 2. SKIP SCENES BASED ON MODE (Solo/Coop)
     if (scene.mode_req && scene.mode_req !== gameState.mode) {
         currentSceneIndex++;
-        playNextScene();
+        playNextScene(saveHistory); // Recursive skip
         return;
     }
 
-    // INPUT LOGIC
+    // 3. HISTORY SAVE (For Back Button)
+    if (saveHistory) {
+        gameState.history.push({ chapterId: currentChapterData.id, index: currentSceneIndex });
+    }
+
+    // 4. INPUT PROMPT HANDLING
     if (scene.input_prompt) {
         let promptText = resolveTextVariant(scene.text_blocks, scene.focus);
         printLine(replacePlaceholders(promptText), scene.focus === 'ai' ? 'ai' : 'story');
         gameState.step = 'story_input';
         gameState.currentInputType = scene.input_prompt;
         
+        // Custom placeholders
         if (scene.input_prompt === 'height') input.placeholder = "E.g., 5'11 or 180";
         else input.placeholder = `Enter ${scene.input_prompt}...`;
-        return; // Wait for input
+        return; // Stop and wait for input
     }
 
+    // 5. TEXT PROCESSING
     let text = resolveTextVariant(scene.text_blocks, scene.focus);
     text = replacePlaceholders(text);
     text = formatText(text);
     
-    let msgType = scene.focus === 'ai' ? 'ai' : (scene.focus === 'system' ? 'system' : 'story');
+    // Determine Style
+    let msgType = 'story';
+    if (scene.focus === 'ai') msgType = 'ai';
+    else if (scene.focus === 'system') msgType = 'system';
 
+    // 6. RENDER WITH DELAY
     gameState.waitingForEnter = true;
     setTimeout(() => {
         printLine(text, msgType);
         currentSceneIndex++;
         
-        // Show Prompt if more scenes exist
-        if (currentSceneIndex <= currentChapterData.scenes.length) {
+        // Show "Press Enter" prompt if there is more content
+        if (currentSceneIndex <= currentChapterData.scenes.length || currentChapterData.next_chapter) {
              printLine("<i>(Press Enter...)</i>", 'system');
         }
         gameState.waitingForEnter = false;
