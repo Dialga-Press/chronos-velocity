@@ -138,6 +138,7 @@
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "But you know the date. You know that in 72 hours, this street will be a river of blood. The contrast made the gold look sharper, and the jasmine smell like funeral flowers." }] }
     ]
   },
+
   "chapter_10_royal": {
     "id": "chapter_10_royal",
     "title": "THE GREAT PLATFORM",
@@ -148,12 +149,19 @@
     ],
     "scenes": [
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They moved through the crowd, heading towards the Royal Center. The architecture shifted from chaotic bazaars to rigid, militaristic precision. Massive granite walls, fitted without mortar, towered over them." }] },
-      { "focus": "architect", "text": "Cyclopean masonry. Interlocking stones. You notice the lack of mortar instantly. This wasn't built; it was puzzled together. A siege engine would break its teeth on these walls." },
+      { 
+        "focus": "player", 
+        "text_blocks": [
+          { "condition": "architect", "text": "Cyclopean masonry. Interlocking stones. You notice the lack of mortar instantly. This wasn't built; it was puzzled together. A siege engine would break its teeth on these walls." },
+          { "condition": "default", "text": "The stones were interlocking, massive, and seamless. It felt less like a city and more like a fortress carved from a single mountain." }
+        ] 
+      },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "And there it was. The **Mahanavami Dibba**. A massive, tiered stone platform, rising like a pyramid. It was covered in carvings—dancers, hunters, soldiers, horses. It was the stage where the King watched the world perform for him." }] },
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "That platform is the Instagram of the 16th Century. You stand up there, you look down on everyone, and you tell the Sultanates: 'Look at my elephants. Look at my gold. Try me.' And in 3 days... they will." }] },
       { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{partner} ran a hand over a carving of a Portuguese soldier firing a musket. 'They knew the tech was changing,' they whispered. 'They put it in stone. But they didn't adapt fast enough.'" }] }
     ]
   },
+
   "chapter_11_pillars": {
     "id": "chapter_11_pillars",
     "title": "RESONANCE",
@@ -166,7 +174,13 @@
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They reached the Vitthala Temple complex near the river. The famous Stone Chariot stood in the courtyard, looking like it could roll away at any moment. But SMYLNYX wasn't interested in the chariot." }] },
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Forget the chariot. Look at the pillars. The **Ranga Mantapa**. 56 musical pillars. They aren't just support beams; they are a lithophonic instrument. 🎶" }] },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} tapped a pillar with a knuckle. It rang. A clear, bell-like tone: *Sa*. {partner} tapped the next one. *Re*. The stone was singing." }] },
-      { "focus": "mech_eng", "text": "You analyze the strike. The density of the granite changes in each sub-pillar to alter the pitch. It's solid rock, tuned like a guitar string. The physics of this are insane. How did they calculate the density without computers?" },
+      { 
+        "focus": "player", 
+        "text_blocks": [
+          { "condition": "mech_eng", "text": "You analyze the strike. The density of the granite changes in each sub-pillar to alter the pitch. It's solid rock, tuned like a guitar string. The physics of this are insane. How did they calculate the density without computers?" },
+          { "condition": "default", "text": "It defied logic. Solid granite shouldn't resonate like hollow metal. It was a masterpiece of acoustics lost to time." }
+        ]
+      },
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "I'm detecting specific resonance frequencies. These aren't random. They match the 7 notes of the scale. But... I'm also detecting micro-fractures. The fire that's coming? The heat will crack these. They will never sing like this again. Record it. Record everything." }] },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They stood there, tapping out a silent melody on stones that would soon be mute for eternity. The river Tungabhadra flowed behind them, indifferent to the music and indifferent to the war." }] }
     ]
