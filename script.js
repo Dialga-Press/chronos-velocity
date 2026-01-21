@@ -10,6 +10,7 @@ let gameState = {
     currentInputType: null,
     driver: '',
     passenger: '',
+    citationsShown: false,
     history: [] 
 };
 
