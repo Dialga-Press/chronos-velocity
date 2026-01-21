@@ -1,80 +1,97 @@
-CHRONOS VELOCITY README
+# ⏳ CHRONOS VELOCITY
+> **Global Archives // Volume 1**
 
-Project overview
-CHRONOS VELOCITY is an immersive, TP‑BON inspired storytelling archive that blends historical events with collaborative fiction. The platform treats each entry as a living archive node: readers can read, contribute, and shape how the story of humankind unfolds. Community members are honored inside the narrative (for example, contributor u/SHOT-MANAGER-7012 inspired the in‑story AI SMYLNYX). Content is curated, credited, and published under the project content license.
+[![Live Demo](https://img.shields.io/badge/Status-Online-success)](https://dialga-press.github.io/chronos-velocity/)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Vibe](https://img.shields.io/badge/Vibe-Time%20Travel-purple)](https://dialga-press.github.io/chronos-velocity/)
 
-Key features
-• 	Immersive narrative nodes that combine historical research and creative vignettes.
-• 	Community contributions with a moderation queue and curator approval.
-• 	Provenance and licensing for every entry (sources, contributor attribution, license).
-• 	Branching story mechanics: lightweight voting and branching to let the community choose canonical directions.
-• 	Simple static site architecture for easy hosting on GitHub Pages.
+**Chronos Velocity** is an open-source, interactive storytelling engine inspired by *Time Patrol Bon (TP-BON)*, *Steins;Gate*, and classic text adventures. It is a journey through the events that shaped humankind—from the salt flats of Bolivia to the burning ruins of Hampi.
 
-Data model and example
-Recommended fields for each archive entry
-• 	id — unique string identifier
-• 	title — short descriptive title
-• 	date — ISO 8601 date (use earliest relevant date)
-• 	location — human readable location; optional geo coordinates
-• 	narrative — markdown content for the story node
-• 	sources — array of  objects for provenance
-• 	contributors — array of contributor handles (credited in UI)
-• 	license — content license string (e.g., CC-BY-SA-4.0)
-• 	status — , , or 
-Example JSON entry
+**[🔴 PLAY THE LIVE VERSION HERE](https://dialga-press.github.io/chronos-velocity/)**
 
-Rendered HTML snippet
+---
 
+## 📜 The Concept
 
-How to contribute
-Quick contribution flow
-1. 	Fork the repository and add a JSON file to  following the data model above.
-2. 	Set  to  for new submissions.
-3. 	Open a pull request with a short description of sources and intent.
-4. 	Curators review submissions and either publish, request edits, or move to draft.
-Contribution guidelines
-• 	Cite sources for historical claims and clearly label speculative or fictional passages.
-• 	Credit contributors by handle; include permission if using a real name.
-• 	Respect the license: all contributions must be compatible with the project content license.
-• 	Moderation: curators may edit for clarity, provenance, and policy compliance before publishing.
-CONTRIBUTING template to paste in PR
-• 	Title: 
-• 	Description: one paragraph describing the entry and its sources.
-• 	Sources: list of URLs and short notes.
-• 	Intent: whether the entry is historical, speculative, or community honor.
+We are building a **Dynamic Light Novel** where the story adapts to *you*.
 
-Governance and moderation
-Roles
-• 	Contributors submit nodes and propose branches.
-• 	Curators review submissions, verify provenance, and publish.
-• 	Moderation queue holds  entries until reviewed.
-Branching and canonical decisions
-• 	Branch proposals can be created by contributors.
-• 	Community voting helps prioritize branches; curators make final canonical calls and record decisions in a changelog.
-Code of conduct
-• 	Be respectful and constructive.
-• 	Do not submit plagiarized content.
-• 	Flag sensitive or potentially harmful content for curator review.
+Unlike static books, the narrative engine changes descriptions, dialogue, and available choices based on the **Archetype** you choose (Engineer, Artist, Doctor, etc.) and your real-world inputs (Nationality, Age).
 
-License and provenance
-Content license: See  in the repository for the full terms.
-Attribution: Every published entry must include contributor attribution and source links. Curators will add provenance metadata when necessary.
+*   **The Rule:** "Ash and Vapor." We only intervene in history to save what is already lost.
+*   **The Goal:** To immerse users in the beauty and tragedy of history, preserving memory before it is erased.
 
-Local development and deployment
-Run locally
-• 	The site is a static HTML/CSS/JS project. Serve  with any static server (for example,  in the project root) to preview locally.
-Deploy
-• 	Host on GitHub Pages by pushing to the  branch or using the repository Pages settings. The static structure is optimized for simple, low-cost hosting.
+---
 
-Next steps and priorities
-• 	Add About section to the landing page describing mission and contribution flow.
-• 	Populate  with 3 sample entries (historical, speculative, community honor).
-• 	Implement submission form and a simple moderation UI.
-• 	Expose provenance UI and a visible changelog for canonical decisions.
+## 🤝 Community-Driven Lore
 
-Contact and credits
-• 	Project: CHRONOS VELOCITY
-• 	Inspired by: TP‑BON style collaborative storytelling
-• 	Honors: u/SHOT-MANAGER-7012 (SMYLNYX) credited as an early contributor
+This isn't just our story. It's yours. We actively incorporate user feedback into the canon lore.
 
-Copy this README into  in the repo to give visitors immediate context, contribution instructions, and a clear data model to follow.
+> **✨ HALL OF FAME**
+> 
+> The device's AI, **SMYLNYX**, was born from a suggestion by our very first reader, **u/SHOT-MANAGER-7012**. 
+> They suggested a distinct personality for the machine, and we wrote it into the code. Now, SMYLNYX guides every new traveler through the timeline.
+
+**We want your ideas.**
+*   Where should we go next?
+*   What artifact should we steal?
+*   How should the plot evolve?
+
+Open an [Issue](https://github.com/Dialga-Press/chronos-velocity/issues) or start a [Discussion](https://github.com/Dialga-Press/chronos-velocity/discussions) to pitch your ideas. If we like it, **we will write it into the next Chapter.**
+
+---
+
+## 🚀 Features
+
+*   **Dynamic Narrative Engine:** Text blocks render conditionally based on user stats (Tech, Arts, Guts, Social).
+*   **The "Bio-Metric" Key:** The story reacts to your real-world inputs (e.g., typing "India" as your origin unlocks specific cultural dialogue).
+*   **Day/Night Cycle:** 
+    *   🌑 **Dark Mode:** "The Void" (Terminal aesthetic).
+    *   ☀️ **Light Mode:** "The Journal" (Da Vinci Sketchbook aesthetic).
+*   **No Backend:** Runs entirely in the browser using Vanilla JS and JSON logic. Zero tracking, 100% privacy.
+
+---
+
+## 🗺️ The Roadmap
+
+### ✅ Volume 1: The Drop (Live)
+*   **Location:** Salar de Uyuni, Bolivia.
+*   **Event:** The initial synchronization.
+*   **Asset:** 2008 Nissan X-Trail T31 (Pearl White).
+
+### 🚧 Volume 2: The City of Victory (In Development)
+*   **Location:** **Vijayanagara (Hampi)**, India.
+*   **Date:** January 1565.
+*   **Objective:** Infiltrate the capital just days before the Battle of Talikota. Witness the glory of the empire at its zenith before the fires begin.
+*   **Mission:** Recover the lost astronomical charts of the Royal Library.
+
+---
+
+## 🛠️ Installation (For Developers)
+
+Want to run the engine locally or fork it to write your own story?
+
+1.  **Clone the repo:**
+    ```bash
+    git clone https://github.com/Dialga-Press/chronos-velocity.git
+    ```
+2.  **Navigate to the folder:**
+    ```bash
+    cd chronos-velocity
+    ```
+3.  **Run it:**
+    *   Simply open `index.html` in your browser.
+    *   OR use a simple local server (VS Code Live Server).
+
+### Modding the Story
+All narrative data is stored in `data/story.json`. You can edit this file to create your own chapters without touching a single line of JavaScript.
+
+```json
+{
+  "focus": "ai", 
+  "text_blocks": [
+    { 
+      "condition": "default", 
+      "text": "Write your dialogue here..." 
+    }
+  ]
+}
