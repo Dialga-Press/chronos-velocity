@@ -1,5 +1,5 @@
 {
-  "chapter_1_p1": { /* ... Keep existing Chapter 1-7 ... */
+  "chapter_1_p1": {
     "id": "chapter_1_p1",
     "title": "PART 1: THE ANOMALY",
     "next_chapter": "chapter_1_p2",
@@ -92,22 +92,18 @@
     "scenes": [
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Okay, listen up meat-bags. That jump to Bolivia? That was just *Space*. We just folded a map. Easy. Child's play." }] },
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "But the next one? That's *Time*. I need specs. {player}, you're up first." }] },
-      
       { "focus": "ai", "input_prompt": "age", "text_blocks": [{ "condition": "default", "text": "How many solar cycles on the clock?" }] },
       { "focus": "ai", "input_prompt": "gender", "text_blocks": [{ "condition": "default", "text": "Gender Presentation? Kings listen to men; Queens listen to women; Spies listen to neither." }] },
       { "focus": "ai", "input_prompt": "origin", "text_blocks": [{ "condition": "default", "text": "Where did you spawn? I need to load the cultural subroutines." }] },
       { "focus": "ai", "input_prompt": "height", "text_blocks": [{ "condition": "default", "text": "Displacement Volume Check. How tall are you? (Use CM or Feet/Inches)." }] },
-      
       { "mode_req": "coop", "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Alright, {partner}. Your turn. Don't let {player} have all the fun." }] },
       { "mode_req": "coop", "focus": "ai", "input_prompt": "age", "text_blocks": [{ "condition": "default", "text": "Age check. Are you vintage or fresh off the line?" }] },
       { "mode_req": "coop", "focus": "ai", "input_prompt": "gender", "text_blocks": [{ "condition": "default", "text": "Presentation?" }] },
       { "mode_req": "coop", "focus": "ai", "input_prompt": "origin", "text_blocks": [{ "condition": "default", "text": "Origin Point?" }] },
       { "mode_req": "coop", "focus": "ai", "input_prompt": "height", "text_blocks": [{ "condition": "default", "text": "Height Check?" }] },
-      
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Calibration Complete. Synchronization at 99%. Calculating 'Ash & Vapor' coordinates..." }] }
     ]
   },
-  
   "chapter_8_wardrobe": {
     "id": "chapter_8_wardrobe",
     "title": "VOLUME 2: THE CHAMELEON",
@@ -119,10 +115,9 @@
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Ugh. No. Absolutely not. If you walk into Hampi wearing polyester, you'll be arrested for public indecency or mistaken for demons. We need to fix this. ✨" }] },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The air around them shimmered. Digital thread spooled out of thin air, weaving itself into fabric." }] },
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Based on your bio-metrics, I'm assigning local camouflage. If you're from the Subcontinent, you're nobility. If you're foreign, you're a Portuguese Horse Trader. Trust me, in Hampi, everyone loves a horse trader. 🐴" }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The jeans dissolved. In their place: heavy silks, velvet waistcoats, and leather sandals. {player} adjusted their Angavastram. It felt... right. Regal. They didn't just look like they belonged; they looked like they owned the place." }] }
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The jeans dissolved. In their place: heavy silks, velvet waistcoats, and leather sandals. They didn't just look like they belonged; they looked like they owned the place." }] }
     ]
   },
-
   "chapter_9_bazaar": {
     "id": "chapter_9_bazaar",
     "title": "THE GILDED CAGE",
