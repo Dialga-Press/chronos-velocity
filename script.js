@@ -17,8 +17,23 @@ const output = document.getElementById('game-output');
 const input = document.getElementById('player-input');
 
 async function init() {
-    try { const r = await fetch('data/rules.json'); gameState.rules = await r.json(); } catch (e) {}
-    try { const s = await fetch('data/story.json'); gameState.story = await s.json(); } catch (e) {}
+    try {
+        const rulesRes = await fetch('data/rules.json');
+        gameState.rules = await rulesRes.json();
+    } catch (e) { 
+        console.error("Rules Error:", e); 
+    }
+
+    try {
+        const storyRes = await fetch('data/story.json');
+        gameState.story = await storyRes.json();
+    } catch (e) { 
+        // THIS IS THE FIX: Tell the user if the story file is broken
+        console.error("Story Error:", e); 
+        printLine("CRITICAL ERROR: STORY ARCHIVE CORRUPTED.", 'system');
+        printLine("Please verify data/story.json syntax.", 'story');
+        return; // Stop execution so it doesn't hang
+    }
 
     printLine("ARCHIVE SYSTEM CONNECTED.", 'system');
     setTimeout(() => {
