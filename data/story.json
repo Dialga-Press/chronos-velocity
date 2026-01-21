@@ -145,7 +145,7 @@
     "next_chapter": "chapter_11_pillars",
     "telemetry": { "loc": "Mahanavami Dibba", "time": "12:30 PM", "weather": "High Noon // Oppressive" },
     "sources": [
-      { "title": "Mahanavami Dibba Architecture", "link": "https://en.wikipedia.org/wiki/Mahanavami_Dibba" }
+      { "title": "Mahanavami Dibba Architecture", "link": "https://en.wikipedia.org/wiki/Hampi#Mahanavami_platform,_public_square_complex" }
     ],
     "scenes": [
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They moved through the crowd, heading towards the Royal Center. The architecture shifted from chaotic bazaars to rigid, militaristic precision. Massive granite walls, fitted without mortar, towered over them." }] },
@@ -168,7 +168,7 @@
     "next_chapter": null,
     "telemetry": { "loc": "Vitthala Temple", "time": "14:00 PM", "weather": "Breezy // River Side" },
     "sources": [
-      { "title": "Musical Pillars of Hampi", "link": "https://www.karnataka.com/hampi/vitthala-temple/" }
+      { "title": "Musical Pillars of Hampi", "link": "https://en.wikipedia.org/wiki/Hampi#Vitthala_temple_and_market_complex" }
     ],
     "scenes": [
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They reached the Vitthala Temple complex near the river. The famous Stone Chariot stood in the courtyard, looking like it could roll away at any moment. But SMYLNYX wasn't interested in the chariot." }] },
