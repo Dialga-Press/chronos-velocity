@@ -121,8 +121,12 @@
   "chapter_9_bazaar": {
     "id": "chapter_9_bazaar",
     "title": "THE GILDED CAGE",
-    "next_chapter": null,
+    "next_chapter": "chapter_10_royal",
     "telemetry": { "loc": "Hampi Bazaar (Virupaksha Street)", "time": "Jan 22, 1565 // 11:00 AM", "weather": "34°C // Smell of Jasmine and Iron" },
+    "sources": [
+      { "title": "Domingo Paes: Chronicle of the Vijayanagar Kings", "link": "https://en.wikipedia.org/wiki/Domingo_Paes" },
+      { "title": "Robert Sewell: A Forgotten Empire", "link": "https://www.gutenberg.org/ebooks/3310" }
+    ],
     "scenes": [
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They stepped out of the shadow of a granite boulder and into the sun. And the noise hit them like a physical wave." }] },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "**The Hampi Bazaar.**" }] },
@@ -131,7 +135,40 @@
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "It was. In Mumbai, you haggle for vegetables. Here, a man was selling diamonds the size of pigeons' eggs, piled in a heap like common potatoes. Rubies were measured by the cup. Pearls were sold by weight." }] },
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Welcome to the richest city on Earth. GDP higher than Rome. Population: 500,000. Status: Invincible. (Or so they think)." }] },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The people didn't look scared. They looked bored. Soldiers in gold-plated armor leaned against pillars, eating sugarcane. Elephants marched past, bells ringing, painted in vibrant floral patterns. It was a paradise so loud, so bright, and so confident, that it felt impossible it could ever end." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "But you know the date. You know that in 72 hours, this street will be a river of blood. The contrast made the gold look sharper, and the jasmine smell like funeral flowers. <br><br> <a href='https://en.wikipedia.org/wiki/Hampi' target='_blank' style='color:var(--accent); text-decoration:none; border-bottom:1px dotted var(--accent);'>[ACCESS ARCHIVE: HAMPI]</a>" }] }
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "But you know the date. You know that in 72 hours, this street will be a river of blood. The contrast made the gold look sharper, and the jasmine smell like funeral flowers." }] }
+    ]
+  },
+  "chapter_10_royal": {
+    "id": "chapter_10_royal",
+    "title": "THE GREAT PLATFORM",
+    "next_chapter": "chapter_11_pillars",
+    "telemetry": { "loc": "Mahanavami Dibba", "time": "12:30 PM", "weather": "High Noon // Oppressive" },
+    "sources": [
+      { "title": "Mahanavami Dibba Architecture", "link": "https://en.wikipedia.org/wiki/Mahanavami_Dibba" }
+    ],
+    "scenes": [
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They moved through the crowd, heading towards the Royal Center. The architecture shifted from chaotic bazaars to rigid, militaristic precision. Massive granite walls, fitted without mortar, towered over them." }] },
+      { "focus": "architect", "text": "Cyclopean masonry. Interlocking stones. You notice the lack of mortar instantly. This wasn't built; it was puzzled together. A siege engine would break its teeth on these walls." },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "And there it was. The **Mahanavami Dibba**. A massive, tiered stone platform, rising like a pyramid. It was covered in carvings—dancers, hunters, soldiers, horses. It was the stage where the King watched the world perform for him." }] },
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "That platform is the Instagram of the 16th Century. You stand up there, you look down on everyone, and you tell the Sultanates: 'Look at my elephants. Look at my gold. Try me.' And in 3 days... they will." }] },
+      { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{partner} ran a hand over a carving of a Portuguese soldier firing a musket. 'They knew the tech was changing,' they whispered. 'They put it in stone. But they didn't adapt fast enough.'" }] }
+    ]
+  },
+  "chapter_11_pillars": {
+    "id": "chapter_11_pillars",
+    "title": "RESONANCE",
+    "next_chapter": null,
+    "telemetry": { "loc": "Vitthala Temple", "time": "14:00 PM", "weather": "Breezy // River Side" },
+    "sources": [
+      { "title": "Musical Pillars of Hampi", "link": "https://www.karnataka.com/hampi/vitthala-temple/" }
+    ],
+    "scenes": [
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They reached the Vitthala Temple complex near the river. The famous Stone Chariot stood in the courtyard, looking like it could roll away at any moment. But SMYLNYX wasn't interested in the chariot." }] },
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Forget the chariot. Look at the pillars. The **Ranga Mantapa**. 56 musical pillars. They aren't just support beams; they are a lithophonic instrument. 🎶" }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} tapped a pillar with a knuckle. It rang. A clear, bell-like tone: *Sa*. {partner} tapped the next one. *Re*. The stone was singing." }] },
+      { "focus": "mech_eng", "text": "You analyze the strike. The density of the granite changes in each sub-pillar to alter the pitch. It's solid rock, tuned like a guitar string. The physics of this are insane. How did they calculate the density without computers?" },
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "I'm detecting specific resonance frequencies. These aren't random. They match the 7 notes of the scale. But... I'm also detecting micro-fractures. The fire that's coming? The heat will crack these. They will never sing like this again. Record it. Record everything." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They stood there, tapping out a silent melody on stones that would soon be mute for eternity. The river Tungabhadra flowed behind them, indifferent to the music and indifferent to the war." }] }
     ]
   }
 }
