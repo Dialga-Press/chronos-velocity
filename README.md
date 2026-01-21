@@ -95,3 +95,11 @@ All narrative data is stored in `data/story.json`. You can edit this file to cre
     }
   ]
 }
+
+📄 License
+The Code (Engine): MIT License. Use it to build your own text adventures!
+The Story (Content): Copyright © 2026 Dialga-Press.
+<p align="center">
+<i>"We aren't going to a place. We are going to a time." — SMYLNYX</i>
+</p>
+```
