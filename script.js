@@ -17,23 +17,8 @@ const output = document.getElementById('game-output');
 const input = document.getElementById('player-input');
 
 async function init() {
-    try {
-        const rulesRes = await fetch('data/rules.json');
-        gameState.rules = await rulesRes.json();
-    } catch (e) { 
-        console.error("Rules Error:", e); 
-    }
-
-    try {
-        const storyRes = await fetch('data/story.json');
-        gameState.story = await storyRes.json();
-    } catch (e) { 
-        // THIS IS THE FIX: Tell the user if the story file is broken
-        console.error("Story Error:", e); 
-        printLine("CRITICAL ERROR: STORY ARCHIVE CORRUPTED.", 'system');
-        printLine("Please verify data/story.json syntax.", 'story');
-        return; // Stop execution so it doesn't hang
-    }
+    try { const r = await fetch('data/rules.json'); gameState.rules = await r.json(); } catch (e) {}
+    try { const s = await fetch('data/story.json'); gameState.story = await s.json(); } catch (e) {}
 
     printLine("ARCHIVE SYSTEM CONNECTED.", 'system');
     setTimeout(() => {
@@ -54,76 +39,61 @@ input.addEventListener('keydown', function(e) {
     }
 });
 
-// --- FIXED BACK BUTTON ---
+// --- FIXED BACK BUTTON LOGIC ---
 function goBack() {
-    // We can only go back if we are inside the story and not at the very start
-    if (!gameState.storyActive || currentSceneIndex <= 0) return;
+    // Prevent going back before story starts
+    if (!gameState.storyActive) return;
 
-    // 1. Remove the last visual message (The text we just read)
-    // We loop to remove 'system' messages (like "Press Enter") + the actual Story block
-    let removedStoryBlock = false;
-    while(output.lastChild && !removedStoryBlock) {
-        const classList = output.lastChild.classList;
-        output.removeChild(output.lastChild);
-        
-        // If we removed a story/ai block, stop. We keep removing system messages/HRs until we hit text.
-        if (classList.contains('story') || classList.contains('ai')) {
-            removedStoryBlock = true;
-        }
+    // 1. Visually Remove elements until we hit a Story/AI block
+    let removedContent = false;
+    while(output.lastChild && !removedContent) {
+        const el = output.lastChild;
+        const isContent = el.classList.contains('story') || el.classList.contains('ai');
+        output.removeChild(el);
+        if (isContent) removedContent = true;
     }
 
-    // 2. Decrement Index
-    currentSceneIndex--;
-    if (currentSceneIndex < 0) currentSceneIndex = 0;
-
-    // 3. Check if the scene we went back to WAS an input scene
-    const scene = currentChapterData.scenes[currentSceneIndex];
-    
-    if (scene.input_prompt) {
-        // Re-enable Input Mode
-        gameState.step = 'story_input';
-        gameState.currentInputType = scene.input_prompt;
-        
-        if (scene.input_prompt === 'height') input.placeholder = "E.g., 5'11 or 180";
-        else input.placeholder = `Enter ${scene.input_prompt}...`;
-        
-        // Remove the prompt text too, so it doesn't duplicate when playNextScene redraws it
-        if(output.lastChild) output.removeChild(output.lastChild);
-        
-        // Replay the scene to show the prompt again
-        playNextScene(false); 
-    } else {
-        // Normal text scene, just reset state so user can press Enter to advance again
-        gameState.step = 'reading';
-        gameState.currentInputType = null;
-        input.placeholder = "Write your response...";
-        gameState.waitingForEnter = false; // Allow them to press enter immediately
-        
-        // We don't re-print the text (it's gone), we just wait for them to press enter to "Read it again" 
-        // Actually, to make it look right, we should re-print it.
-        playNextScene(false);
+    // 2. Adjust Logic Index
+    // If we were waiting at an input prompt, the index hadn't advanced yet.
+    // If we were at text, index had advanced by 1.
+    // We simply decrement.
+    if (currentSceneIndex > 0) {
+        currentSceneIndex--;
     }
+
+    // 3. Reset Input States (In case we backed out of a prompt)
+    gameState.step = 'reading'; 
+    gameState.currentInputType = null;
+    input.placeholder = "Write your response...";
+    gameState.waitingForEnter = false;
+
+    // 4. STOP. Do not playNextScene(). 
+    // We leave the user at the state *before* the removed line was printed.
+    // They must press Enter (or input) to advance again.
 }
 
 function processInput(val) {
     if (gameState.step === 'mode') {
         if (val === '1') { gameState.mode = 'solo'; startCharCreation('player'); }
         else if (val === '2') { gameState.mode = 'coop'; startCharCreation('player'); }
-    } else if (gameState.step.includes('_name')) {
+    } 
+    else if (gameState.step.includes('_name')) {
         let t = gameState.step.split('_')[0];
         gameState[t].name = val;
         printLine(`${t.toUpperCase()} ID: ${val}`, 'story');
         setTimeout(listClasses, 500);
         gameState.step = t + '_class';
-    } else if (gameState.step.includes('_class')) {
+    } 
+    else if (gameState.step.includes('_class')) {
         let t = gameState.step.split('_')[0];
         if (applyClassSelection(val, t)) {
             if(t==='player' && gameState.mode === 'solo') {
-                 setTimeout(() => { printLine("Configure Partner? [Y/N]", 'system'); gameState.step = 'partner_query'; }, 500);
+                 setTimeout(() => { printLine("Configure Secondary Asset? [Y/N]", 'system'); gameState.step = 'partner_query'; }, 500);
             } else if (t==='player') { startCharCreation('partner'); }
             else { startGame(); }
         }
-    } else if (gameState.step === 'partner_query') {
+    } 
+    else if (gameState.step === 'partner_query') {
         if(val.toLowerCase().startsWith('y')) startCharCreation('partner');
         else { autoAssignPartner(); startGame(); }
     }
@@ -178,7 +148,7 @@ function renderTelemetry(chapter) {
     const div = document.createElement('div'); div.innerHTML = html; output.appendChild(div);
 }
 
-function playNextScene(saveHistory = true) {
+function playNextScene() {
     if (!currentChapterData || currentSceneIndex >= currentChapterData.scenes.length) {
         if (currentChapterData.next_chapter) loadStoryChapter(currentChapterData.next_chapter);
         else { printLine(">> TO BE CONTINUED...", 'system'); gameState.storyActive = false; }
@@ -187,10 +157,10 @@ function playNextScene(saveHistory = true) {
 
     const scene = currentChapterData.scenes[currentSceneIndex];
     
-    // SKIP LOGIC
+    // SKIP LOGIC (Mode Check)
     if (scene.mode_req && scene.mode_req !== gameState.mode) {
         currentSceneIndex++;
-        playNextScene(saveHistory);
+        playNextScene();
         return;
     }
 
@@ -203,11 +173,12 @@ function playNextScene(saveHistory = true) {
         
         if (scene.input_prompt === 'height') input.placeholder = "E.g., 5'11 or 180";
         else input.placeholder = `Enter ${scene.input_prompt}...`;
-        return; 
+        return; // Wait for input
     }
 
     let text = resolveTextVariant(scene.text_blocks, scene.focus);
     text = replacePlaceholders(text);
+    text = formatText(text);
     
     let msgType = scene.focus === 'ai' ? 'ai' : (scene.focus === 'system' ? 'system' : 'story');
 
@@ -215,6 +186,8 @@ function playNextScene(saveHistory = true) {
     setTimeout(() => {
         printLine(text, msgType);
         currentSceneIndex++;
+        
+        // Show Prompt if more scenes exist
         if (currentSceneIndex <= currentChapterData.scenes.length) {
              printLine("<i>(Press Enter...)</i>", 'system');
         }
@@ -225,23 +198,28 @@ function playNextScene(saveHistory = true) {
 function handleStoryInput(val) {
     const type = gameState.currentInputType;
     
-    // --- DRIVER LOGIC FIX ---
+    // --- DRIVER LOGIC ---
+    // If I call Shotgun, I am the Passenger.
     if (type === 'shotgun') { 
         let inputName = val.toLowerCase();
         let p1Name = gameState.player.name.toLowerCase();
         
-        // "I call Shotgun" = I am Passenger.
+        // Did Player 1 call shotgun?
         if (inputName.includes(p1Name)) { 
             gameState.passenger = gameState.player.name; 
             gameState.driver = gameState.partner.name; 
-        } 
-        else { 
+        } else { 
+            // Assume Partner called shotgun
             gameState.passenger = gameState.partner.name; 
             gameState.driver = gameState.player.name; 
         }
+        
+        // LOG IT
+        printLine(`>> SHOTGUN CALLED BY: ${gameState.passenger.toUpperCase()}`, 'system');
         printLine(`>> DRIVER DESIGNATED: ${gameState.driver.toUpperCase()}`, 'system');
     } 
     else {
+        // Bio Input
         printLine(`>> DATA LOGGED: ${val.toUpperCase()}`, 'system');
         if (typeof processBioInput === "function") processBioInput(type, val);
     }
@@ -255,17 +233,18 @@ function handleStoryInput(val) {
 
 function advanceStory() { if (!gameState.waitingForEnter) playNextScene(); }
 
+function formatText(text) { return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); }
+
 function replacePlaceholders(text) {
     text = text.replace(/{player}/g, gameState.player.name);
     text = text.replace(/{partner}/g, gameState.partner.name);
-    // Fallback if driver not set yet
+    // Use driver/passenger if set, otherwise fallback to player/partner for pre-drive scenes
     text = text.replace(/{driver}/g, gameState.driver || gameState.player.name);
     text = text.replace(/{passenger}/g, gameState.passenger || gameState.partner.name);
-    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
     return text;
 }
 
-// ... (Rest of UI functions) ...
+// ... (ResolveTextVariant, ListClasses, ShowStatCard same as previous) ...
 function resolveTextVariant(blocks, focus) {
     let targetClass = gameState.player.class;
     let targetStats = gameState.player.stats;
