@@ -32,43 +32,61 @@ input.addEventListener('keydown', function(e) {
     if (e.key === 'Enter') {
         const val = input.value.trim();
         input.value = '';
+        
         if (gameState.step === 'story_input') { handleStoryInput(val); return; }
         if (gameState.storyActive) { advanceStory(); return; }
         if (val) processInput(val);
     }
 });
 
-// --- FIXED BACK BUTTON LOGIC ---
+// --- FIXED BACK BUTTON ---
 function goBack() {
-    // We need at least 2 items in history to go back (The current one, and the previous one)
-    // Or if we are at the first scene, we just reload it.
-    if (gameState.history.length > 0) {
+    // We can only go back if we are inside the story and not at the very start
+    if (!gameState.storyActive || currentSceneIndex <= 0) return;
+
+    // 1. Remove the last visual message (The text we just read)
+    // We loop to remove 'system' messages (like "Press Enter") + the actual Story block
+    let removedStoryBlock = false;
+    while(output.lastChild && !removedStoryBlock) {
+        const classList = output.lastChild.classList;
+        output.removeChild(output.lastChild);
         
-        // 1. Remove the text from screen
+        // If we removed a story/ai block, stop. We keep removing system messages/HRs until we hit text.
+        if (classList.contains('story') || classList.contains('ai')) {
+            removedStoryBlock = true;
+        }
+    }
+
+    // 2. Decrement Index
+    currentSceneIndex--;
+    if (currentSceneIndex < 0) currentSceneIndex = 0;
+
+    // 3. Check if the scene we went back to WAS an input scene
+    const scene = currentChapterData.scenes[currentSceneIndex];
+    
+    if (scene.input_prompt) {
+        // Re-enable Input Mode
+        gameState.step = 'story_input';
+        gameState.currentInputType = scene.input_prompt;
+        
+        if (scene.input_prompt === 'height') input.placeholder = "E.g., 5'11 or 180";
+        else input.placeholder = `Enter ${scene.input_prompt}...`;
+        
+        // Remove the prompt text too, so it doesn't duplicate when playNextScene redraws it
         if(output.lastChild) output.removeChild(output.lastChild);
         
-        // 2. Discard the CURRENT scene from history
-        gameState.history.pop();
-        
-        // 3. Get the PREVIOUS scene index (if it exists)
-        let prevIndex = 0;
-        if (gameState.history.length > 0) {
-            const prevState = gameState.history.pop(); // Remove it so playNextScene re-adds it correctly
-            prevIndex = prevState.index;
-        } else {
-            // If we popped everything, restart chapter (Index 0)
-            prevIndex = 0; 
-        }
-
-        // 4. RESET STATE (Crucial for Input/Story modes)
-        currentSceneIndex = prevIndex;
-        gameState.step = 'reading'; // Reset from 'story_input'
+        // Replay the scene to show the prompt again
+        playNextScene(false); 
+    } else {
+        // Normal text scene, just reset state so user can press Enter to advance again
+        gameState.step = 'reading';
         gameState.currentInputType = null;
-        input.placeholder = "Write your response..."; // Reset prompt
-        gameState.waitingForEnter = false;
-
-        // 5. Replay
-        playNextScene(true); // true = add back to history
+        input.placeholder = "Write your response...";
+        gameState.waitingForEnter = false; // Allow them to press enter immediately
+        
+        // We don't re-print the text (it's gone), we just wait for them to press enter to "Read it again" 
+        // Actually, to make it look right, we should re-print it.
+        playNextScene(false);
     }
 }
 
@@ -79,7 +97,7 @@ function processInput(val) {
     } else if (gameState.step.includes('_name')) {
         let t = gameState.step.split('_')[0];
         gameState[t].name = val;
-        printLine(`${t} ID: ${val}`, 'story');
+        printLine(`${t.toUpperCase()} ID: ${val}`, 'story');
         setTimeout(listClasses, 500);
         gameState.step = t + '_class';
     } else if (gameState.step.includes('_class')) {
@@ -96,6 +114,7 @@ function processInput(val) {
     }
 }
 
+// ... (Char Creation Helpers) ...
 function startCharCreation(target) {
     printLine(target === 'player' ? "ENTER NAME (PROTAGONIST 1):" : "ENTER NAME (PROTAGONIST 2):", 'system');
     gameState.step = target + '_name';
@@ -123,6 +142,7 @@ function startGame() {
     setTimeout(() => { printLine("<hr style='opacity:0.3'>", 'system'); gameState.storyActive = true; loadStoryChapter('chapter_1_p1'); }, 1000);
 }
 
+// --- STORY ENGINE ---
 let currentSceneIndex = 0;
 let currentChapterData = null;
 
@@ -152,20 +172,14 @@ function playNextScene(saveHistory = true) {
 
     const scene = currentChapterData.scenes[currentSceneIndex];
     
-    if (saveHistory) {
-        gameState.history.push({ chapterId: currentChapterData.id, index: currentSceneIndex });
-    }
-
-    // MODE CHECK SKIP
+    // SKIP LOGIC
     if (scene.mode_req && scene.mode_req !== gameState.mode) {
-        // Remove the history entry we just added because we are skipping this scene
-        if (saveHistory) gameState.history.pop();
         currentSceneIndex++;
         playNextScene(saveHistory);
         return;
     }
 
-    // INPUT HANDLING
+    // INPUT LOGIC
     if (scene.input_prompt) {
         let promptText = resolveTextVariant(scene.text_blocks, scene.focus);
         printLine(replacePlaceholders(promptText), scene.focus === 'ai' ? 'ai' : 'story');
@@ -195,16 +209,28 @@ function playNextScene(saveHistory = true) {
 
 function handleStoryInput(val) {
     const type = gameState.currentInputType;
+    
+    // --- DRIVER LOGIC FIX ---
     if (type === 'shotgun') { 
         let inputName = val.toLowerCase();
         let p1Name = gameState.player.name.toLowerCase();
-        if (inputName.includes(p1Name)) { gameState.passenger = gameState.player.name; gameState.driver = gameState.partner.name; } 
-        else { gameState.passenger = gameState.partner.name; gameState.driver = gameState.player.name; }
-        printLine(`>> DRIVER CONFIRMED: ${gameState.driver.toUpperCase()}`, 'system');
-    } else {
+        
+        // "I call Shotgun" = I am Passenger.
+        if (inputName.includes(p1Name)) { 
+            gameState.passenger = gameState.player.name; 
+            gameState.driver = gameState.partner.name; 
+        } 
+        else { 
+            gameState.passenger = gameState.partner.name; 
+            gameState.driver = gameState.player.name; 
+        }
+        printLine(`>> DRIVER DESIGNATED: ${gameState.driver.toUpperCase()}`, 'system');
+    } 
+    else {
         printLine(`>> DATA LOGGED: ${val.toUpperCase()}`, 'system');
         if (typeof processBioInput === "function") processBioInput(type, val);
     }
+    
     gameState.step = 'reading';
     gameState.currentInputType = null;
     input.placeholder = "Write your response...";
@@ -217,12 +243,14 @@ function advanceStory() { if (!gameState.waitingForEnter) playNextScene(); }
 function replacePlaceholders(text) {
     text = text.replace(/{player}/g, gameState.player.name);
     text = text.replace(/{partner}/g, gameState.partner.name);
+    // Fallback if driver not set yet
     text = text.replace(/{driver}/g, gameState.driver || gameState.player.name);
     text = text.replace(/{passenger}/g, gameState.passenger || gameState.partner.name);
     text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
     return text;
 }
 
+// ... (Rest of UI functions) ...
 function resolveTextVariant(blocks, focus) {
     let targetClass = gameState.player.class;
     let targetStats = gameState.player.stats;
