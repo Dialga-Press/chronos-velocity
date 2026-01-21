@@ -1,5 +1,5 @@
 {
-  "chapter_1_p1": {
+  "chapter_1_p1": { /* ... Keep existing Chapter 1-7 ... */
     "id": "chapter_1_p1",
     "title": "PART 1: THE ANOMALY",
     "next_chapter": "chapter_1_p2",
@@ -26,7 +26,7 @@
     "next_chapter": "chapter_3_meeting",
     "telemetry": { "loc": "Planetary Orbit", "time": "T-Minus 0" },
     "scenes": [
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The two devices woke up. A pulse went out. Invisible to the eye, but felt by the soul. It mapped the planet. And then, it pulled the two hosts together." }] }
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The two devices woke up. They ignored the humans for a moment and spoke to each other. A pulse went out. Invisible to the eye, but felt by the soul. It mapped the planet. And then, it pulled the two hosts together." }] }
     ]
   },
   "chapter_3_meeting": {
@@ -55,7 +55,6 @@
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} and {partner} jumped. The voice didn't come from the car speakers. It came from their wrists. It came from *inside* their heads." }] },
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "I'm SMYLNYX. I handle the logistics. The T31 X-Trail... rugged, boxy, dependable. I've already optimized the fuel mixture for altitude. Hop in! 🥰" }] },
       { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{partner} opened the glovebox. There was a heavy, reassuring clunk. A cache of ammunition. No guns—just the ammo. A polite suggestion from the universe." }] },
-      
       { "focus": "ai", "input_prompt": "shotgun", "text_blocks": [{ "condition": "default", "text": "Alright, team. We are burning daylight. Who is calling **Shotgun**? (I need to know who the Passenger is so I can calibrate the airbags)." }] }
     ]
   },
@@ -88,7 +87,7 @@
   "chapter_7_bio": {
     "id": "chapter_7_bio",
     "title": "PROTOCOL: BIO-METRIC KEY",
-    "next_chapter": "chapter_8_hampi",
+    "next_chapter": "chapter_8_wardrobe",
     "telemetry": { "loc": "Tunupa Base Camp", "time": "19:30 PM" },
     "scenes": [
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Okay, listen up meat-bags. That jump to Bolivia? That was just *Space*. We just folded a map. Easy. Child's play." }] },
@@ -97,31 +96,47 @@
       { "focus": "ai", "input_prompt": "age", "text_blocks": [{ "condition": "default", "text": "How many solar cycles on the clock?" }] },
       { "focus": "ai", "input_prompt": "gender", "text_blocks": [{ "condition": "default", "text": "Gender Presentation? Kings listen to men; Queens listen to women; Spies listen to neither." }] },
       { "focus": "ai", "input_prompt": "origin", "text_blocks": [{ "condition": "default", "text": "Where did you spawn? I need to load the cultural subroutines." }] },
-      {
-  "focus": "ai", 
-  "input_prompt": "height", 
-  "text_blocks": [{ "condition": "default", "text": "Displacement Volume Check. How tall are you? (Use CM or Feet/Inches)." }] 
-},
+      { "focus": "ai", "input_prompt": "height", "text_blocks": [{ "condition": "default", "text": "Displacement Volume Check. How tall are you? (Use CM or Feet/Inches)." }] },
       
       { "mode_req": "coop", "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Alright, {partner}. Your turn. Don't let {player} have all the fun." }] },
       { "mode_req": "coop", "focus": "ai", "input_prompt": "age", "text_blocks": [{ "condition": "default", "text": "Age check. Are you vintage or fresh off the line?" }] },
       { "mode_req": "coop", "focus": "ai", "input_prompt": "gender", "text_blocks": [{ "condition": "default", "text": "Presentation?" }] },
       { "mode_req": "coop", "focus": "ai", "input_prompt": "origin", "text_blocks": [{ "condition": "default", "text": "Origin Point?" }] },
+      { "mode_req": "coop", "focus": "ai", "input_prompt": "height", "text_blocks": [{ "condition": "default", "text": "Height Check?" }] },
       
-      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Calibration Complete. Synchronization at 99%. Buckle up. We aren't going to a place. We are going to a time." }] }
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Calibration Complete. Synchronization at 99%. Calculating 'Ash & Vapor' coordinates..." }] }
     ]
   },
-  "chapter_8_hampi": {
-    "id": "chapter_8_hampi",
-    "title": "VOLUME 2: CITY OF VICTORY",
-    "next_chapter": null,
-    "telemetry": { "loc": "Vijayanagara (Hampi)", "time": "Jan 22, 1565 // 3 Days Before The Fall" },
+  
+  "chapter_8_wardrobe": {
+    "id": "chapter_8_wardrobe",
+    "title": "VOLUME 2: THE CHAMELEON",
+    "next_chapter": "chapter_9_bazaar",
+    "telemetry": { "loc": "Temporal Void", "time": "Calibration Phase" },
     "scenes": [
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The transition wasn't like Bolivia. It wasn't a fold. It was a scream. The X-Trail dissolved into light, and reality reassembled itself with the violence of a thunderclap." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Heat. That was the first thing. A dry, baking heat that smelled of stone, crushed marigolds, and elephant dung. Below them lay **Vijayanagara**. The City of Victory." }] },
-      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Look at it. It's beautiful. It's the Rome of the East. Half a million people. The richest city on Earth." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "But as {player} watched the flags flutter, a cold knot formed in their stomach. In three days, the Sultans arrive. In three days, the fire starts. This paradise is a graveyard." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The mission starts now. <br><br> <a href='https://en.wikipedia.org/wiki/Hampi' target='_blank' style='color:var(--accent); text-decoration:none; border-bottom:1px dotted var(--accent);'>[ACCESS ARCHIVE: HAMPI]</a>" }] }
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Target Locked: **Vijayanagara, 1565 AD**. The City of Victory. We are arriving 3 days before the Battle of Talikota." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "SMYLNYX scanned their clothes—jeans, hoodies, sneakers. She made a noise that sounded like digital vomiting." }] },
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Ugh. No. Absolutely not. If you walk into Hampi wearing polyester, you'll be arrested for public indecency or mistaken for demons. We need to fix this. ✨" }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The air around them shimmered. Digital thread spooled out of thin air, weaving itself into fabric." }] },
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Based on your bio-metrics, I'm assigning local camouflage. If you're from the Subcontinent, you're nobility. If you're foreign, you're a Portuguese Horse Trader. Trust me, in Hampi, everyone loves a horse trader. 🐴" }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The jeans dissolved. In their place: heavy silks, velvet waistcoats, and leather sandals. {player} adjusted their Angavastram. It felt... right. Regal. They didn't just look like they belonged; they looked like they owned the place." }] }
+    ]
+  },
+
+  "chapter_9_bazaar": {
+    "id": "chapter_9_bazaar",
+    "title": "THE GILDED CAGE",
+    "next_chapter": null,
+    "telemetry": { "loc": "Hampi Bazaar (Virupaksha Street)", "time": "Jan 22, 1565 // 11:00 AM", "weather": "34°C // Smell of Jasmine and Iron" },
+    "scenes": [
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They stepped out of the shadow of a granite boulder and into the sun. And the noise hit them like a physical wave." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "**The Hampi Bazaar.**" }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "It was a river of humanity. The street was wide—absurdly wide, maybe thirty-five meters—and lined with two-story stone pavilions. But it wasn't the stone that caught the eye. It was the *stuff*." }] },
+      { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{partner} stopped walking. They pointed at a merchant sitting on a rug. 'Is that...?'" }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "It was. In Mumbai, you haggle for vegetables. Here, a man was selling diamonds the size of pigeons' eggs, piled in a heap like common potatoes. Rubies were measured by the cup. Pearls were sold by weight." }] },
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Welcome to the richest city on Earth. GDP higher than Rome. Population: 500,000. Status: Invincible. (Or so they think)." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The people didn't look scared. They looked bored. Soldiers in gold-plated armor leaned against pillars, eating sugarcane. Elephants marched past, bells ringing, painted in vibrant floral patterns. It was a paradise so loud, so bright, and so confident, that it felt impossible it could ever end." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "But you know the date. You know that in 72 hours, this street will be a river of blood. The contrast made the gold look sharper, and the jasmine smell like funeral flowers. <br><br> <a href='https://en.wikipedia.org/wiki/Hampi' target='_blank' style='color:var(--accent); text-decoration:none; border-bottom:1px dotted var(--accent);'>[ACCESS ARCHIVE: HAMPI]</a>" }] }
     ]
   }
 }
