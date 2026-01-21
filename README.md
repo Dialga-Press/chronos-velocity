@@ -36,7 +36,7 @@ This isn't just our story. It's yours. We actively incorporate user feedback int
 *   What artifact should we steal?
 *   How should the plot evolve?
 
-Open an [Issue](https://github.com/Dialga-Press/chronos-velocity/issues) or start a [Discussion](https://github.com/Dialga-Press/chronos-velocity/discussions) to pitch your ideas. If we like it, **we will write it into the next Chapter.**
+Open an [Issue](https://github.com/Dialga-Press/chronos-velocity/issues) or start a Discussion to pitch your ideas on Reddit u/Miles_NYC. If we like it, **we will write it into the next Chapter.**
 
 ---
 
