@@ -36,7 +36,13 @@
     "show_synergy": true,
     "telemetry": { "loc": "Salar de Uyuni // Bolivia", "time": "17:30 PM" },
     "scenes": [
-      { "focus": "player", "image": "assets/images/salar-mirror.jpg", "image_caption": "LOCATION: SALAR DE UYUNI", "text_blocks": [{ "condition": "default", "text": "Teleportation is a rude way to travel. One moment you are home, the next you are standing on the sky. The Salar de Uyuni. The great mirror of Bolivia." }] },
+      { 
+        "focus": "player", 
+        "image": "assets/images/salar-mirror.jpg", 
+        "image_caption": "LOCATION: SALAR DE UYUNI", 
+        "image_source": "Getty Images / The Hungry Travellers",
+        "text_blocks": [{ "condition": "default", "text": "Teleportation is a rude way to travel. One moment you are home, the next you are standing on the sky. The Salar de Uyuni. The great mirror of Bolivia." }] 
+      },
       { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{player} spotted a figure in the distance. {partner}. They looked equally disheveled, scanning the horizon as if looking for a bus stop in the middle of an ocean." }] },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They approached each other. No grand speeches. Just the awkward nod of two people who realize they are stuck in the same lifeboat." }] }
     ]
@@ -49,7 +55,13 @@
     "scenes": [
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The sun began to dip. The beauty of the salt flats is treacherous; without shelter, the cold kills you with a smile. They needed a vehicle." }] },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They didn't summon a spaceship. They didn't ask for a tank. They asked for reliability. The air shimmered, and gravity bent to their will." }] },
-      { "focus": "player", "image": "assets/images/xtrail-t31-pearl.png", "image_caption": "ASSET FABRICATED: NISSAN T31", "text_blocks": [{ "condition": "default", "text": "A **Nissan X-Trail T31** slammed onto the salt with a wet splash. Pearl White paint, gleaming against the endless blue. 2.0L Diesel Turbo. Manual Transmission. It wasn't just a car; it was a fortress." }] },
+      { 
+        "focus": "player", 
+        "image": "assets/images/xtrail-t31-pearl.png", 
+        "image_caption": "ASSET FABRICATED: NISSAN T31", 
+        "image_source": "Visual Reconstruction by Nano Banana",
+        "text_blocks": [{ "condition": "default", "text": "A **Nissan X-Trail T31** slammed onto the salt with a wet splash. Pearl White paint, gleaming against the endless blue. 2.0L Diesel Turbo. Manual Transmission. It wasn't just a car; it was a fortress." }] 
+      },
       { "focus": "system", "text_blocks": [{ "condition": "default", "text": "We are delighted to be Honouring our first reader 📖 🍀u/Shot-Manager-7012 ✨💎 - Author of Chronos Velocity" }] },
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "OOOOH I LIKEEEE. Pearl White? Bold choice for a mud run, but that panoramic sunroof is massive! Chef's kiss ahahah 😝. You two have taste!" }] },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} and {partner} jumped. The voice didn't come from the car speakers. It came from their wrists. It came from *inside* their heads." }] },
@@ -129,7 +141,13 @@
     ],
     "scenes": [
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They stepped out of the shadow of a granite boulder and into the sun. And the noise hit them like a physical wave." }] },
-      { "focus": "player", "image": "assets/images/hampi-bazaar-glory.png", "image_caption": "SIMULATION RECONSTRUCTION: 1565 AD", "text_blocks": [{ "condition": "default", "text": "**The Hampi Bazaar.** It was a river of humanity. The street was wide—absurdly wide—and lined with two-story stone pavilions. But it wasn't the stone that caught the eye. It was the *stuff*." }] },
+      { 
+        "focus": "player", 
+        "image": "assets/images/hampi-bazaar-glory.png",
+        "image_caption": "SIMULATION RECONSTRUCTION: 1565 AD",
+        "image_source": "Visual Reconstruction by Nano Banana",
+        "text_blocks": [{ "condition": "default", "text": "**The Hampi Bazaar.** It was a river of humanity. The street was wide—absurdly wide—and lined with two-story stone pavilions. But it wasn't the stone that caught the eye. It was the *stuff*." }] 
+      },
       { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{partner} stopped walking. They pointed at a merchant sitting on a rug. 'Is that...?'" }] },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "It was. In Mumbai, you haggle for vegetables. Here, a man was selling diamonds the size of pigeons' eggs, piled in a heap like common potatoes. Rubies were measured by the cup. Pearls were sold by weight." }] },
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Welcome to the richest city on Earth. GDP higher than Rome. Population: 500,000. Status: Invincible. (Or so they think)." }] },
@@ -147,7 +165,13 @@
     ],
     "scenes": [
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They moved through the crowd, heading towards the Royal Center. The architecture shifted from chaotic bazaars to rigid, militaristic precision. Massive granite walls, fitted without mortar, towered over them." }] },
-      { "focus": "player", "text_blocks": [ { "condition": "architect", "text": "Cyclopean masonry. Interlocking stones. You notice the lack of mortar instantly. This wasn't built; it was puzzled together. A siege engine would break its teeth on these walls." }, { "condition": "default", "text": "The stones were interlocking, massive, and seamless. It felt less like a city and more like a fortress carved from a single mountain." } ] },
+      { 
+        "focus": "player", 
+        "text_blocks": [
+          { "condition": "architect", "text": "Cyclopean masonry. Interlocking stones. You notice the lack of mortar instantly. This wasn't built; it was puzzled together. A siege engine would break its teeth on these walls." },
+          { "condition": "default", "text": "The stones were interlocking, massive, and seamless. It felt less like a city and more like a fortress carved from a single mountain." }
+        ] 
+      },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "And there it was. The **Mahanavami Dibba**. A massive, tiered stone platform, rising like a pyramid. It was covered in carvings—dancers, hunters, soldiers, horses. It was the stage where the King watched the world perform for him." }] },
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "That platform is the Instagram of the 16th Century. You stand up there, you look down on everyone, and you tell the Sultanates: 'Look at my elephants. Look at my gold. Try me.' And in 3 days... they will." }] },
       { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{partner} ran a hand over a carving of a Portuguese soldier firing a musket. 'They knew the tech was changing,' they whispered. 'They put it in stone. But they didn't adapt fast enough.'" }] }
@@ -163,9 +187,21 @@
     ],
     "scenes": [
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They reached the Vitthala Temple complex near the river. The famous Stone Chariot stood in the courtyard, looking like it could roll away at any moment. But SMYLNYX wasn't interested in the chariot." }] },
-      { "focus": "ai", "image": "assets/images/vitthala-pillars.jpg", "image_caption": "ARCHIVE: MUSICAL PILLARS (SA-RE-GA-MA)", "text_blocks": [{ "condition": "default", "text": "Forget the chariot. Look at the pillars. The **Ranga Mantapa**. 56 musical pillars. They aren't just support beams; they are a lithophonic instrument. 🎶" }] },
+      { 
+        "focus": "ai", 
+        "image": "assets/images/vitthala-pillars.jpg",
+        "image_caption": "ARCHIVE: MUSICAL PILLARS (SA-RE-GA-MA)",
+        "image_source": "Source: Times of India / Wikimedia Commons",
+        "text_blocks": [{ "condition": "default", "text": "Forget the chariot. Look at the pillars. The **Ranga Mantapa**. 56 musical pillars. They aren't just support beams; they are a lithophonic instrument. 🎶" }] 
+      },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} tapped a pillar with a knuckle. It rang. A clear, bell-like tone: *Sa*. {partner} tapped the next one. *Re*. The stone was singing." }] },
-      { "focus": "player", "text_blocks": [ { "condition": "mech_eng", "text": "You analyze the strike. The density of the granite changes in each sub-pillar to alter the pitch. It's solid rock, tuned like a guitar string. The physics of this are insane. How did they calculate the density without computers?" }, { "condition": "default", "text": "It defied logic. Solid granite shouldn't resonate like hollow metal. It was a masterpiece of acoustics lost to time." } ] },
+      { 
+        "focus": "player", 
+        "text_blocks": [
+          { "condition": "mech_eng", "text": "You analyze the strike. The density of the granite changes in each sub-pillar to alter the pitch. It's solid rock, tuned like a guitar string. The physics of this are insane. How did they calculate the density without computers?" },
+          { "condition": "default", "text": "It defied logic. Solid granite shouldn't resonate like hollow metal. It was a masterpiece of acoustics lost to time." }
+        ]
+      },
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "I'm detecting specific resonance frequencies. These aren't random. They match the 7 notes of the scale. But... I'm also detecting micro-fractures. The fire that's coming? The heat will crack these. They will never sing like this again. Record it. Record everything." }] },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They stood there, tapping out a silent melody on stones that would soon be mute for eternity. The river Tungabhadra flowed behind them, indifferent to the music and indifferent to the war." }] }
     ]
@@ -180,12 +216,49 @@
       { "title": "ARCHIVE: Queen's Bath", "link": "https://www.karnataka.com/hampi/queens-bath/" }
     ],
     "scenes": [
-      { "focus": "player", "text_blocks": [ { "condition": "default", "text": "The heat was becoming a physical weight. {player} wiped sweat from their forehead. The silk clothes, while regal, were starting to feel like an oven." }, { "condition": "origin:india", "text": "The heat was familiar—that specific, dry Deccan heat that bakes the stones until they radiate. {player} wiped sweat from their forehead. Even with the silk clothes, it felt like home, just louder." }, { "condition": "origin:uk", "text": "The heat was an assault. It wasn't just hot; it was heavy. {player} felt their northern blood boiling. The silk clothes felt like a personal oven designed to roast them alive." } ] },
-      { "focus": "ai", "text_blocks": [ { "condition": "default", "text": "Core temperature rising. I suggest we find the AC. Or the 16th-century equivalent. Follow the aqueduct." }, { "condition": "high_bio", "text": "Hydration levels critical. You are losing electrolytes faster than you can replace them. Follow the water source. We need cooling immediately." } ] },
+      { 
+        "focus": "player", 
+        "text_blocks": [
+          { "condition": "default", "text": "The heat was becoming a physical weight. {player} wiped sweat from their forehead. The silk clothes, while regal, were starting to feel like an oven." },
+          { "condition": "origin:india", "text": "The heat was familiar—that specific, dry Deccan heat that bakes the stones until they radiate. {player} wiped sweat from their forehead. Even with the silk clothes, it felt like home, just louder." },
+          { "condition": "origin:uk", "text": "The heat was an assault. It wasn't just hot; it was heavy. {player} felt their northern blood boiling. The silk clothes felt like a personal oven designed to roast them alive." }
+        ]
+      },
+      { 
+        "focus": "ai", 
+        "text_blocks": [
+          { "condition": "default", "text": "Core temperature rising. I suggest we find the AC. Or the 16th-century equivalent. Follow the aqueduct." },
+          { "condition": "high_bio", "text": "Hydration levels critical. You are losing electrolytes faster than you can replace them. Follow the water source. We need cooling immediately." }
+        ]
+      },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They followed a stone channel running along the ground. It led them to a massive, square structure with a plain exterior. But inside..." }] },
-      { "focus": "player", "image": "assets/images/queens-bath-restored.png", "image_caption": "RECONSTRUCTION: INDO-ISLAMIC INTERIOR", "text_blocks": [ { "condition": "default", "text": "It was a palace dedicated to water. Arched balconies looked down onto a massive, emerald-green pool. The air here was ten degrees cooler, scented with rosewater." }, { "condition": "synergy:arts_social", "text": "It was a masterpiece of leisure. The **Queen's Bath**. The stucco work on the arches wasn't just decoration; it was acoustic dampening. The balconies were designed for private conversations, hidden from the court. You could feel the ghosts of gossip in the air." }, { "condition": "synergy:tech_lore", "text": "It was a thermodynamic machine. The **Queen's Bath**. The water wasn't stagnant; it was flowing. A constant cycle of fresh river water moved by gravity and siphons, cooling the air via evaporation before circulating out to the gardens. It was massive, passive Air Conditioning." }, { "condition": "architect", "text": "Indo-Islamic fusion at its peak. The arches were Persian, the lotus-bud brackets were Hindu. It wasn't just a building; it was a political statement. 'We are the world,' written in stone and water." } ] },
-      { "focus": "player", "text_blocks": [ { "condition": "default", "text": "They sat in the shade. {partner} produced a bundle of food they had 'acquired' from the bazaar." }, { "condition": "gender:female", "text": "They sat in the shade of the Zenana balconies. {player} felt a strange shiver. This was the women's space. A gilded cage. Beautiful, luxurious, and completely cut off from the war room. It felt safe, but suffocating." }, { "condition": "gender:male", "text": "They sat in the shade. Technically, {player} shouldn't be here. This was the Zenana—the Queen's quarters. Even centuries later, the architecture felt private, like they were trespassing on a secret." } ] },
-      { "focus": "partner", "text_blocks": [ { "condition": "default", "text": "{partner} unwrapped the leaf packet. 'Tamarind Rice. Puliyogare. And these... sweet lentil fritters. Hoige. Eat. We need the energy.'" }, { "condition": "origin:india", "text": "{partner} unwrapped the leaf packet. The smell hit {player} instantly. **Puliyogare**. The real stuff. Heavy on the peanuts, sharp with tamarind. And **Obbattu** dripping with ghee. It tasted like a festival." } ] },
+      { 
+        "focus": "player", 
+        "image": "assets/images/queens-bath-restored.png",
+        "image_caption": "RECONSTRUCTION: INDO-ISLAMIC INTERIOR",
+        "image_source": "Visual Reconstruction by Nano Banana",
+        "text_blocks": [
+          { "condition": "default", "text": "It was a palace dedicated to water. Arched balconies looked down onto a massive, emerald-green pool. The air here was ten degrees cooler, scented with rosewater." },
+          { "condition": "synergy:arts_social", "text": "It was a masterpiece of leisure. The **Queen's Bath**. The stucco work on the arches wasn't just decoration; it was acoustic dampening. The balconies were designed for private conversations, hidden from the court. You could feel the ghosts of gossip in the air." },
+          { "condition": "synergy:tech_lore", "text": "It was a thermodynamic machine. The **Queen's Bath**. The water wasn't stagnant; it was flowing. A constant cycle of fresh river water moved by gravity and siphons, cooling the air via evaporation before circulating out to the gardens. It was massive, passive Air Conditioning." },
+          { "condition": "architect", "text": "Indo-Islamic fusion at its peak. The arches were Persian, the lotus-bud brackets were Hindu. It wasn't just a building; it was a political statement. 'We are the world,' written in stone and water." }
+        ] 
+      },
+      { 
+        "focus": "player", 
+        "text_blocks": [
+          { "condition": "default", "text": "They sat in the shade. {partner} produced a bundle of food they had 'acquired' from the bazaar." },
+          { "condition": "gender:female", "text": "They sat in the shade of the Zenana balconies. {player} felt a strange shiver. This was the women's space. A gilded cage. Beautiful, luxurious, and completely cut off from the war room. It felt safe, but suffocating." },
+          { "condition": "gender:male", "text": "They sat in the shade. Technically, {player} shouldn't be here. This was the Zenana—the Queen's quarters. Even centuries later, the architecture felt private, like they were trespassing on a secret." }
+        ]
+      },
+      { 
+        "focus": "partner", 
+        "text_blocks": [
+          { "condition": "default", "text": "{partner} unwrapped the leaf packet. 'Tamarind Rice. Puliyogare. And these... sweet lentil fritters. Hoige. Eat. We need the energy.'" },
+          { "condition": "origin:india", "text": "{partner} unwrapped the leaf packet. The smell hit {player} instantly. **Puliyogare**. The real stuff. Heavy on the peanuts, sharp with tamarind. And **Obbattu** dripping with ghee. It tasted like a festival." }
+        ] 
+      },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "For a moment, eating spicy rice by a perfumed pool, watching peacocks strut in the garden, the war felt like a lie. It felt like this afternoon could last forever." }] },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Then, a deep *thud* vibrated through the stone floor. Not an earthquake. A distant, heavy impact. Like a thousand tons of metal hitting the earth at once." }] },
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Seismic anomaly detected. 40km North. That's not the tectonic plates, kids. That's the Talikota artillery train testing their range. Break time is over." }] }
