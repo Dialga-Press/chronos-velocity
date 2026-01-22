@@ -184,5 +184,80 @@
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "I'm detecting specific resonance frequencies. These aren't random. They match the 7 notes of the scale. But... I'm also detecting micro-fractures. The fire that's coming? The heat will crack these. They will never sing like this again. Record it. Record everything." }] },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They stood there, tapping out a silent melody on stones that would soon be mute for eternity. The river Tungabhadra flowed behind them, indifferent to the music and indifferent to the war." }] }
     ]
+  },
+  "chapter_12_bath": {
+    "id": "chapter_12_bath",
+    "title": "THE QUEEN'S BATH",
+    "next_chapter": null,
+    "telemetry": { "loc": "Royal Enclosure (South East)", "time": "15:30 PM", "weather": "36°C // Cooled by Water" },
+    "sources": [
+      { "title": "ARCHIVE: Hampi Hydraulic System", "link": "https://en.wikipedia.org/wiki/Hampi#Water_infrastructure" },
+      { "title": "ARCHIVE: Queen's Bath", "link": "https://www.karnataka.com/hampi/queens-bath/" }
+    ],
+    "scenes": [
+      { 
+        "focus": "player", 
+        "text_blocks": [
+          { "condition": "default", "text": "The heat was becoming a physical weight. {player} wiped sweat from their forehead. The silk clothes, while regal, were starting to feel like an oven." },
+          { "condition": "origin:india", "text": "The heat was familiar—that specific, dry Deccan heat that bakes the stones until they radiate. {player} wiped sweat from their forehead. Even with the silk clothes, it felt like home, just louder." },
+          { "condition": "origin:uk", "text": "The heat was an assault. It wasn't just hot; it was heavy. {player} felt their northern blood boiling. The silk clothes felt like a personal oven designed to roast them alive." }
+        ]
+      },
+      { 
+        "focus": "ai", 
+        "text_blocks": [
+          { "condition": "default", "text": "Core temperature rising. I suggest we find the AC. Or the 16th-century equivalent. Follow the aqueduct." },
+          { "condition": "high_bio", "text": "Hydration levels critical. You are losing electrolytes faster than you can replace them. Follow the water source. We need cooling immediately." }
+        ]
+      },
+      { 
+        "focus": "player", 
+        "text_blocks": [
+          { "condition": "default", "text": "They followed a stone channel running along the ground. It led them to a massive, square structure with a plain exterior. But inside..." }
+        ]
+      },
+      { 
+        "focus": "player", 
+        "text_blocks": [
+          { "condition": "default", "text": "It was a palace dedicated to water. Arched balconies looked down onto a massive, emerald-green pool. The air here was ten degrees cooler, scented with rosewater." },
+          { "condition": "synergy:arts_social", "text": "It was a masterpiece of leisure. The **Queen's Bath**. The stucco work on the arches wasn't just decoration; it was acoustic dampening. The balconies were designed for private conversations, hidden from the court. You could feel the ghosts of gossip in the air." },
+          { "condition": "synergy:tech_lore", "text": "It was a thermodynamic machine. The **Queen's Bath**. The water wasn't stagnant; it was flowing. A constant cycle of fresh river water moved by gravity and siphons, cooling the air via evaporation before circulating out to the gardens. It was massive, passive Air Conditioning." },
+          { "condition": "architect", "text": "Indo-Islamic fusion at its peak. The arches were Persian, the lotus-bud brackets were Hindu. It wasn't just a building; it was a political statement. 'We are the world,' written in stone and water." }
+        ] 
+      },
+      { 
+        "focus": "player", 
+        "text_blocks": [
+          { "condition": "default", "text": "They sat in the shade. {partner} produced a bundle of food they had 'acquired' from the bazaar." },
+          { "condition": "gender:female", "text": "They sat in the shade of the Zenana balconies. {player} felt a strange shiver. This was the women's space. A gilded cage. Beautiful, luxurious, and completely cut off from the war room. It felt safe, but suffocating." },
+          { "condition": "gender:male", "text": "They sat in the shade. Technically, {player} shouldn't be here. This was the Zenana—the Queen's quarters. Even centuries later, the architecture felt private, like they were trespassing on a secret." }
+        ]
+      },
+      { 
+        "focus": "partner", 
+        "text_blocks": [
+          { "condition": "default", "text": "{partner} unwrapped the leaf packet. 'Tamarind Rice. Puliyogare. And these... sweet lentil fritters. Hoige. Eat. We need the energy.'" },
+          { "condition": "origin:india", "text": "{partner} unwrapped the leaf packet. The smell hit {player} instantly. **Puliyogare**. The real stuff. Heavy on the peanuts, sharp with tamarind. And **Obbattu** dripping with ghee. It tasted like a festival." }
+        ] 
+      },
+      { 
+        "focus": "player", 
+        "text_blocks": [
+          { "condition": "default", "text": "For a moment, eating spicy rice by a perfumed pool, watching peacocks strut in the garden, the war felt like a lie. It felt like this afternoon could last forever." }
+        ] 
+      },
+      { 
+        "focus": "player", 
+        "text_blocks": [
+          { "condition": "default", "text": "Then, a deep *thud* vibrated through the stone floor. Not an earthquake. A distant, heavy impact. Like a thousand tons of metal hitting the earth at once." }
+        ] 
+      },
+      { 
+        "focus": "ai", 
+        "text_blocks": [
+          { "condition": "default", "text": "Seismic anomaly detected. 40km North. That's not the tectonic plates, kids. That's the Talikota artillery train testing their range. Break time is over." }
+        ] 
+      }
+    ]
   }
 }
