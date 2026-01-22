@@ -18,8 +18,28 @@ const output = document.getElementById('game-output');
 const input = document.getElementById('player-input');
 
 async function init() {
-    try { const r = await fetch('data/rules.json'); gameState.rules = await r.json(); } catch (e) { console.error(e); }
-    try { const s = await fetch('data/story.json'); gameState.story = await s.json(); } catch (e) { console.error(e); }
+    // 1. Load Rules
+    try { 
+        const r = await fetch('data/rules.json'); 
+        if (!r.ok) throw new Error("rules.json not found");
+        gameState.rules = await r.json(); 
+    } catch (e) { 
+        printLine(`ERROR LOADING RULES: ${e.message}`, 'system');
+        console.error(e);
+    }
+
+    // 2. Load Story (With Error Reporting)
+    try { 
+        const s = await fetch('data/story.json'); 
+        if (!s.ok) throw new Error("story.json not found");
+        gameState.story = await s.json(); 
+    } catch (e) { 
+        // THIS IS THE FIX: Print the error to the user!
+        printLine(`CRITICAL ERROR LOADING STORY: ${e.message}`, 'system');
+        printLine(`(Check your JSON file for missing commas or brackets)`, 'ai');
+        console.error(e);
+        return; // Stop execution
+    }
 
     printLine("ARCHIVE SYSTEM CONNECTED.", 'system');
     setTimeout(() => {
@@ -40,11 +60,10 @@ input.addEventListener('keydown', function(e) {
     }
 });
 
-// --- FIXED BACK BUTTON LOGIC ---
+// --- BACK BUTTON LOGIC ---
 function goBack() {
     if (!gameState.storyActive) return;
 
-    // 1. Visually Remove elements until we hit a Story/AI block
     let removedContent = false;
     while(output.lastChild && !removedContent) {
         const el = output.lastChild;
@@ -53,14 +72,11 @@ function goBack() {
         if (isContent) removedContent = true;
     }
 
-    // 2. Adjust Logic Index
     if (currentSceneIndex > 0) {
         currentSceneIndex--;
-        // If we popped a history state, sync it
         gameState.history.pop();
     }
 
-    // 3. Reset Input States
     gameState.step = 'reading'; 
     gameState.currentInputType = null;
     input.placeholder = "Write your response...";
@@ -146,8 +162,8 @@ function renderTelemetry(chapter) {
 }
 
 function playNextScene(saveHistory = true) {
-    // END OF CHAPTER CHECK
     if (!currentChapterData || currentSceneIndex >= currentChapterData.scenes.length) {
+        
         // CITATIONS
         if (currentChapterData.sources && !gameState.citationsShown) {
             printLine("<br><strong style='color:var(--accent); letter-spacing:1px;'>>> HISTORICAL ARCHIVE:</strong>", 'system');
@@ -155,7 +171,7 @@ function playNextScene(saveHistory = true) {
                 printLine(`<a href="${src.link}" target="_blank" style="color:var(--text-secondary); text-decoration:none; border-bottom:1px dotted var(--accent); font-size:0.9em; display:block; margin-bottom:5px;">[📄] ${src.title}</a>`, 'system');
             });
             gameState.citationsShown = true;
-            printLine("<i>(Press Enter to continue...)</i>", 'system');
+            printLine("<i>(Press Enter to continue journey...)</i>", 'system');
             return; 
         }
         gameState.citationsShown = false;
@@ -166,37 +182,18 @@ function playNextScene(saveHistory = true) {
     }
 
     const scene = currentChapterData.scenes[currentSceneIndex];
-
-     // --- NEW: IMAGE HANDLING ---
-    if (scene.image) {
-        const imgHTML = `
-            <div class="story-image-container">
-                <img src="${scene.image}" alt="Archive Visual" class="story-image">
-                ${scene.image_caption ? `<div class="image-caption">ARCHIVE ID: ${scene.image_caption}</div>` : ''}
-            </div>
-        `;
-        const div = document.createElement('div');
-        div.innerHTML = imgHTML;
-        output.appendChild(div);
-    }
-    // ---------------------------
-
-    // SKIP LOGIC
-    if (scene.mode_req && scene.mode_req !== gameState.mode) {
-        // ... (rest of logic)
     
-    // HISTORY SAVE
     if (saveHistory) gameState.history.push({ chapterId: currentChapterData.id, index: currentSceneIndex });
 
     // MODE CHECK SKIP
     if (scene.mode_req && scene.mode_req !== gameState.mode) {
-        if(saveHistory) gameState.history.pop(); // Remove skip from history
+        if(saveHistory) gameState.history.pop();
         currentSceneIndex++;
         playNextScene(saveHistory);
         return;
     }
 
-    // INPUT LOGIC
+    // INPUT PROMPT
     if (scene.input_prompt) {
         let promptText = resolveTextVariant(scene.text_blocks, scene.focus);
         printLine(replacePlaceholders(promptText), scene.focus === 'ai' ? 'ai' : 'story');
@@ -208,6 +205,19 @@ function playNextScene(saveHistory = true) {
         return; 
     }
 
+    // TEXT & IMAGE RENDERER
+    // 1. Image
+    if (scene.image) {
+        const imgHTML = `
+            <div class="story-image-container">
+                <img src="${scene.image}" alt="Archive Visual" class="story-image">
+                ${scene.image_caption ? `<div class="image-caption">${scene.image_caption}</div>` : ''}
+            </div>
+        `;
+        const div = document.createElement('div'); div.innerHTML = imgHTML; output.appendChild(div);
+    }
+
+    // 2. Text
     let text = resolveTextVariant(scene.text_blocks, scene.focus);
     text = replacePlaceholders(text);
     text = formatText(text);
@@ -216,8 +226,9 @@ function playNextScene(saveHistory = true) {
 
     gameState.waitingForEnter = true;
     setTimeout(() => {
-        printLine(text, msgType);
+        if (text) printLine(text, msgType); // Only print if text exists
         currentSceneIndex++;
+        
         if (currentSceneIndex <= currentChapterData.scenes.length || currentChapterData.next_chapter) {
              printLine("<i>(Press Enter...)</i>", 'system');
         }
@@ -236,8 +247,7 @@ function handleStoryInput(val) {
     } else {
         printLine(`>> DATA LOGGED: ${val.toUpperCase()}`, 'system');
         if (typeof processBioInput === "function") processBioInput(type, val);
-        // Save bio data
-        if(gameState.mode === 'solo' || currentSceneIndex < 10) gameState.player[type] = val; // Rough check to save to player first
+        if(gameState.mode === 'solo' || currentSceneIndex < 10) gameState.player[type] = val; 
     }
     
     gameState.step = 'reading';
@@ -249,9 +259,10 @@ function handleStoryInput(val) {
 
 function advanceStory() { if (!gameState.waitingForEnter) playNextScene(); }
 
-function formatText(text) { return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); }
+function formatText(text) { return text ? text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') : ""; }
 
 function replacePlaceholders(text) {
+    if (!text) return "";
     text = text.replace(/{player}/g, gameState.player.name);
     text = text.replace(/{partner}/g, gameState.partner.name);
     text = text.replace(/{driver}/g, gameState.driver || gameState.player.name);
@@ -259,29 +270,23 @@ function replacePlaceholders(text) {
     return text;
 }
 
-// --- ADVANCED TEXT RESOLVER ---
 function resolveTextVariant(blocks, focus) {
     let bestBlock = null;
     let highestPriority = -1;
-
     let target = gameState.player;
     if (focus === 'partner') target = gameState.partner;
 
     const checkCondition = (cond) => {
         if (cond === 'default') return 0; 
         if (cond === target.class) return 10;
-
-        // ORIGIN
         if (cond.startsWith('origin:')) {
             const reqOrigin = cond.split(':')[1];
             if (target.origin && target.origin.toLowerCase().includes(reqOrigin)) return 8;
         }
-        // GENDER
         if (cond.startsWith('gender:')) {
             const reqGender = cond.split(':')[1];
             if (target.gender && target.gender.toLowerCase().includes(reqGender)) return 7;
         }
-        // SYNERGY
         if (cond.startsWith('synergy:')) {
             const parts = cond.split(':')[1].split('_');
             const map = { 'tech': 'Tech', 'arts': 'Arts', 'guts': 'Guts', 'social': 'Social', 'bio': 'Bio', 'lore': 'Lore' };
@@ -289,7 +294,6 @@ function resolveTextVariant(blocks, focus) {
             const s2 = target.stats[map[parts[1]]];
             if (s1 >= 5 && s2 >= 5) return 9;
         }
-        // HIGH STAT
         if (cond.startsWith('high_')) {
             const statName = cond.split('_')[1];
             const map = { 'tech': 'Tech', 'arts': 'Arts', 'guts': 'Guts', 'social': 'Social', 'bio': 'Bio', 'lore': 'Lore' };
@@ -307,11 +311,9 @@ function resolveTextVariant(blocks, focus) {
             bestBlock = block;
         }
     });
-
     return bestBlock ? bestBlock.text : "Data Corrupted.";
 }
 
-// UI Functions
 function listClasses() {
     let listHTML = '<div style="margin-bottom:20px;">';
     gameState.rules.backgrounds.forEach((bg, index) => {
