@@ -237,3 +237,15 @@ input:focus { border-color: var(--accent); box-shadow: 0 10px 40px var(--accent-
     font-style: italic;
     font-family: var(--font-ui);
 }
+
+.image-source {
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+    background: var(--bg-color);
+    text-align: right;
+    padding: 2px 10px 8px 10px;
+    border-bottom: 1px solid var(--border-color);
+    font-family: var(--font-body);
+    opacity: 0.7;
+}
+
