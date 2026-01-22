@@ -18,8 +18,8 @@ const output = document.getElementById('game-output');
 const input = document.getElementById('player-input');
 
 async function init() {
-    try { const r = await fetch('data/rules.json'); gameState.rules = await r.json(); } catch (e) {}
-    try { const s = await fetch('data/story.json'); gameState.story = await s.json(); } catch (e) {}
+    try { const r = await fetch('data/rules.json'); gameState.rules = await r.json(); } catch (e) { console.error(e); }
+    try { const s = await fetch('data/story.json'); gameState.story = await s.json(); } catch (e) { console.error(e); }
 
     printLine("ARCHIVE SYSTEM CONNECTED.", 'system');
     setTimeout(() => {
@@ -42,7 +42,6 @@ input.addEventListener('keydown', function(e) {
 
 // --- FIXED BACK BUTTON LOGIC ---
 function goBack() {
-    // Prevent going back before story starts
     if (!gameState.storyActive) return;
 
     // 1. Visually Remove elements until we hit a Story/AI block
@@ -55,22 +54,17 @@ function goBack() {
     }
 
     // 2. Adjust Logic Index
-    // If we were waiting at an input prompt, the index hadn't advanced yet.
-    // If we were at text, index had advanced by 1.
-    // We simply decrement.
     if (currentSceneIndex > 0) {
         currentSceneIndex--;
+        // If we popped a history state, sync it
+        gameState.history.pop();
     }
 
-    // 3. Reset Input States (In case we backed out of a prompt)
+    // 3. Reset Input States
     gameState.step = 'reading'; 
     gameState.currentInputType = null;
     input.placeholder = "Write your response...";
     gameState.waitingForEnter = false;
-
-    // 4. STOP. Do not playNextScene(). 
-    // We leave the user at the state *before* the removed line was printed.
-    // They must press Enter (or input) to advance again.
 }
 
 function processInput(val) {
@@ -100,7 +94,6 @@ function processInput(val) {
     }
 }
 
-// ... (Char Creation Helpers) ...
 function startCharCreation(target) {
     printLine(target === 'player' ? "ENTER NAME (PROTAGONIST 1):" : "ENTER NAME (PROTAGONIST 2):", 'system');
     gameState.step = target + '_name';
@@ -140,6 +133,9 @@ async function loadStoryChapter(chapterId) {
         if(currentChapterData.show_synergy) showSynergyCard();
         currentSceneIndex = 0;
         playNextScene();
+    } else {
+        printLine(">> END OF ARCHIVE.", 'system');
+        gameState.storyActive = false;
     }
 }
 
@@ -150,81 +146,60 @@ function renderTelemetry(chapter) {
 }
 
 function playNextScene(saveHistory = true) {
-    // 1. END OF CHAPTER CHECK
+    // END OF CHAPTER CHECK
     if (!currentChapterData || currentSceneIndex >= currentChapterData.scenes.length) {
-        
-        // --- CITATION LOGIC ---
-        // If the chapter has sources and we haven't shown them yet
+        // CITATIONS
         if (currentChapterData.sources && !gameState.citationsShown) {
             printLine("<br><strong style='color:var(--accent); letter-spacing:1px;'>>> HISTORICAL ARCHIVE:</strong>", 'system');
-            
             currentChapterData.sources.forEach(src => {
-                // Renders clickable links for sources
                 printLine(`<a href="${src.link}" target="_blank" style="color:var(--text-secondary); text-decoration:none; border-bottom:1px dotted var(--accent); font-size:0.9em; display:block; margin-bottom:5px;">[📄] ${src.title}</a>`, 'system');
             });
-            
-            gameState.citationsShown = true; // Mark as shown so we don't loop
-            printLine("<i>(Press Enter to continue journey...)</i>", 'system');
-            return; // Stop here, wait for user input to trigger next block
+            gameState.citationsShown = true;
+            printLine("<i>(Press Enter to continue...)</i>", 'system');
+            return; 
         }
-        
-        // Reset citation flag for the next chapter
         gameState.citationsShown = false;
 
-        // Load Next Chapter or End Game
-        if (currentChapterData.next_chapter) {
-            loadStoryChapter(currentChapterData.next_chapter);
-        } else {
-            printLine(">> TO BE CONTINUED...", 'system');
-            gameState.storyActive = false;
-        }
+        if (currentChapterData.next_chapter) loadStoryChapter(currentChapterData.next_chapter);
+        else { printLine(">> TO BE CONTINUED...", 'system'); gameState.storyActive = false; }
         return;
     }
 
     const scene = currentChapterData.scenes[currentSceneIndex];
     
-    // 2. SKIP SCENES BASED ON MODE (Solo/Coop)
+    // HISTORY SAVE
+    if (saveHistory) gameState.history.push({ chapterId: currentChapterData.id, index: currentSceneIndex });
+
+    // MODE CHECK SKIP
     if (scene.mode_req && scene.mode_req !== gameState.mode) {
+        if(saveHistory) gameState.history.pop(); // Remove skip from history
         currentSceneIndex++;
-        playNextScene(saveHistory); // Recursive skip
+        playNextScene(saveHistory);
         return;
     }
 
-    // 3. HISTORY SAVE (For Back Button)
-    if (saveHistory) {
-        gameState.history.push({ chapterId: currentChapterData.id, index: currentSceneIndex });
-    }
-
-    // 4. INPUT PROMPT HANDLING
+    // INPUT LOGIC
     if (scene.input_prompt) {
         let promptText = resolveTextVariant(scene.text_blocks, scene.focus);
         printLine(replacePlaceholders(promptText), scene.focus === 'ai' ? 'ai' : 'story');
         gameState.step = 'story_input';
         gameState.currentInputType = scene.input_prompt;
         
-        // Custom placeholders
         if (scene.input_prompt === 'height') input.placeholder = "E.g., 5'11 or 180";
         else input.placeholder = `Enter ${scene.input_prompt}...`;
-        return; // Stop and wait for input
+        return; 
     }
 
-    // 5. TEXT PROCESSING
     let text = resolveTextVariant(scene.text_blocks, scene.focus);
     text = replacePlaceholders(text);
     text = formatText(text);
     
-    // Determine Style
-    let msgType = 'story';
-    if (scene.focus === 'ai') msgType = 'ai';
-    else if (scene.focus === 'system') msgType = 'system';
+    let msgType = scene.focus === 'ai' ? 'ai' : (scene.focus === 'system' ? 'system' : 'story');
 
-    // 6. RENDER WITH DELAY
     gameState.waitingForEnter = true;
     setTimeout(() => {
         printLine(text, msgType);
         currentSceneIndex++;
-        
-        // Show "Press Enter" prompt if there is more content
         if (currentSceneIndex <= currentChapterData.scenes.length || currentChapterData.next_chapter) {
              printLine("<i>(Press Enter...)</i>", 'system');
         }
@@ -234,31 +209,17 @@ function playNextScene(saveHistory = true) {
 
 function handleStoryInput(val) {
     const type = gameState.currentInputType;
-    
-    // --- DRIVER LOGIC ---
-    // If I call Shotgun, I am the Passenger.
     if (type === 'shotgun') { 
         let inputName = val.toLowerCase();
         let p1Name = gameState.player.name.toLowerCase();
-        
-        // Did Player 1 call shotgun?
-        if (inputName.includes(p1Name)) { 
-            gameState.passenger = gameState.player.name; 
-            gameState.driver = gameState.partner.name; 
-        } else { 
-            // Assume Partner called shotgun
-            gameState.passenger = gameState.partner.name; 
-            gameState.driver = gameState.player.name; 
-        }
-        
-        // LOG IT
-        printLine(`>> SHOTGUN CALLED BY: ${gameState.passenger.toUpperCase()}`, 'system');
+        if (inputName.includes(p1Name)) { gameState.passenger = gameState.player.name; gameState.driver = gameState.partner.name; } 
+        else { gameState.passenger = gameState.partner.name; gameState.driver = gameState.player.name; }
         printLine(`>> DRIVER DESIGNATED: ${gameState.driver.toUpperCase()}`, 'system');
-    } 
-    else {
-        // Bio Input
+    } else {
         printLine(`>> DATA LOGGED: ${val.toUpperCase()}`, 'system');
         if (typeof processBioInput === "function") processBioInput(type, val);
+        // Save bio data
+        if(gameState.mode === 'solo' || currentSceneIndex < 10) gameState.player[type] = val; // Rough check to save to player first
     }
     
     gameState.step = 'reading';
@@ -275,26 +236,64 @@ function formatText(text) { return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</s
 function replacePlaceholders(text) {
     text = text.replace(/{player}/g, gameState.player.name);
     text = text.replace(/{partner}/g, gameState.partner.name);
-    // Use driver/passenger if set, otherwise fallback to player/partner for pre-drive scenes
     text = text.replace(/{driver}/g, gameState.driver || gameState.player.name);
     text = text.replace(/{passenger}/g, gameState.passenger || gameState.partner.name);
     return text;
 }
 
-// ... (ResolveTextVariant, ListClasses, ShowStatCard same as previous) ...
+// --- ADVANCED TEXT RESOLVER ---
 function resolveTextVariant(blocks, focus) {
-    let targetClass = gameState.player.class;
-    let targetStats = gameState.player.stats;
-    if (focus === 'partner') { targetClass = gameState.partner.class; targetStats = gameState.partner.stats; }
-    let match = blocks.find(b => b.condition === targetClass);
-    if(match) return match.text;
-    const sortedStats = Object.keys(targetStats).sort((a,b) => targetStats[b] - targetStats[a]);
-    const topStat = sortedStats[0].toLowerCase();
-    match = blocks.find(b => b.condition === `high_${topStat}`);
-    if(match) return match.text;
-    match = blocks.find(b => b.condition === 'default');
-    return match ? match.text : "Data Corrupted.";
+    let bestBlock = null;
+    let highestPriority = -1;
+
+    let target = gameState.player;
+    if (focus === 'partner') target = gameState.partner;
+
+    const checkCondition = (cond) => {
+        if (cond === 'default') return 0; 
+        if (cond === target.class) return 10;
+
+        // ORIGIN
+        if (cond.startsWith('origin:')) {
+            const reqOrigin = cond.split(':')[1];
+            if (target.origin && target.origin.toLowerCase().includes(reqOrigin)) return 8;
+        }
+        // GENDER
+        if (cond.startsWith('gender:')) {
+            const reqGender = cond.split(':')[1];
+            if (target.gender && target.gender.toLowerCase().includes(reqGender)) return 7;
+        }
+        // SYNERGY
+        if (cond.startsWith('synergy:')) {
+            const parts = cond.split(':')[1].split('_');
+            const map = { 'tech': 'Tech', 'arts': 'Arts', 'guts': 'Guts', 'social': 'Social', 'bio': 'Bio', 'lore': 'Lore' };
+            const s1 = target.stats[map[parts[0]]];
+            const s2 = target.stats[map[parts[1]]];
+            if (s1 >= 5 && s2 >= 5) return 9;
+        }
+        // HIGH STAT
+        if (cond.startsWith('high_')) {
+            const statName = cond.split('_')[1];
+            const map = { 'tech': 'Tech', 'arts': 'Arts', 'guts': 'Guts', 'social': 'Social', 'bio': 'Bio', 'lore': 'Lore' };
+            const stats = target.stats;
+            const sortedStats = Object.keys(stats).sort((a,b) => stats[b] - stats[a]);
+            if (sortedStats[0].toLowerCase() === statName) return 5;
+        }
+        return -1;
+    };
+
+    blocks.forEach(block => {
+        let priority = checkCondition(block.condition);
+        if (priority > highestPriority) {
+            highestPriority = priority;
+            bestBlock = block;
+        }
+    });
+
+    return bestBlock ? bestBlock.text : "Data Corrupted.";
 }
+
+// UI Functions
 function listClasses() {
     let listHTML = '<div style="margin-bottom:20px;">';
     gameState.rules.backgrounds.forEach((bg, index) => {
