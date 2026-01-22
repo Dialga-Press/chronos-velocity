@@ -203,3 +203,37 @@ input:focus { border-color: var(--accent); box-shadow: 0 10px 40px var(--accent-
 #theme-toggle:hover { color: var(--accent); background: var(--glass-border); }
 
 @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* --- STORY IMAGES --- */
+.story-image-container {
+    width: 100%;
+    margin: 20px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    animation: fadeIn 1s ease forwards;
+}
+
+.story-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: sepia(20%) contrast(1.1); /* Slight vintage/cinematic feel */
+    transition: filter 0.3s;
+}
+
+.story-image:hover {
+    filter: sepia(0%) contrast(1); /* Full color on hover */
+}
+
+.image-caption {
+    font-size: 0.75rem;
+    color: var(--text-ui);
+    padding: 8px 15px;
+    background: var(--selection-bg);
+    border-top: 1px solid var(--glass-border);
+    text-align: right;
+    font-style: italic;
+    font-family: var(--font-ui);
+}
