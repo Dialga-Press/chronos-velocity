@@ -7,6 +7,10 @@ let gameState = {
     story: null,
     storyActive: false,
     waitingForEnter: false,
+    isTyping: false, // NEW: Prevents skipping scenes while typing
+    typingSpeed: 25, // ms per char (Standard)
+    typingSpeedAI: 40, // ms per char (Slower, thoughtful)
+    skipTyping: false, // Flag to finish immediately
     currentInputType: null,
     driver: '',
     passenger: '',
@@ -18,51 +22,51 @@ const output = document.getElementById('game-output');
 const input = document.getElementById('player-input');
 
 async function init() {
-    // 1. Load Rules
-    try { 
-        const r = await fetch('data/rules.json'); 
-        if (!r.ok) throw new Error("rules.json not found");
-        gameState.rules = await r.json(); 
-    } catch (e) { 
-        printLine(`ERROR LOADING RULES: ${e.message}`, 'system');
-        console.error(e);
-    }
+    try { const r = await fetch('data/rules.json'); gameState.rules = await r.json(); } catch (e) { console.error(e); }
+    try { const s = await fetch('data/story.json'); gameState.story = await s.json(); } catch (e) { console.error(e); }
 
-    // 2. Load Story (With Error Reporting)
-    try { 
-        const s = await fetch('data/story.json'); 
-        if (!s.ok) throw new Error("story.json not found");
-        gameState.story = await s.json(); 
-    } catch (e) { 
-        // THIS IS THE FIX: Print the error to the user!
-        printLine(`CRITICAL ERROR LOADING STORY: ${e.message}`, 'system');
-        printLine(`(Check your JSON file for missing commas or brackets)`, 'ai');
-        console.error(e);
-        return; // Stop execution
-    }
-
-    printLine("ARCHIVE SYSTEM CONNECTED.", 'system');
+    // Initial system message (Instant)
+    printLine("ARCHIVE SYSTEM CONNECTED.", 'system', false);
     setTimeout(() => {
-        printLine("SELECT NARRATIVE MODE:", 'system');
-        printLine("[1] SOLO CHRONICLE", 'story');
-        printLine("[2] DUAL CHRONICLE", 'story');
+        printLine("SELECT NARRATIVE MODE:", 'system', false);
+        printLine("[1] SOLO CHRONICLE", 'story', false);
+        printLine("[2] DUAL CHRONICLE", 'story', false);
     }, 800);
 }
 
 input.addEventListener('keydown', function(e) {
     if (e.key === 'Enter') {
         const val = input.value.trim();
-        input.value = '';
         
-        if (gameState.step === 'story_input') { handleStoryInput(val); return; }
-        if (gameState.storyActive) { advanceStory(); return; }
+        // 1. If Typing, force finish
+        if (gameState.isTyping) {
+            gameState.skipTyping = true;
+            return;
+        }
+
+        // 2. If Story Input
+        if (gameState.step === 'story_input') { 
+            input.value = '';
+            if(!val) return;
+            handleStoryInput(val); 
+            return; 
+        }
+
+        // 3. If Story Reading
+        if (gameState.storyActive) { 
+            input.value = '';
+            advanceStory(); 
+            return; 
+        }
+
+        // 4. Normal Input
+        input.value = '';
         if (val) processInput(val);
     }
 });
 
-// --- BACK BUTTON LOGIC ---
 function goBack() {
-    if (!gameState.storyActive) return;
+    if (!gameState.storyActive || gameState.isTyping) return;
 
     let removedContent = false;
     while(output.lastChild && !removedContent) {
@@ -83,28 +87,130 @@ function goBack() {
     gameState.waitingForEnter = false;
 }
 
+// --- TYPEWRITER ENGINE (The Magic) ---
+function typeWriter(element, html, speed) {
+    return new Promise((resolve) => {
+        gameState.isTyping = true;
+        gameState.skipTyping = false;
+        element.classList.add('typing'); // Add blinking cursor
+
+        // Parse HTML into text nodes and tag nodes
+        // We create a temp div to parse the HTML structure
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = html;
+        
+        const nodes = Array.from(tempDiv.childNodes);
+        element.innerHTML = ""; // Clear for typing
+
+        let nodeIndex = 0;
+        
+        function typeNode() {
+            if (gameState.skipTyping) {
+                element.innerHTML = html; // Instant finish
+                element.classList.remove('typing');
+                element.classList.add('typed-done');
+                gameState.isTyping = false;
+                gameState.skipTyping = false;
+                scrollToBottom();
+                resolve();
+                return;
+            }
+
+            if (nodeIndex >= nodes.length) {
+                element.classList.remove('typing');
+                element.classList.add('typed-done');
+                gameState.isTyping = false;
+                resolve();
+                return;
+            }
+
+            const node = nodes[nodeIndex];
+
+            if (node.nodeType === 3) { // Text Node
+                const text = node.nodeValue;
+                let charIndex = 0;
+                
+                // Create a text node in the live element
+                const liveTextNode = document.createTextNode("");
+                element.appendChild(liveTextNode);
+
+                function typeChar() {
+                    if (gameState.skipTyping) { typeNode(); return; } // Check skip
+
+                    liveTextNode.nodeValue += text.charAt(charIndex);
+                    charIndex++;
+                    scrollToBottom();
+
+                    if (charIndex < text.length) {
+                        setTimeout(typeChar, speed);
+                    } else {
+                        nodeIndex++;
+                        typeNode();
+                    }
+                }
+                typeChar();
+
+            } else { // HTML Element (strong, span, etc.)
+                // Clone the element without its inner text first (complex, let's simplify)
+                // Simplified: Just append the element instantly if it's a tag, 
+                // OR recursively type inside it. For stability, let's append tags instantly for v0.1.3
+                // but if it's a structural tag (like span), we might want to type inside.
+                
+                // V0.1.3 Strategy: Append the tag structure, then recurse typing? 
+                // Too complex for single file. 
+                // SIMPLE STRATEGY: Treat tags as instant blocks.
+                
+                element.appendChild(node.cloneNode(true));
+                nodeIndex++;
+                setTimeout(typeNode, speed);
+            }
+        }
+
+        typeNode();
+    });
+}
+
+// Modified printLine to handle typing
+async function printLine(text, type, animate = true) {
+    const p = document.createElement('div');
+    p.classList.add('msg');
+    if (type) p.classList.add(type);
+    output.appendChild(p);
+
+    if (animate) {
+        // Determine speed
+        let spd = gameState.typingSpeed;
+        if (type === 'ai') spd = gameState.typingSpeedAI;
+        if (type === 'system') spd = 5; // Fast system text
+
+        await typeWriter(p, text, spd);
+    } else {
+        p.innerHTML = text;
+        p.classList.add('typed-done');
+        scrollToBottom();
+    }
+}
+
+// ... (Process Input Logic - Simplified for brevity, use previous if not changed) ...
 function processInput(val) {
     if (gameState.step === 'mode') {
         if (val === '1') { gameState.mode = 'solo'; startCharCreation('player'); }
         else if (val === '2') { gameState.mode = 'coop'; startCharCreation('player'); }
-    } 
-    else if (gameState.step.includes('_name')) {
+    } else if (gameState.step.includes('_name')) {
         let t = gameState.step.split('_')[0];
         gameState[t].name = val;
-        printLine(`${t.toUpperCase()} ID: ${val}`, 'story');
-        setTimeout(listClasses, 500);
+        printLine(`${t.toUpperCase()} ID: ${val}`, 'story'); // Animate this
+        setTimeout(listClasses, 1000); // Wait for typing
         gameState.step = t + '_class';
-    } 
-    else if (gameState.step.includes('_class')) {
+    } else if (gameState.step.includes('_class')) {
         let t = gameState.step.split('_')[0];
         if (applyClassSelection(val, t)) {
             if(t==='player' && gameState.mode === 'solo') {
-                 setTimeout(() => { printLine("Configure Secondary Asset? [Y/N]", 'system'); gameState.step = 'partner_query'; }, 500);
+                 setTimeout(() => { printLine("Configure Secondary Asset? [Y/N]", 'system'); gameState.step = 'partner_query'; }, 1000);
             } else if (t==='player') { startCharCreation('partner'); }
             else { startGame(); }
         }
-    } 
-    else if (gameState.step === 'partner_query') {
+    } else if (gameState.step === 'partner_query') {
         if(val.toLowerCase().startsWith('y')) startCharCreation('partner');
         else { autoAssignPartner(); startGame(); }
     }
@@ -134,7 +240,7 @@ function autoAssignPartner() {
 }
 function startGame() {
     printLine("TIMELINE SYNCHRONIZATION COMPLETE.", 'system');
-    setTimeout(() => { printLine("<hr style='opacity:0.3'>", 'system'); gameState.storyActive = true; loadStoryChapter('chapter_1_p1'); }, 1000);
+    setTimeout(() => { printLine("<hr style='opacity:0.3'>", 'system', false); gameState.storyActive = true; loadStoryChapter('chapter_1_p1'); }, 1500);
 }
 
 // --- STORY ENGINE ---
@@ -149,9 +255,6 @@ async function loadStoryChapter(chapterId) {
         if(currentChapterData.show_synergy) showSynergyCard();
         currentSceneIndex = 0;
         playNextScene();
-    } else {
-        printLine(">> END OF ARCHIVE.", 'system');
-        gameState.storyActive = false;
     }
 }
 
@@ -162,16 +265,17 @@ function renderTelemetry(chapter) {
 }
 
 function playNextScene(saveHistory = true) {
+    if (gameState.isTyping) return; // Block while typing
+
     if (!currentChapterData || currentSceneIndex >= currentChapterData.scenes.length) {
-        
-        // CITATIONS
+        // Citations
         if (currentChapterData.sources && !gameState.citationsShown) {
-            printLine("<br><strong style='color:var(--accent); letter-spacing:1px;'>>> HISTORICAL ARCHIVE:</strong>", 'system');
+            printLine("<br><strong style='color:var(--accent); letter-spacing:1px;'>>> HISTORICAL ARCHIVE:</strong>", 'system', false);
             currentChapterData.sources.forEach(src => {
-                printLine(`<a href="${src.link}" target="_blank" style="color:var(--text-secondary); text-decoration:none; border-bottom:1px dotted var(--accent); font-size:0.9em; display:block; margin-bottom:5px;">[📄] ${src.title}</a>`, 'system');
+                printLine(`<a href="${src.link}" target="_blank" style="color:var(--text-secondary); text-decoration:none; border-bottom:1px dotted var(--accent); font-size:0.9em; display:block; margin-bottom:5px;">[📄] ${src.title}</a>`, 'system', false);
             });
             gameState.citationsShown = true;
-            printLine("<i>(Press Enter to continue journey...)</i>", 'system');
+            printLine("<i>(Press Enter to continue...)</i>", 'system', false);
             return; 
         }
         gameState.citationsShown = false;
@@ -182,10 +286,8 @@ function playNextScene(saveHistory = true) {
     }
 
     const scene = currentChapterData.scenes[currentSceneIndex];
-    
     if (saveHistory) gameState.history.push({ chapterId: currentChapterData.id, index: currentSceneIndex });
 
-    // MODE CHECK SKIP
     if (scene.mode_req && scene.mode_req !== gameState.mode) {
         if(saveHistory) gameState.history.pop();
         currentSceneIndex++;
@@ -193,21 +295,20 @@ function playNextScene(saveHistory = true) {
         return;
     }
 
-    // INPUT PROMPT
+    // Input Prompt
     if (scene.input_prompt) {
         let promptText = resolveTextVariant(scene.text_blocks, scene.focus);
-        printLine(replacePlaceholders(promptText), scene.focus === 'ai' ? 'ai' : 'story');
-        gameState.step = 'story_input';
-        gameState.currentInputType = scene.input_prompt;
-        
-        if (scene.input_prompt === 'height') input.placeholder = "E.g., 5'11 or 180";
-        else input.placeholder = `Enter ${scene.input_prompt}...`;
+        // We Await the typing before showing input
+        printLine(replacePlaceholders(promptText), scene.focus === 'ai' ? 'ai' : 'story').then(() => {
+            gameState.step = 'story_input';
+            gameState.currentInputType = scene.input_prompt;
+            if (scene.input_prompt === 'height') input.placeholder = "E.g., 5'11 or 180";
+            else input.placeholder = `Enter ${scene.input_prompt}...`;
+        });
         return; 
     }
 
-    // TEXT & IMAGE RENDERER
-    // 1. Image
-    // 1. Image Renderer
+    // Image
     if (scene.image) {
         const imgHTML = `
             <div class="story-image-container">
@@ -219,23 +320,21 @@ function playNextScene(saveHistory = true) {
         const div = document.createElement('div'); div.innerHTML = imgHTML; output.appendChild(div);
     }
 
-    // 2. Text
+    // Text
     let text = resolveTextVariant(scene.text_blocks, scene.focus);
     text = replacePlaceholders(text);
     text = formatText(text);
     
     let msgType = scene.focus === 'ai' ? 'ai' : (scene.focus === 'system' ? 'system' : 'story');
 
-    gameState.waitingForEnter = true;
-    setTimeout(() => {
-        if (text) printLine(text, msgType); // Only print if text exists
+    // Call Typewriter
+    printLine(text, msgType).then(() => {
         currentSceneIndex++;
-        
         if (currentSceneIndex <= currentChapterData.scenes.length || currentChapterData.next_chapter) {
-             printLine("<i>(Press Enter...)</i>", 'system');
+             printLine("<i>(Press Enter...)</i>", 'system', false);
         }
         gameState.waitingForEnter = false;
-    }, 400);
+    });
 }
 
 function handleStoryInput(val) {
@@ -251,7 +350,6 @@ function handleStoryInput(val) {
         if (typeof processBioInput === "function") processBioInput(type, val);
         if(gameState.mode === 'solo' || currentSceneIndex < 10) gameState.player[type] = val; 
     }
-    
     gameState.step = 'reading';
     gameState.currentInputType = null;
     input.placeholder = "Write your response...";
@@ -259,7 +357,10 @@ function handleStoryInput(val) {
     playNextScene();
 }
 
-function advanceStory() { if (!gameState.waitingForEnter) playNextScene(); }
+function advanceStory() { 
+    if (gameState.isTyping) return; // Prevent double advance
+    if (!gameState.waitingForEnter) playNextScene(); 
+}
 
 function formatText(text) { return text ? text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') : ""; }
 
@@ -322,13 +423,13 @@ function listClasses() {
         listHTML += `<div class="class-card"><strong>[${index + 1}] ${bg.name}</strong><span>${bg.desc}</span></div>`;
     });
     listHTML += '</div>';
-    const div = document.createElement('div'); div.innerHTML = listHTML; div.classList.add('msg'); output.appendChild(div); scrollToBottom();
+    printLine(listHTML, 'system', false); // No typing for lists
 }
 function showStatCard(className, stats, name) {
     let html = `<div class="stats-card"><div style="text-align:center; margin-bottom:20px; font-family:var(--font-head); font-size:1.4em; color:var(--text-primary)">${name}<div style="font-size:0.6em; color:var(--accent); text-transform:uppercase; margin-top:5px; letter-spacing:2px;">${className}</div></div><div class="stats-grid">`;
     for (let [key, val] of Object.entries(stats)) { let pct = (val/10)*100; html += `<div class="stat-row"><div class="stat-label"><span>${key}</span><span>${val}/10</span></div><div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${pct}%"></div></div></div>`; }
     html += `</div></div>`;
-    const div = document.createElement('div'); div.innerHTML = html; output.appendChild(div); scrollToBottom();
+    printLine(html, 'system', false);
 }
 function showSynergyCard() {
     const p1 = gameState.player.stats;
@@ -338,9 +439,23 @@ function showSynergyCard() {
     let html = `<div class="stats-card" style="border-color: var(--text-primary);"><div style="text-align:center; margin-bottom:20px; font-family:var(--font-head); font-size:1.4em; color:var(--text-primary)">TEAM SYNERGY<div style="font-size:0.6em; color:var(--text-secondary); text-transform:uppercase; margin-top:5px; letter-spacing:2px;">COMBINED POTENTIAL</div></div><div class="stats-grid">`;
     for (let [key, val] of Object.entries(synergy)) { let pct = (val/20)*100; html += `<div class="stat-row"><div class="stat-label"><span>${key}</span><span>${val}/20</span></div><div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${pct}%; background:var(--text-primary);"></div></div></div>`; }
     html += `</div></div>`;
-    const div = document.createElement('div'); div.innerHTML = html; output.appendChild(div);
+    printLine(html, 'system', false);
 }
-function printLine(text, type) { const p = document.createElement('div'); p.innerHTML = text; p.classList.add('msg'); if (type) p.classList.add(type); output.appendChild(p); scrollToBottom(); }
+function printLine(text, type, animate = true) { 
+    const p = document.createElement('div'); 
+    p.classList.add('msg'); 
+    if (type) p.classList.add(type); 
+    output.appendChild(p); 
+    
+    if(animate) {
+        return typeWriter(p, text, (type==='ai' ? 40 : 25));
+    } else {
+        p.innerHTML = text;
+        p.classList.add('typed-done');
+        scrollToBottom();
+        return Promise.resolve();
+    }
+}
 function scrollToBottom() { setTimeout(() => { output.scrollTop = output.scrollHeight; }, 50); }
 const themeBtn = document.getElementById('theme-toggle');
 if(themeBtn) { themeBtn.addEventListener('click', function() { document.body.classList.toggle('light-mode'); }); }
