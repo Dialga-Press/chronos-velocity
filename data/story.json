@@ -165,7 +165,7 @@
   "chapter_11_pillars": {
     "id": "chapter_11_pillars",
     "title": "RESONANCE",
-    "next_chapter": null,
+    "next_chapter": "chapter_12_bath",
     "telemetry": { "loc": "Vitthala Temple", "time": "14:00 PM", "weather": "Breezy // River Side" },
     "sources": [
       { "title": "Musical Pillars of Hampi", "link": "https://en.wikipedia.org/wiki/Hampi#Vitthala_temple_and_market_complex" }
