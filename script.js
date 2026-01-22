@@ -166,6 +166,24 @@ function playNextScene(saveHistory = true) {
     }
 
     const scene = currentChapterData.scenes[currentSceneIndex];
+
+     // --- NEW: IMAGE HANDLING ---
+    if (scene.image) {
+        const imgHTML = `
+            <div class="story-image-container">
+                <img src="${scene.image}" alt="Archive Visual" class="story-image">
+                ${scene.image_caption ? `<div class="image-caption">ARCHIVE ID: ${scene.image_caption}</div>` : ''}
+            </div>
+        `;
+        const div = document.createElement('div');
+        div.innerHTML = imgHTML;
+        output.appendChild(div);
+    }
+    // ---------------------------
+
+    // SKIP LOGIC
+    if (scene.mode_req && scene.mode_req !== gameState.mode) {
+        // ... (rest of logic)
     
     // HISTORY SAVE
     if (saveHistory) gameState.history.push({ chapterId: currentChapterData.id, index: currentSceneIndex });
