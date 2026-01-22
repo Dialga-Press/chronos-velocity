@@ -207,11 +207,13 @@ function playNextScene(saveHistory = true) {
 
     // TEXT & IMAGE RENDERER
     // 1. Image
+    // 1. Image Renderer
     if (scene.image) {
         const imgHTML = `
             <div class="story-image-container">
                 <img src="${scene.image}" alt="Archive Visual" class="story-image">
                 ${scene.image_caption ? `<div class="image-caption">${scene.image_caption}</div>` : ''}
+                ${scene.image_source ? `<div class="image-source">SOURCE: ${scene.image_source}</div>` : ''}
             </div>
         `;
         const div = document.createElement('div'); div.innerHTML = imgHTML; output.appendChild(div);
