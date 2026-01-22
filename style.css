@@ -247,5 +247,25 @@ input:focus { border-color: var(--accent); box-shadow: 0 10px 40px var(--accent-
     border-bottom: 1px solid var(--border-color);
     font-family: var(--font-body);
     opacity: 0.7;
+
+    /* --- TYPEWRITER EFFECTS --- */
+.typing::after {
+    content: '▋';
+    display: inline-block;
+    vertical-align: bottom;
+    animation: blink 1s step-end infinite;
+    color: var(--accent);
+    margin-left: 2px;
+}
+
+/* Typing finished state (remove cursor) */
+.typed-done::after {
+    display: none;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
 }
 
