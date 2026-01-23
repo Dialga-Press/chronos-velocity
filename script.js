@@ -52,14 +52,35 @@ function triggerNewGameMenu() {
 input.addEventListener('keydown', function(e) {
     if (e.key === 'Enter') {
         const val = input.value.trim();
-        input.value = '';
         
-        // Typing Priority: Stop typing if user hits enter
-        if (gameState.isTyping) { gameState.skipTyping = true; return; }
+        // 1. If Typing, force finish (Skip)
+        if (gameState.isTyping) {
+            gameState.skipTyping = true;
+            // Don't clear input if we just skipped typing
+            e.preventDefault(); 
+            return;
+        }
 
-        if (gameState.step === 'story_input') { handleStoryInput(val); return; }
-        if (gameState.storyActive) { advanceStory(); return; }
-        if (val) processInput(val);
+        // 2. If Story Input (Bio-Metric/Shotgun)
+        if (gameState.step === 'story_input') { 
+            if (!val) return; // FIX: Stop if empty!
+            
+            input.value = ''; // Clear only if valid
+            handleStoryInput(val); 
+            return; 
+        }
+
+        // 3. If Story Reading (Just advancing text)
+        if (gameState.storyActive) { 
+            input.value = '';
+            advanceStory(); 
+            return; 
+        }
+
+        // 4. Normal Menu Input
+        if (!val) return; // Block empty inputs here too
+        input.value = '';
+        processInput(val);
     }
 });
 
