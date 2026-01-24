@@ -209,7 +209,7 @@
   "chapter_12_bath": {
     "id": "chapter_12_bath",
     "title": "THE QUEEN'S BATH",
-    "next_chapter": null,
+    "next_chapter": null, 
     "telemetry": { "loc": "Royal Enclosure (South East)", "time": "15:30 PM", "weather": "36°C // Cooled by Water" },
     "sources": [
       { "title": "ARCHIVE: Hampi Hydraulic System", "link": "https://en.wikipedia.org/wiki/Hampi#Water_infrastructure" },
@@ -218,50 +218,60 @@
     "scenes": [
       { 
         "focus": "player", 
-        "text_blocks": [
-          { "condition": "default", "text": "The heat was becoming a physical weight. {player} wiped sweat from their forehead. The silk clothes, while regal, were starting to feel like an oven." },
-          { "condition": "origin:india", "text": "The heat was familiar—that specific, dry Deccan heat that bakes the stones until they radiate. {player} wiped sweat from their forehead. Even with the silk clothes, it felt like home, just louder." },
-          { "condition": "origin:uk", "text": "The heat was an assault. It wasn't just hot; it was heavy. {player} felt their northern blood boiling. The silk clothes felt like a personal oven designed to roast them alive." }
-        ]
+        "text_blocks": [ { "condition": "default", "text": "The heat was becoming a physical weight. {player} wiped sweat from their forehead. The silk clothes, while regal, were starting to feel like an oven." }, { "condition": "origin:india", "text": "The heat was familiar—that specific, dry Deccan heat that bakes the stones until they radiate. {player} wiped sweat from their forehead. Even with the silk clothes, it felt like home, just louder." }, { "condition": "origin:uk", "text": "The heat was an assault. It wasn't just hot; it was heavy. {player} felt their northern blood boiling. The silk clothes felt like a personal oven designed to roast them alive." } ] 
       },
       { 
         "focus": "ai", 
-        "text_blocks": [
-          { "condition": "default", "text": "Core temperature rising. I suggest we find the AC. Or the 16th-century equivalent. Follow the aqueduct." },
-          { "condition": "high_bio", "text": "Hydration levels critical. You are losing electrolytes faster than you can replace them. Follow the water source. We need cooling immediately." }
-        ]
+        "text_blocks": [ { "condition": "default", "text": "Core temperature rising. I suggest we find the AC. Or the 16th-century equivalent. Follow the aqueduct." }, { "condition": "high_bio", "text": "Hydration levels critical. You are losing electrolytes faster than you can replace them. Follow the water source. We need cooling immediately." } ] 
       },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They followed a stone channel running along the ground. It led them to a massive, square structure with a plain exterior. But inside..." }] },
-      { 
-        "focus": "player", 
-        "image": "assets/images/queens-bath-restored.png",
-        "image_caption": "RECONSTRUCTION: INDO-ISLAMIC INTERIOR",
-        "image_source": "Visual Reconstruction by Nano Banana",
-        "text_blocks": [
-          { "condition": "default", "text": "It was a palace dedicated to water. Arched balconies looked down onto a massive, emerald-green pool. The air here was ten degrees cooler, scented with rosewater." },
-          { "condition": "synergy:arts_social", "text": "It was a masterpiece of leisure. The **Queen's Bath**. The stucco work on the arches wasn't just decoration; it was acoustic dampening. The balconies were designed for private conversations, hidden from the court. You could feel the ghosts of gossip in the air." },
-          { "condition": "synergy:tech_lore", "text": "It was a thermodynamic machine. The **Queen's Bath**. The water wasn't stagnant; it was flowing. A constant cycle of fresh river water moved by gravity and siphons, cooling the air via evaporation before circulating out to the gardens. It was massive, passive Air Conditioning." },
-          { "condition": "architect", "text": "Indo-Islamic fusion at its peak. The arches were Persian, the lotus-bud brackets were Hindu. It wasn't just a building; it was a political statement. 'We are the world,' written in stone and water." }
-        ] 
-      },
-      { 
-        "focus": "player", 
-        "text_blocks": [
-          { "condition": "default", "text": "They sat in the shade. {partner} produced a bundle of food they had 'acquired' from the bazaar." },
-          { "condition": "gender:female", "text": "They sat in the shade of the Zenana balconies. {player} felt a strange shiver. This was the women's space. A gilded cage. Beautiful, luxurious, and completely cut off from the war room. It felt safe, but suffocating." },
-          { "condition": "gender:male", "text": "They sat in the shade. Technically, {player} shouldn't be here. This was the Zenana—the Queen's quarters. Even centuries later, the architecture felt private, like they were trespassing on a secret." }
-        ]
-      },
-      { 
-        "focus": "partner", 
-        "text_blocks": [
-          { "condition": "default", "text": "{partner} unwrapped the leaf packet. 'Tamarind Rice. Puliyogare. And these... sweet lentil fritters. Hoige. Eat. We need the energy.'" },
-          { "condition": "origin:india", "text": "{partner} unwrapped the leaf packet. The smell hit {player} instantly. **Puliyogare**. The real stuff. Heavy on the peanuts, sharp with tamarind. And **Obbattu** dripping with ghee. It tasted like a festival." }
-        ] 
-      },
+      { "focus": "player", "image": "assets/images/queens-bath-restored.png", "image_caption": "RECONSTRUCTION: INDO-ISLAMIC INTERIOR", "text_blocks": [ { "condition": "default", "text": "It was a palace dedicated to water. Arched balconies looked down onto a massive, emerald-green pool. The air here was ten degrees cooler, scented with rosewater." }, { "condition": "synergy:arts_social", "text": "It was a masterpiece of leisure. The **Queen's Bath**. The stucco work on the arches wasn't just decoration; it was acoustic dampening. The balconies were designed for private conversations, hidden from the court. You could feel the ghosts of gossip in the air." }, { "condition": "synergy:tech_lore", "text": "It was a thermodynamic machine. The **Queen's Bath**. The water wasn't stagnant; it was flowing. A constant cycle of fresh river water moved by gravity and siphons, cooling the air via evaporation before circulating out to the gardens. It was massive, passive Air Conditioning." }, { "condition": "architect", "text": "Indo-Islamic fusion at its peak. The arches were Persian, the lotus-bud brackets were Hindu. It wasn't just a building; it was a political statement. 'We are the world,' written in stone and water." } ] },
+      { "focus": "player", "text_blocks": [ { "condition": "default", "text": "They sat in the shade. {partner} produced a bundle of food they had 'acquired' from the bazaar." }, { "condition": "gender:female", "text": "They sat in the shade of the Zenana balconies. {player} felt a strange shiver. This was the women's space. A gilded cage. Beautiful, luxurious, and completely cut off from the war room. It felt safe, but suffocating." }, { "condition": "gender:male", "text": "They sat in the shade. Technically, {player} shouldn't be here. This was the Zenana—the Queen's quarters. Even centuries later, the architecture felt private, like they were trespassing on a secret." } ] },
+      { "focus": "partner", "text_blocks": [ { "condition": "default", "text": "{partner} unwrapped the leaf packet. 'Tamarind Rice. Puliyogare. And these... sweet lentil fritters. Hoige. Eat. We need the energy.'" }, { "condition": "origin:india", "text": "{partner} unwrapped the leaf packet. The smell hit {player} instantly. **Puliyogare**. The real stuff. Heavy on the peanuts, sharp with tamarind. And **Obbattu** dripping with ghee. It tasted like a festival." } ] },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "For a moment, eating spicy rice by a perfumed pool, watching peacocks strut in the garden, the war felt like a lie. It felt like this afternoon could last forever." }] },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Then, a deep *thud* vibrated through the stone floor. Not an earthquake. A distant, heavy impact. Like a thousand tons of metal hitting the earth at once." }] },
-      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Seismic anomaly detected. 40km North. That's not the tectonic plates, kids. That's the Talikota artillery train testing their range. Break time is over." }] }
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Seismic anomaly detected. 40km North. That's not the tectonic plates, kids. That's the Talikota artillery train testing their range. Break time is over." }] },
+      { 
+        "focus": "partner", 
+        "text_blocks": [{ "condition": "default", "text": "As they packed up, {partner} noticed something. A small leather pouch left behind by a guard near the drain. It was heavy. The clink of **Varaha** gold coins was unmistakable." }] 
+      },
+      {
+        "focus": "player",
+        "choices": [
+          { "text": "Take the Gold (Ash & Vapor Protocol)", "target": "chapter_13_gold" },
+          { "text": "Leave it (Risk of Butterfly Effect)", "target": "chapter_13_leave" }
+        ],
+        "text_blocks": [{ "condition": "default", "text": "SMYLNYX scanned it. 'High purity gold. Value: 500 Varahas. Timeline trajectory: In 10 minutes, a rat knocks this into the drainage sludge. It remains buried for 500 years. Status: Vapor. Claimable. What's the call?'" }]
+      }
+    ]
+  },
+  "chapter_13_gold": {
+    "id": "chapter_13_gold",
+    "title": "ASSET ACQUIRED",
+    "next_chapter": "chapter_14_armory",
+    "scenes": [
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} swiped the pouch. It vanished into the Void Vault instantly. 'Funding secured for the next semester,' SMYLNYX chirped. 'And we saved history from the sewers. Double win.'" }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They left the bathhouse, pockets heavier, consciences clear. The war was coming, but at least they wouldn't be broke." }] }
+    ]
+  },
+  "chapter_13_leave": {
+    "id": "chapter_13_leave",
+    "title": "TIMELINE PRESERVED",
+    "next_chapter": "chapter_14_armory",
+    "scenes": [
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} stepped away. 'Not worth the risk,' they muttered. SMYLNYX sighed. 'Boring, but responsible. I respect it. Goodbye, retirement fund.'" }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They left the bathhouse empty-handed. Behind them, a large rat skittered out of the shadows, eyeing the leather pouch." }] }
+    ]
+  },
+  "chapter_14_armory": {
+    "id": "chapter_14_armory",
+    "title": "THE GATHERING STORM",
+    "next_chapter": null,
+    "telemetry": { "loc": "Streets of Hampi", "time": "16:00 PM", "weather": "Smoke on the Horizon" },
+    "scenes": [
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They stepped back out into the heat. The mood in the city had shifted. The laughter in the bazaar was tighter. The soldiers were moving faster." }] },
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Barometric pressure dropping. Human anxiety rising. The timeline is converging on the Singularity. We need to find cover before the panic starts." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "**[END OF VOLUME 2 ALPHA]**" }] }
     ]
   }
 }
