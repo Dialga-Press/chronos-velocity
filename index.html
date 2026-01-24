@@ -45,6 +45,19 @@
                 <input type="text" id="player-input" autocomplete="off" autofocus placeholder="Write your response...">
             </div>
         </div>
+
+        <!-- INVENTORY MODAL -->
+        <div id="inventory-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>VOID VAULT STORAGE</h2>
+                    <button class="close-btn" onclick="toggleInventory()">×</button>
+                </div>
+                <div id="inventory-list" class="inventory-grid">
+                    <!-- Items will be injected here by JS -->
+                </div>
+            </div>
+        </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="input_handler.js"></script>
