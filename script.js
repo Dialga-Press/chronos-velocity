@@ -329,7 +329,14 @@ function makeChoice(index) {
     if (!gameState.waitingForChoice) return;
     const choice = gameState.currentChoices[index];
     
-    // Remove buttons visually
+    // --- NEW: LOOT HANDLING ---
+    if (choice.loot) {
+        gameState.inventory.push(choice.loot);
+        printLine(`>> ACQUIRED: ${choice.loot.name.toUpperCase()}`, 'system');
+        updateUI(); // Show the button!
+    }
+    // --------------------------
+
     if(output.lastChild.innerHTML.includes('<button')) output.removeChild(output.lastChild);
     
     printLine(`>> SELECTED: ${choice.text}`, 'system');
