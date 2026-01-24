@@ -14,6 +14,7 @@ let gameState = {
     passenger: '',
     citationsShown: false,
     history: [],
+    inventory: [], 
     isTyping: false,
     skipTyping: false,
     typingSpeed: 25,
