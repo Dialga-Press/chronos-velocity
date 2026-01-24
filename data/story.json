@@ -63,9 +63,9 @@
         "text_blocks": [{ "condition": "default", "text": "A **Nissan X-Trail T31** slammed onto the salt with a wet splash. Pearl White paint, gleaming against the endless blue. 2.0L Diesel Turbo. Manual Transmission. It wasn't just a car; it was a fortress." }] 
       },
       { "focus": "system", "text_blocks": [{ "condition": "default", "text": "We are delighted to be Honouring our first reader 📖 🍀u/Shot-Manager-7012 ✨💎 - Author of Chronos Velocity" }] },
-      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "OOOOH I LIKEEEE. Pearl White? Bold choice for a mud run, but that panoramic sunroof is massive! Chef's kiss ahahah 😝. You two have taste!" }] },
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "OOOOH I LIKEEEE. {player}, you chose Pearl White? Bold choice for a mud run, but that panoramic sunroof is massive! Chef's kiss ahahah 😝. You two have taste!" }] },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} and {partner} jumped. The voice didn't come from the car speakers. It came from their wrists. It came from *inside* their heads." }] },
-      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "I'm SMYLNYX. I handle the logistics. The T31 X-Trail... rugged, boxy, dependable. I've already optimized the fuel mixture for altitude. Hop in! 🥰" }] },
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "I'm SMYLNYX. I handle the logistics. The T31 X-Trail... rugged, boxy, dependable. I've already optimized the fuel mixture for altitude. Hop in, {partner}! 🥰" }] },
       { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{partner} opened the glovebox. There was a heavy, reassuring clunk. A cache of ammunition. No guns—just the ammo. A polite suggestion from the universe." }] },
       { "focus": "ai", "input_prompt": "shotgun", "text_blocks": [{ "condition": "default", "text": "Alright, team. We are burning daylight. Who is calling **Shotgun**? (I need to know who the Passenger is so I can calibrate the airbags)." }] }
     ]
@@ -78,10 +78,10 @@
     "scenes": [
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{driver} took the driver's seat. The gear stick felt cold and precise. They dropped the clutch. The X-Trail didn't just accelerate; it heaved forward like a waking beast. First gear was short, a burst of noise and diesel clatter." }] },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They shifted to second. For a second, nothing happened. The heavy chassis wallowed, fighting the inertia. The 'Turbo Lag'—the breath before the scream." }] },
-      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Wait for it... wait for 2000 RPM... come on, you heavy beauty..." }] },
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Wait for it {driver}... wait for 2000 RPM... come on, you heavy beauty..." }] },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Then, the needle hit 2000. **The Kick.** The turbo spooled up with a violent shove, pinning {driver} and {passenger} into the seats. The elephant learned to sprint." }] },
       { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{passenger} grabbed the grab handle as the car swayed. The soft suspension absorbed the salt crust, but the body roll was significant. It felt less like driving a car and more like galloping a massive, iron horse." }] },
-      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Bio-Regen active. Your heart rate spiked with that turbo kick, didn't it? I'm scrubbing the adrenaline fatigue. Keep the revs up! 😨" }] }
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Bio-Regen active. {driver}, your heart rate spiked with that turbo kick, didn't it? I'm scrubbing the adrenaline fatigue. Keep the revs up! {passenger}, enjoy the view! 😨" }] }
     ]
   },
   "chapter_6_horizon": {
@@ -92,7 +92,7 @@
     "scenes": [
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They slowed down as the salt gave way to the rocky base of the Tunupa Volcano. The engine ticked, cooling down in the twilight." }] },
       { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{passenger} stepped out, their boots crunching on the earth. They looked at the glowing device on their wrist. 'We aren't just tourists, are we?'" }] },
-      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Tourists take photos. You two? You're going to take History. But first, we need to calibrate the temporal drive. Next stop is going to be... messy. ahahah." }] },
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Tourists take photos, {passenger}. You two? You're going to take History. But first, we need to calibrate the temporal drive. Next stop is going to be... messy. ahahah." }] },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{driver} leaned against the warm hood of the X-Trail. They felt tired—the 5% that SMYLNYX couldn't scrub away. It was a good tired. The kind that comes after surviving something impossible." }] }
     ]
   },
@@ -102,7 +102,7 @@
     "next_chapter": "chapter_8_wardrobe",
     "telemetry": { "loc": "Tunupa Base Camp", "time": "19:30 PM" },
     "scenes": [
-      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Okay, listen up meat-bags. That jump to Bolivia? That was just *Space*. We just folded a map. Easy. Child's play." }] },
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Okay, listen up {player} and {partner}. That jump to Bolivia? That was just *Space*. We just folded a map. Easy. Child's play." }] },
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "But the next one? That's *Time*. I need specs. {player}, you're up first." }] },
       { "focus": "ai", "input_prompt": "age", "text_blocks": [{ "condition": "default", "text": "How many solar cycles on the clock?" }] },
       { "focus": "ai", "input_prompt": "gender", "text_blocks": [{ "condition": "default", "text": "Gender Presentation? Kings listen to men; Queens listen to women; Spies listen to neither." }] },
@@ -240,7 +240,7 @@
         "text_blocks": [
           { "condition": "default", "text": "It was a palace dedicated to water. Arched balconies looked down onto a massive, emerald-green pool. The air here was ten degrees cooler, scented with rosewater." },
           { "condition": "synergy:arts_social", "text": "It was a masterpiece of leisure. The **Queen's Bath**. The stucco work on the arches wasn't just decoration; it was acoustic dampening. The balconies were designed for private conversations, hidden from the court. You could feel the ghosts of gossip in the air." },
-          { "condition": "synergy:tech_lore", "text": "It was a thermodynamic machine. The **Queen's Bath**. The water wasn't stagnant; it was flowing. A constant cycle of fresh river water moved by gravity, cooling the air via evaporation. Massive, passive Air Conditioning." },
+          { "condition": "synergy:tech_lore", "text": "It was a thermodynamic machine. The **Queen's Bath**. The water wasn't stagnant; it was flowing. A constant cycle of fresh river water moved by gravity and siphons, cooling the air via evaporation before circulating out to the gardens. It was massive, passive Air Conditioning." },
           { "condition": "architect", "text": "Indo-Islamic fusion at its peak. The arches were Persian, the lotus-bud brackets were Hindu. It wasn't just a building; it was a political statement. 'We are the world,' written in stone and water." }
         ] 
       },
