@@ -506,4 +506,45 @@ function printLine(text, type, animate = true) {
 function scrollToBottom() { setTimeout(() => { output.scrollTop = output.scrollHeight; }, 50); }
 const themeBtn = document.getElementById('theme-toggle');
 if(themeBtn) { themeBtn.addEventListener('click', function() { document.body.classList.toggle('light-mode'); }); }
+
+// --- INVENTORY SYSTEM ---
+
+// 1. Bind the Vault Button
+const invButton = document.getElementById('inventory-btn');
+if (invButton) {
+    invButton.addEventListener('click', toggleInventory);
+}
+
+// 2. Toggle Logic
+function toggleInventory() {
+    const modal = document.getElementById('inventory-modal');
+    const list = document.getElementById('inventory-list');
+    
+    if (modal.classList.contains('active')) {
+        modal.classList.remove('active');
+    } else {
+        renderInventory(list);
+        modal.classList.add('active');
+    }
+}
+
+// 3. Render Logic
+function renderInventory(container) {
+    container.innerHTML = ''; // Clear previous
+    
+    if (gameState.inventory.length === 0) {
+        container.innerHTML = '<div class="empty-msg">VAULT IS EMPTY</div>';
+        return;
+    }
+
+    gameState.inventory.forEach(item => {
+        const div = document.createElement('div');
+        div.classList.add('inv-item');
+        div.innerHTML = `
+            <div class="inv-item-name">${item.name}</div>
+            <div class="inv-item-desc">${item.desc}</div>
+        `;
+        container.appendChild(div);
+    });
+}
 init();
