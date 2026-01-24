@@ -530,4 +530,15 @@ function renderTelemetry(chapter) {
     const div = document.createElement('div'); div.innerHTML = html; output.appendChild(div);
 }
 
+function updateUI() {
+    const invBtn = document.getElementById('inventory-btn');
+    if (gameState.inventory.length > 0) {
+        invBtn.style.display = 'block';
+        invBtn.innerText = `VAULT [${gameState.inventory.length}]`;
+        // Optional: Add a 'flash' animation class here if it just appeared
+    } else {
+        invBtn.style.display = 'none';
+    }
+}
+
 init();
