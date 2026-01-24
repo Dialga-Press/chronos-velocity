@@ -12,7 +12,6 @@ let gameState = {
     currentChoices: null,
     driver: '',
     passenger: '',
-    inventory: [],
     citationsShown: false,
     history: [],
     isTyping: false,
@@ -65,28 +64,33 @@ input.addEventListener('keydown', function(e) {
         const val = input.value.trim();
         input.value = '';
         
+        // 1. Force Finish Typing
         if (gameState.isTyping) { 
             gameState.skipTyping = true; 
             e.preventDefault();
             return; 
         }
         
+        // 2. Handle Branching Choices (1, 2...)
         if (gameState.waitingForChoice) {
             if(val) handleChoiceInput(val);
             return;
         }
 
+        // 3. Handle Story Input (Bio/Shotgun)
         if (gameState.step === 'story_input') { 
             if(!val) return; 
             handleStoryInput(val); 
             return; 
         }
 
+        // 4. Advance Story
         if (gameState.storyActive) { 
             advanceStory(); 
             return; 
         }
 
+        // 5. Menu Logic
         if (val) processInput(val);
     }
 });
@@ -163,13 +167,11 @@ function processInput(val) {
         if (val.toLowerCase() === 'y' || val.toLowerCase() === 'yes') {
             gameState.partner.name = 'Beeth';
             triggerConfettiEvent();
-            // Auto-set mode to coop since Beeth is here
-            gameState.mode = 'coop';
+            gameState.mode = 'coop'; // Force Coop
             printLine(`Protagonist 1: <strong>Lava</strong>`, 'story');
             setTimeout(listClasses, 500);
             gameState.step = 'player_class';
         } else {
-            // Just Lava alone
             printLine(`Protagonist 1: <strong>Lava</strong>`, 'story');
             setTimeout(listClasses, 500);
             gameState.step = 'player_class';
@@ -177,11 +179,27 @@ function processInput(val) {
     }
     else if (gameState.step.includes('_class')) {
         let t = gameState.step.split('_')[0];
+        
         if (applyClassSelection(val, t)) {
-            if(t==='player' && gameState.mode === 'solo') {
-                 setTimeout(() => { printLine("Configure Secondary Asset? [Y/N]", 'system'); gameState.step = 'partner_query'; }, 500);
-            } else if (t==='player') { startCharCreation('partner'); }
-            else { startGame(); }
+            // --- LOGIC FIX HERE ---
+            if(t === 'player') {
+                if (gameState.mode === 'solo') {
+                     setTimeout(() => { printLine("Configure Secondary Asset? [Y/N]", 'system'); gameState.step = 'partner_query'; }, 500);
+                } else {
+                    // COOP MODE
+                    // If Partner Name is already set (by Easter Egg), skip name input!
+                    if (gameState.partner.name && gameState.partner.name !== '') {
+                        printLine(`Protagonist 2: <strong>${gameState.partner.name}</strong>`, 'story');
+                        setTimeout(() => { printLine("Select Origin Protocol:", 'system'); listClasses(); }, 500);
+                        gameState.step = 'partner_class';
+                    } else {
+                        startCharCreation('partner');
+                    }
+                }
+            } else { 
+                // Partner class selected -> Start Game
+                startGame(); 
+            }
         }
     } 
     else if (gameState.step === 'partner_query') {
@@ -192,12 +210,10 @@ function processInput(val) {
 
 function triggerConfettiEvent() {
     printLine("WE HAVE BEEN WAITING FOR YOU! ✨", 'ai');
-    // Canvas Confetti Library Call
     if (typeof confetti === 'function') {
         var duration = 3 * 1000;
         var animationEnd = Date.now() + duration;
         var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
         var interval = setInterval(function() {
             var timeLeft = animationEnd - Date.now();
             if (timeLeft <= 0) { return clearInterval(interval); }
@@ -210,8 +226,7 @@ function triggerConfettiEvent() {
 
 function randomInRange(min, max) { return Math.random() * (max - min) + min; }
 
-// --- REST OF THE CODE (No changes needed below, but included for completeness) ---
-
+// --- CORE HELPERS ---
 function startCharCreation(target) {
     printLine(target === 'player' ? "ENTER NAME (PROTAGONIST 1):" : "ENTER NAME (PROTAGONIST 2):", 'system');
     gameState.step = target + '_name';
@@ -271,7 +286,6 @@ async function loadStoryChapter(chapterId, resetIndex = true) {
 }
 
 function playNextScene(saveHistory = true) {
-    // 1. END OF CHAPTER
     if (!currentChapterData || currentSceneIndex >= currentChapterData.scenes.length) {
         if (currentChapterData.sources && !gameState.citationsShown) {
             printLine("<br><strong style='color:var(--accent); letter-spacing:1px;'>>> HISTORICAL ARCHIVE:</strong>", 'system', false);
@@ -283,6 +297,7 @@ function playNextScene(saveHistory = true) {
             return; 
         }
         gameState.citationsShown = false;
+
         if (currentChapterData.next_chapter) loadStoryChapter(currentChapterData.next_chapter);
         else { printLine(">> TO BE CONTINUED...", 'system'); gameState.storyActive = false; }
         return;
@@ -290,11 +305,9 @@ function playNextScene(saveHistory = true) {
 
     const scene = currentChapterData.scenes[currentSceneIndex];
     
-    // 2. AUTO SAVE
-    if (currentChapterData.id && typeof StorageManager !== 'undefined') StorageManager.save(gameState, currentChapterData.id, currentSceneIndex);
+    if (currentChapterData.id && StorageManager) StorageManager.save(gameState, currentChapterData.id, currentSceneIndex);
     if (saveHistory) gameState.history.push({ chapterId: currentChapterData.id, index: currentSceneIndex });
 
-    // 3. MODE SKIP
     if (scene.mode_req && scene.mode_req !== gameState.mode) {
         if(saveHistory) gameState.history.pop();
         currentSceneIndex++;
@@ -302,7 +315,6 @@ function playNextScene(saveHistory = true) {
         return;
     }
 
-    // 4. INPUT
     if (scene.input_prompt) {
         let promptText = resolveTextVariant(scene.text_blocks, scene.focus);
         printLine(replacePlaceholders(promptText), scene.focus === 'ai' ? 'ai' : 'story').then(() => {
@@ -313,7 +325,6 @@ function playNextScene(saveHistory = true) {
         return; 
     }
 
-    // 5. CHOICE
     if (scene.choices) {
         let text = resolveTextVariant(scene.text_blocks, scene.focus);
         printLine(replacePlaceholders(text), scene.focus === 'ai' ? 'ai' : 'story').then(() => {
@@ -322,10 +333,10 @@ function playNextScene(saveHistory = true) {
         return;
     }
 
-    // 6. TEXT & IMAGE
     let text = resolveTextVariant(scene.text_blocks, scene.focus);
     text = replacePlaceholders(text);
     text = formatText(text);
+    
     let msgType = scene.focus === 'ai' ? 'ai' : (scene.focus === 'system' ? 'system' : 'story');
 
     printLine(text, msgType).then(() => {
@@ -375,8 +386,6 @@ function makeChoice(index) {
 function handleChoiceInput(val) {
     const idx = parseInt(val) - 1;
     if (gameState.currentChoices && gameState.currentChoices[idx]) {
-        const choice = gameState.currentChoices[idx];
-        // Basic check (UI handles main disabled logic)
         makeChoice(idx);
     }
 }
@@ -481,30 +490,17 @@ function replacePlaceholders(text) {
     return text;
 }
 function resolveTextVariant(blocks, focus) {
-    let targetClass = gameState.player.class;
-    let targetStats = gameState.player.stats;
-    if (focus === 'partner') { targetClass = gameState.partner.class; targetStats = gameState.partner.stats; }
-    let match = blocks.find(b => b.condition === targetClass);
-    if(match) return match.text;
-    const sortedStats = Object.keys(targetStats).sort((a,b) => targetStats[b] - targetStats[a]);
-    const topStat = sortedStats[0].toLowerCase();
-    match = blocks.find(b => b.condition === `high_${topStat}`);
-    if(match) return match.text;
-    
-    // Origin/Gender/Synergy checks (Complex Resolver)
     let bestBlock = null; let highestPriority = -1; let target = gameState.player; if (focus === 'partner') target = gameState.partner;
     const checkCondition = (cond) => {
         if (cond === 'default') return 0; if (cond === target.class) return 10;
         if (cond.startsWith('origin:')) { const req = cond.split(':')[1]; if (target.origin && target.origin.toLowerCase().includes(req)) return 8; }
         if (cond.startsWith('gender:')) { const req = cond.split(':')[1]; if (target.gender && target.gender.toLowerCase().includes(req)) return 7; }
         if (cond.startsWith('synergy:')) { const parts = cond.split(':')[1].split('_'); const m = { 'tech': 'Tech', 'arts': 'Arts', 'guts': 'Guts', 'social': 'Social', 'bio': 'Bio', 'lore': 'Lore' }; if (target.stats[m[parts[0]]] >= 5 && target.stats[m[parts[1]]] >= 5) return 9; }
+        if (cond.startsWith('high_')) { const statName = cond.split('_')[1]; const map = { 'tech': 'Tech', 'arts': 'Arts', 'guts': 'Guts', 'social': 'Social', 'bio': 'Bio', 'lore': 'Lore' }; const stats = target.stats; const sortedStats = Object.keys(stats).sort((a,b) => stats[b] - stats[a]); if (sortedStats[0].toLowerCase() === statName) return 5; }
         return -1;
     };
     blocks.forEach(block => { let p = checkCondition(block.condition); if (p > highestPriority) { highestPriority = p; bestBlock = block; } });
-    if(bestBlock) return bestBlock.text;
-
-    match = blocks.find(b => b.condition === 'default');
-    return match ? match.text : "Data Corrupted.";
+    return bestBlock ? bestBlock.text : "Data Corrupted.";
 }
 function scrollToBottom() { setTimeout(() => { output.scrollTop = output.scrollHeight; }, 50); }
 const themeBtn = document.getElementById('theme-toggle');
