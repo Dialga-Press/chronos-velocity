@@ -14,6 +14,7 @@ let gameState = {
     passenger: '',
     citationsShown: false,
     history: [],
+    inventory: [],
     isTyping: false,
     skipTyping: false,
     typingSpeed: 25,
@@ -64,56 +65,65 @@ input.addEventListener('keydown', function(e) {
         const val = input.value.trim();
         input.value = '';
         
-        // 1. Force Finish Typing
         if (gameState.isTyping) { 
             gameState.skipTyping = true; 
             e.preventDefault();
             return; 
         }
         
-        // 2. Handle Branching Choices (1, 2...)
         if (gameState.waitingForChoice) {
             if(val) handleChoiceInput(val);
             return;
         }
 
-        // 3. Handle Story Input (Bio/Shotgun)
         if (gameState.step === 'story_input') { 
             if(!val) return; 
             handleStoryInput(val); 
             return; 
         }
 
-        // 4. Advance Story
         if (gameState.storyActive) { 
             advanceStory(); 
             return; 
         }
 
-        // 5. Menu Logic
         if (val) processInput(val);
     }
 });
 
+// --- FIXED BACK BUTTON LOGIC ---
 function goBack() {
+    // 1. Safety Checks
     if (!gameState.storyActive || gameState.isTyping) return;
+    if (gameState.history.length === 0) return; // Cannot go back further
 
+    // 2. Visual Cleanup (Remove the last rendered block)
     let removedContent = false;
     while(output.lastChild && !removedContent) {
         const el = output.lastChild;
         if (el.classList.contains('msg') || el.classList.contains('story-image-container') || el.innerHTML.includes('<button')) {
             output.removeChild(el);
-            if(el.classList.contains('story') || el.classList.contains('ai')) removedContent = true;
+            // Stop if we removed a meaningful text block
+            if(el.classList.contains('story') || el.classList.contains('ai') || el.innerHTML.includes('SELECTED:')) removedContent = true;
         } else {
             output.removeChild(el);
         }
     }
 
-    if (currentSceneIndex > 0) {
-        currentSceneIndex--;
-        gameState.history.pop();
+    // 3. Logic Reversion
+    const prevState = gameState.history.pop(); // Get state we are returning TO
+    
+    // --- CROSS-CHAPTER FIX ---
+    // If the previous state was in a different chapter, we must reload that chapter data
+    if (prevState.chapterId !== currentChapterData.id) {
+        currentChapterData = gameState.story[prevState.chapterId];
+        // Note: We do NOT re-render telemetry header to avoid clutter
     }
 
+    // Restore Index
+    currentSceneIndex = prevState.index;
+
+    // 4. Reset Interaction States
     gameState.step = 'reading'; 
     gameState.currentInputType = null;
     gameState.waitingForChoice = false;
@@ -121,6 +131,7 @@ function goBack() {
     input.placeholder = "Write your response...";
     gameState.waitingForEnter = false;
     
+    // 5. Replay the scene (Pass false so we don't duplicate history)
     playNextScene(false);
 }
 
@@ -138,56 +149,40 @@ function processInput(val) {
         let t = gameState.step.split('_')[0];
         gameState[t].name = val;
 
-        // --- EASTER EGG CHECK 1: IS IT LAVA? ---
+        // Easter Egg Logic
         if (t === 'player' && val.toLowerCase() === 'lava') {
             printLine("... IDENTITY FLAGGED.", 'system');
-            setTimeout(() => {
-                printLine("Is <strong>Beeth</strong> with you? [Y/N]", 'ai');
-                gameState.step = 'easter_egg_check';
-            }, 600);
+            setTimeout(() => { printLine("Is <strong>Beeth</strong> with you? [Y/N]", 'ai'); gameState.step = 'easter_egg_check'; }, 600);
             return;
         }
-        
-        // --- EASTER EGG CHECK 2: THE DUO ---
-        // If Player is Beeth and Partner is Lava (or vice versa)
         if (t === 'partner') {
             const p1 = gameState.player.name.toLowerCase();
             const p2 = val.toLowerCase();
-            if ((p1 === 'beeth' && p2 === 'lava') || (p1 === 'lava' && p2 === 'beeth')) {
-                triggerConfettiEvent();
-            }
+            if ((p1 === 'beeth' && p2 === 'lava') || (p1 === 'lava' && p2 === 'beeth')) triggerConfettiEvent();
         }
 
         printLine(`${t.toUpperCase()} ID: ${val}`, 'story');
         setTimeout(listClasses, 500);
         gameState.step = t + '_class';
     } 
-    // --- EASTER EGG CONFIRMATION STEP ---
     else if (gameState.step === 'easter_egg_check') {
-        if (val.toLowerCase() === 'y' || val.toLowerCase() === 'yes') {
-            gameState.partner.name = 'Beeth';
-            triggerConfettiEvent();
-            gameState.mode = 'coop'; // Force Coop
+        if (val.toLowerCase().startsWith('y')) {
+            gameState.partner.name = 'Beeth'; triggerConfettiEvent(); gameState.mode = 'coop';
             printLine(`Protagonist 1: <strong>Lava</strong>`, 'story');
-            setTimeout(listClasses, 500);
-            gameState.step = 'player_class';
+            setTimeout(listClasses, 500); gameState.step = 'player_class';
         } else {
             printLine(`Protagonist 1: <strong>Lava</strong>`, 'story');
-            setTimeout(listClasses, 500);
-            gameState.step = 'player_class';
+            setTimeout(listClasses, 500); gameState.step = 'player_class';
         }
     }
     else if (gameState.step.includes('_class')) {
         let t = gameState.step.split('_')[0];
-        
         if (applyClassSelection(val, t)) {
-            // --- LOGIC FIX HERE ---
             if(t === 'player') {
                 if (gameState.mode === 'solo') {
                      setTimeout(() => { printLine("Configure Secondary Asset? [Y/N]", 'system'); gameState.step = 'partner_query'; }, 500);
                 } else {
-                    // COOP MODE
-                    // If Partner Name is already set (by Easter Egg), skip name input!
+                    // Coop check: If partner name already set (Easter Egg), skip name input
                     if (gameState.partner.name && gameState.partner.name !== '') {
                         printLine(`Protagonist 2: <strong>${gameState.partner.name}</strong>`, 'story');
                         setTimeout(() => { printLine("Select Origin Protocol:", 'system'); listClasses(); }, 500);
@@ -196,10 +191,7 @@ function processInput(val) {
                         startCharCreation('partner');
                     }
                 }
-            } else { 
-                // Partner class selected -> Start Game
-                startGame(); 
-            }
+            } else { startGame(); }
         }
     } 
     else if (gameState.step === 'partner_query') {
@@ -208,25 +200,21 @@ function processInput(val) {
     }
 }
 
+// ... (Helpers and UI Logic) ...
 function triggerConfettiEvent() {
     printLine("WE HAVE BEEN WAITING FOR YOU! ✨", 'ai');
     if (typeof confetti === 'function') {
-        var duration = 3 * 1000;
-        var animationEnd = Date.now() + duration;
-        var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+        var duration = 3000; var animationEnd = Date.now() + duration; var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
         var interval = setInterval(function() {
-            var timeLeft = animationEnd - Date.now();
-            if (timeLeft <= 0) { return clearInterval(interval); }
+            var timeLeft = animationEnd - Date.now(); if (timeLeft <= 0) { return clearInterval(interval); }
             var particleCount = 50 * (timeLeft / duration);
             confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
             confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
         }, 250);
     }
 }
-
 function randomInRange(min, max) { return Math.random() * (max - min) + min; }
 
-// --- CORE HELPERS ---
 function startCharCreation(target) {
     printLine(target === 'player' ? "ENTER NAME (PROTAGONIST 1):" : "ENTER NAME (PROTAGONIST 2):", 'system');
     gameState.step = target + '_name';
@@ -238,23 +226,18 @@ function applyClassSelection(val, target) {
         const selected = classes[choice];
         const targetObj = (target === 'player') ? gameState.player : gameState.partner;
         targetObj.class = selected.id;
-        for (let [key, value] of Object.entries(selected.bonus)) {
-            if(targetObj.stats[key] !== undefined) targetObj.stats[key] += value;
-        }
+        for (let [key, value] of Object.entries(selected.bonus)) { if(targetObj.stats[key] !== undefined) targetObj.stats[key] += value; }
         showStatCard(selected.name, targetObj.stats, targetObj.name);
         return true;
-    }
-    return false;
+    } return false;
 }
-function autoAssignPartner() {
-    gameState.partner.class = 'adventurer'; gameState.partner.name = "The Other";
-}
+function autoAssignPartner() { gameState.partner.class = 'adventurer'; gameState.partner.name = "The Other"; }
 function startGame() {
     printLine("TIMELINE SYNCHRONIZATION COMPLETE.", 'system');
     setTimeout(() => { printLine("<hr style='opacity:0.3'>", 'system', false); gameState.storyActive = true; loadStoryChapter('chapter_1_p1'); }, 1000);
 }
 
-// --- SAVE / LOAD ---
+// --- LOAD GAME ---
 function loadGame() {
     const data = StorageManager.load();
     if (!data) { printLine("ERROR: SAVE CORRUPT.", 'system'); triggerNewGameMenu(); return; }
@@ -265,7 +248,7 @@ function loadGame() {
     updateUI();
 }
 
-// --- STORY ENGINE ---
+// --- STORY CORE ---
 let currentSceneIndex = 0;
 let currentChapterData = null;
 
@@ -297,7 +280,6 @@ function playNextScene(saveHistory = true) {
             return; 
         }
         gameState.citationsShown = false;
-
         if (currentChapterData.next_chapter) loadStoryChapter(currentChapterData.next_chapter);
         else { printLine(">> TO BE CONTINUED...", 'system'); gameState.storyActive = false; }
         return;
@@ -305,9 +287,17 @@ function playNextScene(saveHistory = true) {
 
     const scene = currentChapterData.scenes[currentSceneIndex];
     
-    if (currentChapterData.id && StorageManager) StorageManager.save(gameState, currentChapterData.id, currentSceneIndex);
-    if (saveHistory) gameState.history.push({ chapterId: currentChapterData.id, index: currentSceneIndex });
+    // Save to History (Deep copy basic types)
+    if (saveHistory) {
+        gameState.history.push({ 
+            chapterId: currentChapterData.id, 
+            index: currentSceneIndex 
+        });
+    }
 
+    if (currentChapterData.id && StorageManager) StorageManager.save(gameState, currentChapterData.id, currentSceneIndex);
+
+    // MODE SKIP
     if (scene.mode_req && scene.mode_req !== gameState.mode) {
         if(saveHistory) gameState.history.pop();
         currentSceneIndex++;
@@ -315,6 +305,7 @@ function playNextScene(saveHistory = true) {
         return;
     }
 
+    // INPUT PROMPT
     if (scene.input_prompt) {
         let promptText = resolveTextVariant(scene.text_blocks, scene.focus);
         printLine(replacePlaceholders(promptText), scene.focus === 'ai' ? 'ai' : 'story').then(() => {
@@ -325,6 +316,7 @@ function playNextScene(saveHistory = true) {
         return; 
     }
 
+    // CHOICE SYSTEM
     if (scene.choices) {
         let text = resolveTextVariant(scene.text_blocks, scene.focus);
         printLine(replacePlaceholders(text), scene.focus === 'ai' ? 'ai' : 'story').then(() => {
@@ -333,10 +325,10 @@ function playNextScene(saveHistory = true) {
         return;
     }
 
+    // STANDARD TEXT
     let text = resolveTextVariant(scene.text_blocks, scene.focus);
     text = replacePlaceholders(text);
     text = formatText(text);
-    
     let msgType = scene.focus === 'ai' ? 'ai' : (scene.focus === 'system' ? 'system' : 'story');
 
     printLine(text, msgType).then(() => {
@@ -379,18 +371,19 @@ function makeChoice(index) {
     if(output.lastChild.innerHTML.includes('<button')) output.removeChild(output.lastChild);
     printLine(`>> SELECTED: ${choice.text}`, 'system');
     gameState.waitingForChoice = false; gameState.currentChoices = null;
+    
+    // Save logic
     if (choice.target) loadStoryChapter(choice.target);
     else { currentSceneIndex++; playNextScene(); }
 }
 
 function handleChoiceInput(val) {
     const idx = parseInt(val) - 1;
-    if (gameState.currentChoices && gameState.currentChoices[idx]) {
-        makeChoice(idx);
-    }
+    if (gameState.currentChoices && gameState.currentChoices[idx]) { makeChoice(idx); }
 }
 
-// UI Functions
+// ... (Keep existing UI functions: updateUI, listClasses, showStatCard, showSynergyCard, renderTelemetry, typeWriter, printLine, handleStoryInput, advanceStory, formatText, replacePlaceholders, resolveTextVariant, scrollToBottom, themeBtn) ...
+// Copy them from the previous version or use the block below if you need the full paste.
 function updateUI() {
     const invBtn = document.getElementById('inventory-btn');
     if (invBtn && gameState.inventory.length > 0) {
@@ -422,28 +415,15 @@ function showSynergyCard() {
     html += `</div></div>`;
     printLine(html, 'system', false);
 }
-function renderTelemetry(chapter) {
-    const hr = `<hr style='border:0; border-top:1px solid var(--accent); opacity:0.3; margin:40px 0;'>`;
-    let html = `${hr}<div style="text-align:center; margin-bottom:30px; letter-spacing:1px;"><div style="font-family:var(--font-head); font-size:1.5em; color:var(--accent); margin-bottom:10px;">${chapter.title}</div><div style="font-size:0.75em; color:var(--text-secondary); text-transform:uppercase;">LOC: ${chapter.telemetry.loc} // DATE: ${chapter.telemetry.time}</div></div>`;
-    const div = document.createElement('div'); div.innerHTML = html; output.appendChild(div);
-}
 function typeWriter(element, html, speed) {
     return new Promise((resolve) => {
-        gameState.isTyping = true;
-        gameState.skipTyping = false;
-        element.classList.add('typing');
+        gameState.isTyping = true; gameState.skipTyping = false; element.classList.add('typing');
         const tempDiv = document.createElement('div'); tempDiv.innerHTML = html;
         const nodes = Array.from(tempDiv.childNodes);
-        element.innerHTML = "";
-        let nodeIndex = 0;
+        element.innerHTML = ""; let nodeIndex = 0;
         function typeNode() {
-            if (gameState.skipTyping) {
-                element.innerHTML = html; element.classList.remove('typing'); element.classList.add('typed-done');
-                gameState.isTyping = false; gameState.skipTyping = false; scrollToBottom(); resolve(); return;
-            }
-            if (nodeIndex >= nodes.length) {
-                element.classList.remove('typing'); element.classList.add('typed-done'); gameState.isTyping = false; resolve(); return;
-            }
+            if (gameState.skipTyping) { element.innerHTML = html; element.classList.remove('typing'); element.classList.add('typed-done'); gameState.isTyping = false; gameState.skipTyping = false; scrollToBottom(); resolve(); return; }
+            if (nodeIndex >= nodes.length) { element.classList.remove('typing'); element.classList.add('typed-done'); gameState.isTyping = false; resolve(); return; }
             const node = nodes[nodeIndex];
             if (node.nodeType === 3) {
                 const text = node.nodeValue; let charIndex = 0; const liveTextNode = document.createTextNode(""); element.appendChild(liveTextNode);
