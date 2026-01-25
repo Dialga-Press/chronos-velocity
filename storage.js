@@ -1,52 +1,50 @@
-/* 
-  STORAGE MODULE
-  Handles Auto-Saving and State Hydration.
-*/
-
-const SAVE_KEY = 'CHRONOS_VELOCITY_V1';
+/**
+ * CHRONOS ARCHIVE STORAGE SYSTEM
+ * Handles state serialization, versioning, and auto-saves.
+ */
+const SAVE_KEY = 'CHRONOS_VELOCITY_CORE';
+const CURRENT_VERSION = '0.2.0';
 
 const StorageManager = {
-    // Save the current state
-    save: (gameState, currentChapterId, currentSceneIndex) => {
-        const data = {
+    save: (gameState, chapterId, sceneIndex) => {
+        const payload = {
+            version: CURRENT_VERSION,
             timestamp: Date.now(),
-            mode: gameState.mode,
-            player: gameState.player,
-            partner: gameState.partner,
-            driver: gameState.driver,
-            passenger: gameState.passenger,
-            history: gameState.history,
-            currentChapterId: currentChapterId,
-            currentSceneIndex: currentSceneIndex
+            data: {
+                ...gameState,
+                currentChapterId: chapterId,
+                currentSceneIndex: sceneIndex,
+                // Sanitize history to prevent circular structures or bloat
+                history: gameState.history.slice(-50) 
+            }
         };
-        
         try {
-            localStorage.setItem(SAVE_KEY, JSON.stringify(data));
-            console.log(">> AUTO-SAVE COMPLETE");
+            localStorage.setItem(SAVE_KEY, JSON.stringify(payload));
+            // Trigger a visual save indicator if we had one
+            console.log(`[SYS] ARCHIVE SAVED :: ${chapterId}:${sceneIndex}`);
         } catch (e) {
-            console.error("Save failed:", e);
+            console.error("[SYS] SAVE FAILURE", e);
         }
     },
 
-    // Load the state
     load: () => {
         try {
-            const data = localStorage.getItem(SAVE_KEY);
-            return data ? JSON.parse(data) : null;
+            const raw = localStorage.getItem(SAVE_KEY);
+            if (!raw) return null;
+            const payload = JSON.parse(raw);
+            
+            // Version migration logic could go here
+            return payload.data;
         } catch (e) {
-            console.error("Load failed:", e);
+            console.error("[SYS] CORRUPT DATA", e);
             return null;
         }
     },
 
-    // Check if save exists
-    hasSave: () => {
-        return !!localStorage.getItem(SAVE_KEY);
-    },
-
-    // Wipe save (Hard Reset)
+    hasSave: () => !!localStorage.getItem(SAVE_KEY),
+    
     clear: () => {
         localStorage.removeItem(SAVE_KEY);
-        console.log(">> SAVE DATA WIPED");
+        console.warn("[SYS] TIMELINE PURGED");
     }
 };
