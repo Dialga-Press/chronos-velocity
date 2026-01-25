@@ -5,9 +5,9 @@
     "next_chapter": "chapter_1_p2",
     "telemetry": { "loc": "Home Base // Coordinates: Classified", "time": "Jan 20, 2026 // 14:00 PM" },
     "scenes": [
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Let us speak of {player}. A perfectly functional human being who, much like the rest of us, was busy doing absolutely nothing of historical importance." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Then, gravity decided to take a lunch break. A silver sphere fell onto the table. It didn't roll. It simply sat there, heavy with implication, like an unpaid bill." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Common sense dictates one should run from unidentified extraterrestrial objects. But curiosity is a terrible affliction. {player} touched it. And just like that, the metal dissolved into their skin, warm and inviting, like tea on a rainy afternoon." }] }
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Let us speak of {player}. A perfectly functional human being who, much like the rest of us, was busy doing absolutely nothing of historical importance. They were existing in that comfortable numbness between 'Too much coffee' and 'Not enough sleep'." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Then, reality hiccuped. The air pressure dropped so sharp your ears popped. A silver sphere fell onto the desk. It didn't bounce. It landed with the heavy, dead thud of a neutron star wrapped in chrome." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Common sense—that survival instinct kept alive by millions of years of evolution—screamed 'RUN'. But curiosity is a terrible, beautiful affliction. {player} reached out. And just like that, the metal dissolved into their skin, warm and inviting, like tea on a rainy afternoon." }] }
     ]
   },
   "chapter_1_p2": {
@@ -16,8 +16,8 @@
     "next_chapter": "chapter_2_sync",
     "telemetry": { "loc": "Secondary Location", "time": "Jan 20, 2026" },
     "scenes": [
-      { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "Meanwhile, half a world away, {partner} was minding their own business, blissfully unaware that the universe was about to file a complaint." }] },
-      { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "The device found them too. It bonded with them. No pain, just a sudden realization that the world was suddenly much larger." }] }
+      { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "Meanwhile, half a world away, {partner} was minding their own business. They were likely complaining about the weather or the wi-fi, blissfully unaware that the universe was about to file a formal complaint against their boredom." }] },
+      { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "The device found them too. It bonded. No pain. Just a sudden, terrifying realization that the world was suddenly much larger, and they were now a very small part of a very big machine." }] }
     ]
   },
   "chapter_2_sync": {
@@ -26,7 +26,7 @@
     "next_chapter": "chapter_3_meeting",
     "telemetry": { "loc": "Planetary Orbit", "time": "T-Minus 0" },
     "scenes": [
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The two devices woke up. They ignored the humans for a moment and spoke to each other. A pulse went out. Invisible to the eye, but felt by the soul. It mapped the planet. And then, it pulled the two hosts together." }] }
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The two devices woke up. They ignored the humans for a moment and spoke to each other in a language of pure mathematics. A pulse went out. Invisible to the eye, but felt by the soul. It mapped the planet in a heartbeat." }] }
     ]
   },
   "chapter_3_meeting": {
@@ -41,10 +41,10 @@
         "image": "assets/images/salar-mirror.jpg", 
         "image_caption": "LOCATION: SALAR DE UYUNI", 
         "image_source": "Getty Images / The Hungry Travellers",
-        "text_blocks": [{ "condition": "default", "text": "Teleportation is a rude way to travel. One moment you are home, the next you are standing on the sky. The Salar de Uyuni. The great mirror of Bolivia." }] 
+        "text_blocks": [{ "condition": "default", "text": "Teleportation is a rude way to travel. There is no transition. One moment you are home, the next you are standing on the ceiling of the world. The Salar de Uyuni. The great mirror of Bolivia. The sky was above, the sky was below, and gravity felt like a suggestion." }] 
       },
-      { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{player} spotted a figure in the distance. {partner}. They looked equally disheveled, scanning the horizon as if looking for a bus stop in the middle of an ocean." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They approached each other. No grand speeches. Just the awkward nod of two people who realize they are stuck in the same lifeboat." }] }
+      { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{player} spotted a figure in the distance. {partner}. They looked equally disheveled, scanning the horizon as if looking for a bus stop in the middle of an infinite ocean." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They approached each other. No grand speeches. Just the awkward, terrified nod of two people who realize they are stuck in the same lifeboat at the end of the world." }] }
     ]
   },
   "chapter_4_asset": {
@@ -53,20 +53,20 @@
     "next_chapter": "chapter_5_drive",
     "telemetry": { "loc": "Salar de Uyuni", "time": "18:00 PM" },
     "scenes": [
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The sun began to dip. The beauty of the salt flats is treacherous; without shelter, the cold kills you with a smile. They needed a vehicle." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They didn't summon a spaceship. They didn't ask for a tank. They asked for reliability. The air shimmered, and gravity bent to their will." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The sun began to dip. The beauty of the salt flats is treacherous; without shelter, the cold kills you with a smile. They needed a vehicle. Something that laughed at terrain." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They didn't summon a spaceship. They didn't ask for a tank. They asked for reliability. The air shimmered. Digital dust swirled, knitting together steel, rubber, and glass." }] },
       { 
         "focus": "player", 
         "image": "assets/images/xtrail-t31-pearl.png", 
         "image_caption": "ASSET FABRICATED: NISSAN T31", 
         "image_source": "Visual Reconstruction by Nano Banana",
-        "text_blocks": [{ "condition": "default", "text": "A **Nissan X-Trail T31** slammed onto the salt with a wet splash. Pearl White paint, gleaming against the endless blue. 2.0L Diesel Turbo. Manual Transmission. It wasn't just a car; it was a fortress." }] 
+        "text_blocks": [{ "condition": "default", "text": "It landed with a wet splash. A **Nissan X-Trail T31**. Pearl White. The 'Hyper-Roof' edition with the integrated spotlights. 2.0L M9R Diesel Turbo. 6-Speed Manual. It sat there, boxy and unapologetic, looking like a refrigerator that learned to do karate." }] 
       },
       { "focus": "system", "text_blocks": [{ "condition": "default", "text": "We are delighted to be Honouring our first reader 📖 🍀u/Shot-Manager-7012 ✨💎 - Author of Chronos Velocity" }] },
-      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "OOOOH I LIKEEEE. {player}, you chose Pearl White? Bold choice for a mud run, but that panoramic sunroof is massive! Chef's kiss ahahah 😝. You two have taste!" }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} and {partner} jumped. The voice didn't come from the car speakers. It came from their wrists. It came from *inside* their heads." }] },
-      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "I'm SMYLNYX. I handle the logistics. The T31 X-Trail... rugged, boxy, dependable. I've already optimized the fuel mixture for altitude. Hop in, {partner}! 🥰" }] },
-      { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{partner} opened the glovebox. There was a heavy, reassuring clunk. A cache of ammunition. No guns—just the ammo. A polite suggestion from the universe." }] },
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "OOOOH I LIKEEEE. Pearl White? Bold choice for a mud run, but that panoramic sunroof is massive! Chef's kiss ahahah 😝. You two have taste!" }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} and {partner} jumped. The voice didn't come from the car speakers. It came from their wrists. It came from *inside* their heads. It sounded like a best friend who had too much sugar." }] },
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "I'm SMYLNYX. I handle the logistics. The T31 X-Trail... rugged, boxy, dependable. I've already optimized the fuel mixture for altitude. Hop in! 🥰" }] },
+      { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{partner} opened the glovebox. There was a heavy, reassuring clunk. A cache of ammunition. No guns—just the ammo. A polite suggestion from the universe that 'Peaceful Tourist' might not be their only job description." }] },
       { "focus": "ai", "input_prompt": "shotgun", "text_blocks": [{ "condition": "default", "text": "Alright, team. We are burning daylight. Who is calling **Shotgun**? (I need to know who the Passenger is so I can calibrate the airbags)." }] }
     ]
   },
@@ -76,12 +76,12 @@
     "next_chapter": "chapter_6_horizon",
     "telemetry": { "loc": "Salar de Uyuni", "time": "18:15 PM" },
     "scenes": [
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{driver} took the driver's seat. The gear stick felt cold and precise. They dropped the clutch. The X-Trail didn't just accelerate; it heaved forward like a waking beast. First gear was short, a burst of noise and diesel clatter." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They shifted to second. For a second, nothing happened. The heavy chassis wallowed, fighting the inertia. The 'Turbo Lag'—the breath before the scream." }] },
-      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Wait for it {driver}... wait for 2000 RPM... come on, you heavy beauty..." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Then, the needle hit 2000. **The Kick.** The turbo spooled up with a violent shove, pinning {driver} and {passenger} into the seats. The elephant learned to sprint." }] },
-      { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{passenger} grabbed the grab handle as the car swayed. The soft suspension absorbed the salt crust, but the body roll was significant. It felt less like driving a car and more like galloping a massive, iron horse." }] },
-      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Bio-Regen active. {driver}, your heart rate spiked with that turbo kick, didn't it? I'm scrubbing the adrenaline fatigue. Keep the revs up! {passenger}, enjoy the view! 😨" }] }
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{driver} took the driver's seat. The gear stick felt cold and precise. They dropped the clutch. The X-Trail didn't just accelerate; it heaved forward like a waking beast. The diesel clatter was a rhythmic, mechanical heartbeat." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "First gear was short. Shift. Second gear. The car wallowed for a second—the infamous Turbo Lag. The breath before the scream." }] },
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Wait for it... wait for 2000 RPM... come on, you heavy beauty..." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "Then, the needle hit 2000. **The Kick.** The Variable Geometry Turbo spooled up. The torque hit like a sledgehammer—320Nm of pure grunt. The nose lifted, the rear squatted, and the elephant learned to sprint." }] },
+      { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{passenger} grabbed the 'Oh Sh*t' handle as the car swayed. The soft suspension absorbed the salt crust, but the body roll was significant. It felt less like driving a car and more like galloping a massive, iron horse." }] },
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Bio-Regen active. Your heart rate spiked with that turbo kick, didn't it? I'm scrubbing the adrenaline fatigue. Keep the revs up! Don't let the turbo sleep! 😨" }] }
     ]
   },
   "chapter_6_horizon": {
@@ -90,10 +90,12 @@
     "next_chapter": "chapter_7_bio",
     "telemetry": { "loc": "Tunupa Volcano", "time": "19:00 PM" },
     "scenes": [
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They slowed down as the salt gave way to the rocky base of the Tunupa Volcano. The engine ticked, cooling down in the twilight." }] },
-      { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{passenger} stepped out, their boots crunching on the earth. They looked at the glowing device on their wrist. 'We aren't just tourists, are we?'" }] },
-      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Tourists take photos, {passenger}. You two? You're going to take History. But first, we need to calibrate the temporal drive. Next stop is going to be... messy. ahahah." }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{driver} leaned against the warm hood of the X-Trail. They felt tired—the 5% that SMYLNYX couldn't scrub away. It was a good tired. The kind that comes after surviving something impossible." }] }
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "They slowed down as the salt gave way to the rocky base of the Tunupa Volcano. The engine ticked, cooling down in the twilight. The world was blue, turning to black." }] },
+      { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{passenger} stepped out, their boots crunching on the earth. They looked at the glowing device on their wrist. 'We aren't just tourists, are we? This feels... permanent.'" }] },
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Tourists take photos. You two? You're going to take History. But first, we need to calibrate the temporal drive. Next stop is going to be... messy. ahahah." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{driver} leaned against the warm hood of the X-Trail. They felt tired—the 5% that SMYLNYX couldn't scrub away. It was a good tired. The kind that comes after surviving something impossible." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "{player} looked up. 'So, Smylynx... is that an acronym? Synthetic Machine Learning...?'" }] },
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "No. It's old code. It means **'The Smiling Night.'** Because I have a hundred eyes, I see everything, and I think the universe is funny. Now stop asking personal questions and look at that nebula. 🥰" }] }
     ]
   },
   "chapter_7_bio": {
@@ -102,17 +104,21 @@
     "next_chapter": "chapter_8_wardrobe",
     "telemetry": { "loc": "Tunupa Base Camp", "time": "19:30 PM" },
     "scenes": [
-      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Okay, listen up {player} and {partner}. That jump to Bolivia? That was just *Space*. We just folded a map. Easy. Child's play." }] },
-      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "But the next one? That's *Time*. I need specs. {player}, you're up first." }] },
-      { "focus": "ai", "input_prompt": "age", "text_blocks": [{ "condition": "default", "text": "How many solar cycles on the clock?" }] },
-      { "focus": "ai", "input_prompt": "gender", "text_blocks": [{ "condition": "default", "text": "Gender Presentation? Kings listen to men; Queens listen to women; Spies listen to neither." }] },
-      { "focus": "ai", "input_prompt": "origin", "text_blocks": [{ "condition": "default", "text": "Where did you spawn? I need to load the cultural subroutines." }] },
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Okay, listen up meat-bags. That jump to Bolivia? That was just *Space*. We just folded a map. Easy. Child's play." }] },
+      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "But the next one? That's *Time*. That's ripping a page out of the history book and gluing ourselves into it. The strain is logarithmic. If I don't calibrate to your specific biology, I might leave your liver in 2026." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "SMYLNYX projected a hologram onto the windshield. It looked like a bureaucratic form from the future. 'I need specs,' she said. 'Age. Gender. Origin. Height. Don't lie to me. I can see your cholesterol levels.'" }] },
+      
+      { "focus": "ai", "input_prompt": "age", "text_blocks": [{ "condition": "default", "text": "First. How many solar cycles on the clock? Are you vintage or fresh off the line?" }] },
+      { "focus": "ai", "input_prompt": "gender", "text_blocks": [{ "condition": "default", "text": "Gender Presentation? History is sexist. Kings listen to men; Queens listen to women; Spies listen to neither." }] },
+      { "focus": "ai", "input_prompt": "origin", "text_blocks": [{ "condition": "default", "text": "Spawn point? I need to load the cultural subroutines. Where are you from?" }] },
       { "focus": "ai", "input_prompt": "height", "text_blocks": [{ "condition": "default", "text": "Displacement Volume Check. How tall are you? (Use CM or Feet/Inches)." }] },
+      
       { "mode_req": "coop", "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Alright, {partner}. Your turn. Don't let {player} have all the fun." }] },
-      { "mode_req": "coop", "focus": "ai", "input_prompt": "age", "text_blocks": [{ "condition": "default", "text": "Age check. Are you vintage or fresh off the line?" }] },
+      { "mode_req": "coop", "focus": "ai", "input_prompt": "age", "text_blocks": [{ "condition": "default", "text": "Age check." }] },
       { "mode_req": "coop", "focus": "ai", "input_prompt": "gender", "text_blocks": [{ "condition": "default", "text": "Presentation?" }] },
       { "mode_req": "coop", "focus": "ai", "input_prompt": "origin", "text_blocks": [{ "condition": "default", "text": "Origin Point?" }] },
       { "mode_req": "coop", "focus": "ai", "input_prompt": "height", "text_blocks": [{ "condition": "default", "text": "Height Check?" }] },
+      
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Calibration Complete. Synchronization at 99%. Calculating 'Ash & Vapor' coordinates..." }] }
     ]
   },
@@ -125,9 +131,16 @@
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Target Locked: **Vijayanagara, 1565 AD**. The City of Victory. We are arriving 3 days before the Battle of Talikota." }] },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "SMYLNYX scanned their clothes—jeans, hoodies, sneakers. She made a noise that sounded like digital vomiting." }] },
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Ugh. No. Absolutely not. If you walk into Hampi wearing polyester, you'll be arrested for public indecency or mistaken for demons. We need to fix this. ✨" }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The air around them shimmered. Digital thread spooled out of thin air, weaving itself into fabric." }] },
-      { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Based on your bio-metrics, I'm assigning local camouflage. If you're from the Subcontinent, you're nobility. If you're foreign, you're a Portuguese Horse Trader. Trust me, in Hampi, everyone loves a horse trader. 🐴" }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The jeans dissolved. In their place: heavy silks, velvet waistcoats, and leather sandals. They didn't just look like they belonged; they looked like they owned the place." }] }
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The air around them shimmered. Digital thread spooled out of thin air, weaving itself into fabric. It was like watching a 3D printer made of light." }] },
+      { 
+        "focus": "ai", 
+        "text_blocks": [
+          { "condition": "default", "text": "Loading defaults... Here." },
+          { "condition": "origin:india", "text": "Local Origin Detected. You are now a **Noble Merchant from the Coast**. Silk Dhoti. Angavastram with gold zari work. A turban that says 'I have money.' Try not to trip on the pleats." },
+          { "condition": "origin:uk", "text": "Foreign Origin Detected. Camouflage Protocol: **Portuguese Horse Trader**. Velvet tunic. Pantaloons. Leather boots. The Empire loves Portuguese traders because they bring Arabian horses. You have diplomatic immunity, basically." }
+        ] 
+      },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The jeans dissolved. In their place: heavy silks, velvet waistcoats, and leather sandals. They didn't just look like they belonged; they looked like they owned the place. They looked... timeless." }] }
     ]
   },
   "chapter_9_bazaar": {
@@ -146,10 +159,10 @@
         "image": "assets/images/hampi-bazaar-glory.png", 
         "image_caption": "SIMULATION RECONSTRUCTION: 1565 AD",
         "image_source": "Visual Reconstruction by Nano Banana",
-        "text_blocks": [{ "condition": "default", "text": "**The Hampi Bazaar.** It was a river of humanity. The street was wide—absurdly wide—and lined with two-story stone pavilions. But it wasn't the stone that caught the eye. It was the *stuff*." }] 
+        "text_blocks": [{ "condition": "default", "text": "**The Hampi Bazaar.** It was a river of humanity. The street was wide—absurdly wide, maybe thirty-five meters—and lined with two-story stone pavilions. But it wasn't the stone that caught the eye. It was the *stuff*." }] 
       },
       { "focus": "partner", "text_blocks": [{ "condition": "default", "text": "{partner} stopped walking. They pointed at a merchant sitting on a rug. 'Is that...?'" }] },
-      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "It was. In Mumbai, you haggle for vegetables. Here, a man was selling diamonds the size of pigeons' eggs, piled in a heap like common potatoes. Rubies were measured by the cup. Pearls were sold by weight." }] },
+      { "focus": "player", "text_blocks": [{ "condition": "default", "text": "It was. In Mumbai, you haggle for vegetables. Here, a man was selling diamonds the size of pigeons' eggs, piled in a heap like common potatoes. Rubies were measured by the cup. Pearls were sold by weight. It was obscene. It was magnificent." }] },
       { "focus": "ai", "text_blocks": [{ "condition": "default", "text": "Welcome to the richest city on Earth. GDP higher than Rome. Population: 500,000. Status: Invincible. (Or so they think)." }] },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "The people didn't look scared. They looked bored. Soldiers in gold-plated armor leaned against pillars, eating sugarcane. Elephants marched past, bells ringing, painted in vibrant floral patterns. It was a paradise so loud, so bright, and so confident, that it felt impossible it could ever end." }] },
       { "focus": "player", "text_blocks": [{ "condition": "default", "text": "But you know the date. You know that in 72 hours, this street will be a river of blood. The contrast made the gold look sharper, and the jasmine smell like funeral flowers." }] }
@@ -168,7 +181,7 @@
       { 
         "focus": "player", 
         "text_blocks": [
-          { "condition": "architect", "text": "Cyclopean masonry. Interlocking stones. You notice the lack of mortar instantly. This wasn't built; it was puzzled together. A siege engine would break its teeth on these walls." },
+          { "condition": "architect", "text": "Cyclopean masonry. Interlocking stones. You notice the lack of mortar instantly. This wasn't built; it was puzzled together. The friction alone holds it. A siege engine would break its teeth on these walls." },
           { "condition": "default", "text": "The stones were interlocking, massive, and seamless. It felt less like a city and more like a fortress carved from a single mountain." }
         ] 
       },
@@ -250,7 +263,7 @@
           { "condition": "default", "text": "They sat in the shade. {partner} produced a bundle of food they had 'acquired' from the bazaar." },
           { "condition": "gender:female", "text": "They sat in the shade of the Zenana balconies. {player} felt a strange shiver. This was the women's space. A gilded cage. Beautiful, luxurious, and completely cut off from the war room. It felt safe, but suffocating." },
           { "condition": "gender:male", "text": "They sat in the shade. Technically, {player} shouldn't be here. This was the Zenana—the Queen's quarters. Even centuries later, the architecture felt private, like they were trespassing on a secret." }
-        ]
+        ] 
       },
       { 
         "focus": "partner", 
