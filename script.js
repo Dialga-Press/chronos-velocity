@@ -24,28 +24,20 @@ const output = document.getElementById('game-output');
 const input = document.getElementById('player-input');
 
 async function init() {
-    // 1. Load Rules
     try { 
         const r = await fetch('data/rules.json'); 
-        if(!r.ok) throw new Error("rules.json file missing");
+        if(!r.ok) throw new Error("Rules file missing");
         gameState.rules = await r.json(); 
-    } catch (e) { 
-        printLine(`ERROR: ${e.message}`, 'system', false);
-        console.error(e);
-    }
-
-    // 2. Load Story
-    try { 
+        
         const s = await fetch('data/story.json'); 
-        if(!s.ok) throw new Error("story.json file missing");
+        if(!s.ok) throw new Error("Story file missing");
         gameState.story = await s.json(); 
     } catch (e) { 
-        printLine(`CRITICAL ERROR: ${e.message}`, 'system', false);
-        printLine(`(Check JSON syntax in data/story.json)`, 'system', false);
-        console.error(e);
+        printLine(`CRITICAL ERROR: ${e.message}`, 'system', false); 
         return;
     }
 
+    // Check for Save
     if (typeof StorageManager !== 'undefined' && StorageManager.hasSave()) {
         gameState.step = 'main_menu';
         setTimeout(() => {
@@ -73,61 +65,83 @@ input.addEventListener('keydown', function(e) {
         const val = input.value.trim();
         input.value = '';
         
-        try {
-            // Priority 1: Typing
-            if (gameState.isTyping) { 
-                gameState.skipTyping = true; 
-                e.preventDefault();
-                return; 
-            }
-            
-            // Priority 2: Choices
-            if (gameState.waitingForChoice) {
-                if(val) handleChoiceInput(val);
-                return;
-            }
-
-            // Priority 3: Narrative Input
-            if (gameState.step === 'story_input') { 
-                if(!val) return; 
-                handleStoryInput(val); 
-                return; 
-            }
-
-            // Priority 4: Reading
-            if (gameState.storyActive) { 
-                advanceStory(); 
-                return; 
-            }
-
-            // Priority 5: System Menu
-            if (val) processInput(val);
-
-        } catch (error) {
-            console.error("Input Error:", error);
-            printLine(`SYSTEM CRASH: ${error.message}`, 'system', false);
+        // 1. Force Finish Typing
+        if (gameState.isTyping) { 
+            gameState.skipTyping = true; 
+            e.preventDefault();
+            return; 
         }
+        
+        // 2. Branching Choices (1, 2...)
+        if (gameState.waitingForChoice) {
+            if(val) handleChoiceInput(val);
+            return;
+        }
+
+        // 3. Story Input (Bio/Shotgun)
+        if (gameState.step === 'story_input') { 
+            if(!val) return; 
+            handleStoryInput(val); 
+            return; 
+        }
+
+        // 4. Advance Story
+        if (gameState.storyActive) { 
+            advanceStory(); 
+            return; 
+        }
+
+        // 5. Menu Logic
+        if (val) processInput(val);
     }
 });
 
-// --- MENU LOGIC ---
+function goBack() {
+    if (!gameState.storyActive || gameState.isTyping) return;
+
+    // Visual Cleanup
+    let removedContent = false;
+    while(output.lastChild && !removedContent) {
+        const el = output.lastChild;
+        // Check for specific content classes to stop removing
+        if (el.classList.contains('story') || el.classList.contains('ai')) {
+             removedContent = true;
+        }
+        output.removeChild(el);
+    }
+
+    // Logic Cleanup
+    if (currentSceneIndex > 0) {
+        currentSceneIndex--;
+        gameState.history.pop();
+    }
+
+    // Reset States
+    gameState.step = 'reading'; 
+    gameState.currentInputType = null;
+    gameState.waitingForChoice = false;
+    gameState.currentChoices = null;
+    input.placeholder = "Write your response...";
+    gameState.waitingForEnter = false;
+    
+    // Replay
+    playNextScene(false);
+}
+
+// --- MENU LOGIC & EASTER EGGS ---
 function processInput(val) {
-    // MAIN MENU
     if (gameState.step === 'main_menu') {
         if (val === '1') loadGame();
         else if (val === '2') { StorageManager.clear(); triggerNewGameMenu(); }
     }
-    // MODE SELECT
     else if (gameState.step === 'mode_select') {
         if (val === '1') { gameState.mode = 'solo'; startCharCreation('player'); }
         else if (val === '2') { gameState.mode = 'coop'; startCharCreation('player'); }
     } 
-    // NAME INPUT
     else if (gameState.step.includes('_name')) {
         let t = gameState.step.split('_')[0];
-        gameState[t].name = val;
-
-        // Easter Egg
+        
+        // --- EASTER EGG CHECK 1: IS IT LAVA? ---
         if (t === 'player' && val.toLowerCase() === 'lava') {
             printLine("... IDENTITY FLAGGED.", 'system');
             setTimeout(() => {
@@ -136,6 +150,11 @@ function processInput(val) {
             }, 600);
             return;
         }
+        
+        gameState[t].name = val;
+        printLine(`${t.toUpperCase()} ID: ${val}`, 'story');
+        
+        // --- EASTER EGG CHECK 2: THE DUO ---
         if (t === 'partner') {
             const p1 = gameState.player.name.toLowerCase();
             const p2 = val.toLowerCase();
@@ -144,54 +163,82 @@ function processInput(val) {
             }
         }
 
-        printLine(`${t.toUpperCase()} ID: ${val}`, 'story');
         setTimeout(listClasses, 500);
         gameState.step = t + '_class';
     } 
-    // EASTER EGG
+    // --- EASTER EGG CONFIRMATION STEP ---
     else if (gameState.step === 'easter_egg_check') {
         if (val.toLowerCase().startsWith('y')) {
+            // User Confirmed Beeth is here
+            gameState.player.name = 'Lava';
             gameState.partner.name = 'Beeth';
-            triggerConfettiEvent();
             gameState.mode = 'coop'; 
+            
+            triggerConfettiEvent();
+            
             printLine(`Protagonist 1: <strong>Lava</strong>`, 'story');
-            setTimeout(listClasses, 500);
+            setTimeout(listClasses, 1000); // Wait for confetti to settle slightly
             gameState.step = 'player_class';
         } else {
+            // User denied, just Lava solo
+            gameState.player.name = 'Lava';
             printLine(`Protagonist 1: <strong>Lava</strong>`, 'story');
             setTimeout(listClasses, 500);
             gameState.step = 'player_class';
         }
     }
-    // CLASS INPUT
     else if (gameState.step.includes('_class')) {
         let t = gameState.step.split('_')[0];
-        
         if (applyClassSelection(val, t)) {
-            // Logic Fork
+            // LOGIC FORK AFTER CLASS SELECTION
             if(t === 'player') {
                 if (gameState.mode === 'solo') {
                      setTimeout(() => { printLine("Configure Secondary Asset? [Y/N]", 'system'); gameState.step = 'partner_query'; }, 500);
                 } else {
-                    // Check if partner name exists (Easter Egg)
+                    // COOP MODE CHECK: Do we already know the partner?
                     if (gameState.partner.name && gameState.partner.name !== '') {
+                        // We know the name (e.g. Beeth), skip name input
                         printLine(`Protagonist 2: <strong>${gameState.partner.name}</strong>`, 'story');
-                        setTimeout(() => { printLine("Select Origin Protocol:", 'system'); listClasses(); }, 500);
+                        setTimeout(() => { 
+                            printLine(`Select Origin Protocol for ${gameState.partner.name}:`, 'system'); 
+                            listClasses(); 
+                        }, 500);
                         gameState.step = 'partner_class';
                     } else {
+                        // We don't know name, ask for it
                         startCharCreation('partner');
                     }
                 }
             } else { 
-                // Partner Class Done -> Start Game
+                // Partner Class selected -> Start
                 startGame(); 
             }
         }
     } 
-    // PARTNER QUERY
     else if (gameState.step === 'partner_query') {
         if(val.toLowerCase().startsWith('y')) startCharCreation('partner');
         else { autoAssignPartner(); startGame(); }
+    }
+}
+
+// --- CONFETTI FIX ---
+function triggerConfettiEvent() {
+    printLine("WE HAVE BEEN WAITING FOR YOU! ✨", 'ai');
+    
+    if (typeof confetti === 'function') {
+        var duration = 2000; // 2 Seconds only
+        var end = Date.now() + duration;
+
+        (function frame() {
+            // Launch confetti
+            confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 } });
+            confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 } });
+    
+            // Keep going until time is up
+            if (Date.now() < end) {
+                requestAnimationFrame(frame);
+            }
+        }());
     }
 }
 
@@ -200,56 +247,39 @@ function startCharCreation(target) {
     printLine(target === 'player' ? "ENTER NAME (PROTAGONIST 1):" : "ENTER NAME (PROTAGONIST 2):", 'system');
     gameState.step = target + '_name';
 }
-
 function applyClassSelection(val, target) {
     const choice = parseInt(val) - 1;
-    if (!gameState.rules) {
-        printLine("ERROR: Rules data not loaded.", 'system');
-        return false;
-    }
+    if(!gameState.rules) return false;
     const classes = gameState.rules.backgrounds;
-    
     if (classes[choice]) {
         const selected = classes[choice];
         const targetObj = (target === 'player') ? gameState.player : gameState.partner;
         targetObj.class = selected.id;
-        
-        // Add Stats
         for (let [key, value] of Object.entries(selected.bonus)) {
             if(targetObj.stats[key] !== undefined) targetObj.stats[key] += value;
         }
-        
         showStatCard(selected.name, targetObj.stats, targetObj.name);
         return true;
     }
-    
-    printLine("Invalid selection. Try again.", 'system');
     return false;
 }
-
 function autoAssignPartner() {
     gameState.partner.class = 'adventurer'; 
     gameState.partner.name = "The Other";
-    // Apply stats for adventurer
-    // (Ideally fetch from rules, but hardcoded fallback is safe)
-    gameState.partner.stats.Guts += 2;
-    gameState.partner.stats.Lore += 2;
 }
-
 function startGame() {
     printLine("TIMELINE SYNCHRONIZATION COMPLETE.", 'system');
-    
-    // Safety check
-    if (!gameState.story) {
-        printLine("ERROR: No Story Data Loaded.", 'system');
-        return;
-    }
+    setTimeout(() => { printLine("<hr style='opacity:0.3'>", 'system', false); gameState.storyActive = true; loadStoryChapter('chapter_1_p1'); }, 1000);
+}
 
-    setTimeout(() => { 
-        printLine("<hr style='opacity:0.3'>", 'system', false); 
-        gameState.storyActive = true; 
-        loadStoryChapter('chapter_1_p1'); 
-    }, 1000);
+function loadGame() {
+    const data = StorageManager.load();
+    if (!data) { printLine("ERROR: SAVE CORRUPT.", 'system'); triggerNewGameMenu(); return; }
+    Object.assign(gameState, data);
+    gameState.storyActive = true;
+    printLine("RESTORING TIMELINE...", 'system');
+    loadStoryChapter(data.currentChapterId, false);
+    updateUI();
 }
 
 // --- STORY ENGINE ---
@@ -257,8 +287,6 @@ let currentSceneIndex = 0;
 let currentChapterData = null;
 
 async function loadStoryChapter(chapterId, resetIndex = true) {
-    if(!gameState.story) return;
-    
     currentChapterData = gameState.story[chapterId];
     if(currentChapterData) {
         if (resetIndex || gameState.step === 'main_menu') {
@@ -304,7 +332,6 @@ function playNextScene(saveHistory = true) {
         return;
     }
 
-    // Input Prompt
     if (scene.input_prompt) {
         let promptText = resolveTextVariant(scene.text_blocks, scene.focus);
         printLine(replacePlaceholders(promptText), scene.focus === 'ai' ? 'ai' : 'story').then(() => {
@@ -315,7 +342,6 @@ function playNextScene(saveHistory = true) {
         return; 
     }
 
-    // Choices
     if (scene.choices) {
         let text = resolveTextVariant(scene.text_blocks, scene.focus);
         printLine(replacePlaceholders(text), scene.focus === 'ai' ? 'ai' : 'story').then(() => {
@@ -324,7 +350,6 @@ function playNextScene(saveHistory = true) {
         return;
     }
 
-    // Standard Text
     let text = resolveTextVariant(scene.text_blocks, scene.focus);
     text = replacePlaceholders(text);
     text = formatText(text);
@@ -344,7 +369,6 @@ function playNextScene(saveHistory = true) {
     });
 }
 
-// ... UI Functions ...
 function renderChoices(choices) {
     gameState.waitingForChoice = true;
     gameState.currentChoices = choices;
@@ -363,6 +387,7 @@ function renderChoices(choices) {
     html += `</div>`;
     const div = document.createElement('div'); div.innerHTML = html; output.appendChild(div); scrollToBottom();
 }
+
 function makeChoice(index) {
     if (!gameState.waitingForChoice) return;
     const choice = gameState.currentChoices[index];
@@ -378,10 +403,13 @@ function makeChoice(index) {
     if (choice.target) loadStoryChapter(choice.target);
     else { currentSceneIndex++; playNextScene(); }
 }
+
 function handleChoiceInput(val) {
     const idx = parseInt(val) - 1;
     if (gameState.currentChoices && gameState.currentChoices[idx]) makeChoice(idx);
 }
+
+// UI Functions
 function updateUI() {
     const invBtn = document.getElementById('inventory-btn');
     if (invBtn && gameState.inventory && gameState.inventory.length > 0) {
@@ -419,20 +447,6 @@ function handleStoryInput(val) {
     gameState.step = 'reading'; gameState.currentInputType = null; input.placeholder = "Write your response...";
     currentSceneIndex++; playNextScene();
 }
-function goBack() {
-    if (!gameState.storyActive || gameState.isTyping) return;
-    let removedContent = false;
-    while(output.lastChild && !removedContent) {
-        const el = output.lastChild;
-        if (el.classList.contains('msg') || el.classList.contains('story-image-container') || el.innerHTML.includes('<button')) {
-            output.removeChild(el);
-            if(el.classList.contains('story') || el.classList.contains('ai')) removedContent = true;
-        } else { output.removeChild(el); }
-    }
-    if (currentSceneIndex > 0) { currentSceneIndex--; gameState.history.pop(); }
-    gameState.step = 'reading'; gameState.currentInputType = null; gameState.waitingForChoice = false; gameState.currentChoices = null;
-    input.placeholder = "Write your response..."; gameState.waitingForEnter = false; playNextScene(false);
-}
 function advanceStory() { if (!gameState.waitingForEnter && !gameState.isTyping) playNextScene(); }
 function formatText(text) { return text ? text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') : ""; }
 function replacePlaceholders(text) {
@@ -456,49 +470,40 @@ function resolveTextVariant(blocks, focus) {
     blocks.forEach(block => { let p = checkCondition(block.condition); if (p > highestPriority) { highestPriority = p; bestBlock = block; } });
     return bestBlock ? bestBlock.text : "Data Corrupted.";
 }
+function listClasses() {
+    let listHTML = '<div style="margin-bottom:20px;">';
+    gameState.rules.backgrounds.forEach((bg, index) => {
+        listHTML += `<div class="class-card"><strong>[${index + 1}] ${bg.name}</strong><span>${bg.desc}</span></div>`;
+    });
+    listHTML += '</div>';
+    printLine(listHTML, 'system', false);
+}
 function showStatCard(className, stats, name) {
     let html = `<div class="stats-card"><div style="text-align:center; margin-bottom:20px; font-family:var(--font-head); font-size:1.4em; color:var(--text-primary)">${name}<div style="font-size:0.6em; color:var(--accent); text-transform:uppercase; margin-top:5px; letter-spacing:2px;">${className}</div></div><div class="stats-grid">`;
     for (let [key, val] of Object.entries(stats)) { let pct = (val/10)*100; html += `<div class="stat-row"><div class="stat-label"><span>${key}</span><span>${val}/10</span></div><div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${pct}%"></div></div></div>`; }
     html += `</div></div>`;
     printLine(html, 'system', false);
 }
-function triggerConfettiEvent() {
-    printLine("WE HAVE BEEN WAITING FOR YOU! ✨", 'ai');
-    if (typeof confetti === 'function') {
-        var duration = 3 * 1000;
-        var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-        var interval = setInterval(function() {
-            var timeLeft = (Date.now() + duration) - Date.now();
-            if (timeLeft <= 0) return clearInterval(interval);
-            confetti(Object.assign({}, defaults, { particleCount: 50, origin: { x: Math.random(), y: Math.random() - 0.2 } }));
-        }, 250);
-    }
+function showSynergyCard() {
+    const p1 = gameState.player.stats;
+    const p2 = gameState.partner.stats;
+    let synergy = {};
+    for (let key in p1) { synergy[key] = p1[key] + p2[key]; }
+    let html = `<div class="stats-card" style="border-color: var(--text-primary);"><div style="text-align:center; margin-bottom:20px; font-family:var(--font-head); font-size:1.4em; color:var(--text-primary)">TEAM SYNERGY<div style="font-size:0.6em; color:var(--text-secondary); text-transform:uppercase; margin-top:5px; letter-spacing:2px;">COMBINED POTENTIAL</div></div><div class="stats-grid">`;
+    for (let [key, val] of Object.entries(synergy)) { let pct = (val/20)*100; html += `<div class="stat-row"><div class="stat-label"><span>${key}</span><span>${val}/20</span></div><div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${pct}%; background:var(--text-primary);"></div></div></div>`; }
+    html += `</div></div>`;
+    printLine(html, 'system', false);
 }
 function printLine(text, type, animate = true) { 
     const p = document.createElement('div'); p.classList.add('msg'); if (type) p.classList.add(type); output.appendChild(p); 
     if(animate) { return typeWriter(p, text, (type==='ai' ? 40 : 25)); } 
     else { p.innerHTML = text; p.classList.add('typed-done'); scrollToBottom(); return Promise.resolve(); }
 }
-function typeWriter(element, html, speed) {
-    return new Promise((resolve) => {
-        gameState.isTyping = true; gameState.skipTyping = false; element.classList.add('typing');
-        const tempDiv = document.createElement('div'); tempDiv.innerHTML = html;
-        const nodes = Array.from(tempDiv.childNodes);
-        element.innerHTML = ""; let nodeIndex = 0;
-        function typeNode() {
-            if (gameState.skipTyping) { element.innerHTML = html; element.classList.remove('typing'); element.classList.add('typed-done'); gameState.isTyping = false; gameState.skipTyping = false; scrollToBottom(); resolve(); return; }
-            if (nodeIndex >= nodes.length) { element.classList.remove('typing'); element.classList.add('typed-done'); gameState.isTyping = false; resolve(); return; }
-            const node = nodes[nodeIndex];
-            if (node.nodeType === 3) {
-                const text = node.nodeValue; let charIndex = 0; const liveTextNode = document.createTextNode(""); element.appendChild(liveTextNode);
-                function typeChar() { if (gameState.skipTyping) { typeNode(); return; } liveTextNode.nodeValue += text.charAt(charIndex); charIndex++; scrollToBottom(); if (charIndex < text.length) setTimeout(typeChar, speed); else { nodeIndex++; typeNode(); } }
-                typeChar();
-            } else { element.appendChild(node.cloneNode(true)); nodeIndex++; setTimeout(typeNode, speed); }
-        }
-        typeNode();
-    });
-}
-function listClasses() { let listHTML = '<div style="margin-bottom:20px;">'; gameState.rules.backgrounds.forEach((bg, index) => { listHTML += `<div class="class-card"><strong>[${index + 1}] ${bg.name}</strong><span>${bg.desc}</span></div>`; }); listHTML += '</div>'; printLine(listHTML, 'system', false); }
 function scrollToBottom() { setTimeout(() => { output.scrollTop = output.scrollHeight; }, 50); }
-const themeBtn = document.getElementById('theme-toggle'); if(themeBtn) { themeBtn.addEventListener('click', function() { document.body.classList.toggle('light-mode'); }); }
+// Bind Inventory Button
+const invBtn = document.getElementById('inventory-btn');
+if(invBtn) invBtn.addEventListener('click', toggleInventory);
+
+const themeBtn = document.getElementById('theme-toggle');
+if(themeBtn) { themeBtn.addEventListener('click', function() { document.body.classList.toggle('light-mode'); }); }
 init();
