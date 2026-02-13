@@ -248,3 +248,54 @@ body:not(.light-mode) .story-image {
     0% { clip-path: inset(10% 0 60% 0); transform: translate(2px, 1px); }
     100% { clip-path: inset(80% 0 5% 0); transform: translate(-2px, -1px); }
 }
+
+/* --- NEW FEATURE: CRT SCANLINES (The Vibe) --- */
+body::after {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+    background-size: 100% 4px;
+    z-index: 999;
+    pointer-events: none;
+    opacity: 0.3; /* Subtle effect */
+}
+body.light-mode::after { display: none; } /* Disable in Light Mode */
+
+/* --- FIXED: HOLOGRAPHIC PARALLAX --- */
+.story-image-container {
+    margin: 30px 0;
+    border-radius: 8px;
+    overflow: hidden; /* Keeps the image inside the border */
+    perspective: 1000px; /* REQUIRED for 3D effect */
+    transform-style: preserve-3d;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    border: 1px solid var(--border-color);
+}
+
+.story-image {
+    width: 100%;
+    display: block;
+    filter: sepia(15%) contrast(1.1);
+    transition: transform 0.1s ease-out; /* Smooth instant movement */
+    will-change: transform;
+}
+
+/* --- UI POLISH --- */
+.icon-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 8px;
+    font-size: 1.2rem;
+    transition: color 0.3s, transform 0.2s;
+}
+.icon-btn:hover {
+    color: var(--accent);
+    transform: scale(1.1);
+}
