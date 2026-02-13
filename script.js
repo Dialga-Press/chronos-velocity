@@ -1,160 +1,211 @@
 /* 
-   CHRONOS VELOCITY ENGINE v0.1.7
-   Features: Procedural Audio, 3D Parallax, Persistence
+   CHRONOS VELOCITY ENGINE (STABLE MONOLITH V2.1)
+   Fixes: Missing Dependency (AccessibilityManager), Global Error Trapping
 */
 
-// --- 1. AUDIO CONTROLLER (Louder & Simpler) ---
-const AudioController = {
-    ctx: null, 
-    gainNode: null, 
-    enabled: false,
+// --- 0. GLOBAL SAFETY NET (Prevents Black Screens) ---
+window.onerror = function(message, source, lineno, colno, error) {
+    const out = document.getElementById('game-output') || document.body;
+    out.innerHTML += `<div style="color:red; border:1px solid red; padding:10px; margin:10px;">
+        <strong>SYSTEM CRASH:</strong> ${message}<br>
+        <small>${source}:${lineno}</small>
+    </div>`;
+    console.error(error);
+};
 
+// --- 1. ACCESSIBILITY MANAGER (The Missing Piece) ---
+const AccessibilityManager = {
+    init() { console.log("[SYS] A11Y: ONLINE"); },
+    speak(text) { /* Placeholder for screen reader logic */ },
+    prefersReducedMotion() { return false; } 
+};
+
+// --- 2. AUDIO CONTROLLER ---
+const AudioController = {
+    ctx: null, masterGain: null, reverbNode: null, isMuted: false, isInit: false,
+    
     init() {
-        if (this.ctx) return;
+        if (this.isInit) return;
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         this.ctx = new AudioContext();
-        this.gainNode = this.ctx.createGain();
-        this.gainNode.gain.value = 0.1; // Default Volume (Low to start)
-        this.gainNode.connect(this.ctx.destination);
-    },
-
-    enable() {
-        if (!this.ctx) this.init();
-        if (this.ctx.state === 'suspended') this.ctx.resume();
-        this.enabled = true;
-        this.gainNode.gain.setValueAtTime(0.2, this.ctx.currentTime); // Unmute volume
-        console.log("[AUDIO] System Enabled");
-        this.playBlip(); // Feedback
-    },
-
-    disable() {
-        this.enabled = false;
-        if(this.gainNode) this.gainNode.gain.setValueAtTime(0, this.ctx.currentTime);
-    },
-
-    // SFX: High Tech Blip (Triangle Wave)
-    playBlip() {
-        if (!this.enabled || !this.ctx) return;
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc.connect(gain);
-        gain.connect(this.ctx.destination); // Direct connect for clarity
-
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(440, this.ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(880, this.ctx.currentTime + 0.1);
+        this.masterGain = this.ctx.createGain();
+        this.masterGain.gain.value = 0.4;
         
-        gain.gain.setValueAtTime(0.05, this.ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.1);
-
-        osc.start();
-        osc.stop(this.ctx.currentTime + 0.1);
+        // Reverb
+        this.reverbNode = this.ctx.createConvolver();
+        this.reverbNode.buffer = this.createImpulse(2.5, 2.0);
+        this.reverbNode.connect(this.masterGain);
+        
+        this.masterGain.connect(this.ctx.destination);
+        this.isInit = true;
     },
-
-    // SFX: Typing Click (Short Noise)
-    playType() {
-        if (!this.enabled || !this.ctx) return;
+    resume() { if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume(); },
+    toggleMute() {
+        if (!this.isInit) this.init();
+        this.isMuted = !this.isMuted;
+        const now = this.ctx.currentTime;
+        this.masterGain.gain.cancelScheduledValues(now);
+        this.masterGain.gain.linearRampToValueAtTime(this.isMuted ? 0 : 0.4, now + 0.1);
+        return this.isMuted;
+    },
+    createImpulse(duration, decay) {
+        const rate = this.ctx.sampleRate;
+        const length = rate * duration;
+        const impulse = this.ctx.createBuffer(2, length, rate);
+        const L = impulse.getChannelData(0), R = impulse.getChannelData(1);
+        for (let i = 0; i < length; i++) {
+            const n = i / length;
+            L[i] = (Math.random() * 2 - 1) * Math.pow(1 - n, decay);
+            R[i] = (Math.random() * 2 - 1) * Math.pow(1 - n, decay);
+        }
+        return impulse;
+    },
+    playMagicalChime(pitchVar = 0) {
+        if (this.isMuted || !this.isInit) return;
+        this.resume();
+        const t = this.ctx.currentTime;
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
-        osc.connect(gain);
-        gain.connect(this.ctx.destination);
-
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(800, this.ctx.currentTime);
-        
-        gain.gain.setValueAtTime(0.02, this.ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.05);
-
-        osc.start();
-        osc.stop(this.ctx.currentTime + 0.05);
+        osc.frequency.setValueAtTime(880 + (Math.random() * 100) + pitchVar, t);
+        gain.gain.setValueAtTime(0, t);
+        gain.gain.linearRampToValueAtTime(0.05, t + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+        osc.connect(gain);
+        gain.connect(this.reverbNode);
+        gain.connect(this.masterGain);
+        osc.start(t); osc.stop(t + 0.6);
     },
-
-    // SFX: AI Voice (Harmonic Chord)
-    playAI() {
-        if (!this.enabled || !this.ctx) return;
-        const osc1 = this.ctx.createOscillator();
-        const osc2 = this.ctx.createOscillator();
+    playBlip() {
+        if (this.isMuted || !this.isInit) return;
+        this.resume();
+        const t = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
-        
-        osc1.connect(gain);
-        osc2.connect(gain);
-        gain.connect(this.ctx.destination);
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(220, t);
+        gain.gain.setValueAtTime(0.05, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+        osc.connect(gain);
+        gain.connect(this.masterGain);
+        osc.start(t); osc.stop(t + 0.1);
+    },
+    playType() { this.playMagicalChime(0); },
+    playAI() { this.playMagicalChime(-300); }
+};
 
-        osc1.type = 'sine';
-        osc2.type = 'triangle';
-        
-        // Random Melody
-        const note = 440 + (Math.random() * 200);
-        osc1.frequency.setValueAtTime(note, this.ctx.currentTime);
-        osc2.frequency.setValueAtTime(note * 1.5, this.ctx.currentTime);
+// --- 3. STORAGE MANAGER ---
+const StorageManager = {
+    save: (gs, chId, scIdx) => {
+        const data = {
+            timestamp: Date.now(),
+            mode: gs.mode,
+            player: gs.player,
+            partner: gs.partner,
+            driver: gs.driver,
+            passenger: gs.passenger,
+            inventory: gs.inventory,
+            history: gs.history,
+            currentChapterId: chId,
+            currentSceneIndex: scIdx
+        };
+        try { localStorage.setItem('CV_SAVE_V1', JSON.stringify(data)); } catch(e){}
+    },
+    load: () => {
+        try { return JSON.parse(localStorage.getItem('CV_SAVE_V1')); } catch(e){ return null; }
+    },
+    hasSave: () => !!localStorage.getItem('CV_SAVE_V1'),
+    clear: () => localStorage.removeItem('CV_SAVE_V1')
+};
 
-        gain.gain.setValueAtTime(0.03, this.ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.2);
-
-        osc1.start();
-        osc2.start();
-        osc1.stop(this.ctx.currentTime + 0.2);
-        osc2.stop(this.ctx.currentTime + 0.2);
+// --- 4. INPUT PROCESSOR ---
+const InputProcessor = {
+    processBio(type, rawVal) {
+        const val = rawVal.toLowerCase().trim();
+        let response = null;
+        let formattedVal = rawVal;
+        if (type === 'height') {
+            const match = val.match(/(\d+)'?(\d*)?/);
+            let cm = parseFloat(val);
+            if (match && val.includes("'")) { cm = (parseInt(match[1]) * 30.48) + (parseInt(match[2] || 0) * 2.54); }
+            if (cm > 190) response = `Wow. ${Math.round(cm)}cm? You're a tower. 🦒`;
+            else if (cm < 160) response = `Compact format (${Math.round(cm)}cm). Stealth bonus. 🐁`;
+            else response = `Standard displacement (${Math.round(cm)}cm). Calibrating. ✅`;
+            formattedVal = `${Math.round(cm)}cm`;
+        } else if (type === 'origin') {
+            if (val.includes('india')) response = "India? Excellent. Loading Sanskrit subroutines. 🌶️";
+            else if (val.includes('uk')) response = "UK? Stiff upper lip. Tea synthesis engaged. ☕";
+            else if (val.includes('usa')) response = "USA? Metric conversion active. 🦅";
+            else response = `${rawVal}? Exotic. Downloading database... 🌍`;
+        }
+        return { response, formattedVal };
     }
 };
 
-// --- 2. GAME STATE ---
+// --- 5. GAME ENGINE ---
+const output = document.getElementById('game-output');
+const input = document.getElementById('player-input');
+const invBtn = document.getElementById('inventory-btn');
+const themeBtn = document.getElementById('theme-toggle');
+// Inject audio button if missing
+let audioBtn = document.getElementById('audio-toggle');
+if (!audioBtn) {
+    const headerControls = document.querySelector('.header-controls');
+    if(headerControls) {
+        audioBtn = document.createElement('button');
+        audioBtn.id = 'audio-toggle';
+        audioBtn.className = 'icon-btn';
+        audioBtn.innerHTML = '<span id="audio-icon">🔇</span>';
+        headerControls.prepend(audioBtn);
+    }
+}
+
 let gameState = {
     step: 'boot',
     mode: 'solo',
     player: { name: '', class: '', age: '', gender: '', origin: '', height: '', stats: { Tech: 2, Arts: 2, Guts: 2, Social: 2, Bio: 2, Lore: 2 } },
     partner: { name: '', class: '', age: '', gender: '', origin: '', height: '', stats: { Tech: 2, Arts: 2, Guts: 2, Social: 2, Bio: 2, Lore: 2 } },
-    inventory: [],
-    history: [],
-    rules: null, story: null, storyActive: false, waitingForEnter: false, waitingForChoice: false,
-    currentInputType: null, currentChoices: null, driver: '', passenger: '', citationsShown: false,
-    isTyping: false, skipTyping: false, typingSpeed: 25, typingSpeedAI: 40
+    inventory: [], history: [], rules: null, story: null, storyActive: false,
+    waitingForEnter: false, waitingForChoice: false, currentInputType: null, currentChoices: null,
+    driver: '', passenger: '', citationsShown: false, isTyping: false, skipTyping: false,
+    typingSpeed: 25, typingSpeedAI: 40
 };
 
-// --- DOM ---
-const output = document.getElementById('game-output');
-const input = document.getElementById('player-input');
-const invBtn = document.getElementById('inventory-btn');
-const themeBtn = document.getElementById('theme-toggle');
-const audioBtn = document.getElementById('audio-toggle');
-const audioIcon = document.getElementById('audio-icon');
+// Global Exposure
+window.engine = {
+    goBack: () => goBack(),
+    toggleInventory: () => toggleInventory(),
+    makeChoice: (index) => makeChoice(index)
+};
 
-// --- 3. INIT ---
 async function init() {
-    // Parallax Effect (The Fix)
-    document.addEventListener('mousemove', (e) => {
-        // Query ALL images currently on screen
-        const images = document.querySelectorAll('.story-image');
-        const x = (window.innerWidth - e.pageX * 2) / 100;
-        const y = (window.innerHeight - e.pageY * 2) / 100;
-        
-        images.forEach(img => {
-            // Apply slight rotation based on mouse position
-            img.style.transform = `perspective(1000px) rotateY(${x}deg) rotateX(${y}deg) scale(1.02)`;
-        });
-    });
-
-    // Audio Button Logic
-    if(audioBtn) {
-        audioBtn.addEventListener('click', () => {
-            if (AudioController.enabled) {
-                AudioController.disable();
-                audioIcon.innerText = '🔇';
-            } else {
-                AudioController.enable();
-                audioIcon.innerText = '🔈';
-            }
-        });
-    }
+    AccessibilityManager.init();
+    
+    // Audio Hooks
+    const startAudio = () => AudioController.init();
+    document.addEventListener('click', startAudio, { once: true });
+    document.addEventListener('keydown', startAudio, { once: true });
 
     if(themeBtn) themeBtn.addEventListener('click', () => document.body.classList.toggle('light-mode'));
     if(invBtn) invBtn.addEventListener('click', toggleInventory);
+    if(audioBtn) audioBtn.addEventListener('click', () => {
+        const muted = AudioController.toggleMute();
+        const icon = document.getElementById('audio-icon') || audioBtn;
+        icon.innerText = muted ? '🔇' : '🔈';
+    });
 
-    try { 
-        const [r, s] = await Promise.all([fetch('data/rules.json'), fetch('data/story.json')]);
-        if(!r.ok || !s.ok) throw new Error("Data missing");
-        gameState.rules = await r.json(); gameState.story = await s.json();
-    } catch (e) { printLine(`CRITICAL ERROR: ${e.message}`, 'system', false); return; }
+    try {
+        const [rulesRes, storyRes] = await Promise.all([
+            fetch('data/rules.json'),
+            fetch('data/story.json')
+        ]);
+        if (!rulesRes.ok || !storyRes.ok) throw new Error("File Fetch Failed");
+        gameState.rules = await rulesRes.json();
+        gameState.story = await storyRes.json();
+    } catch (e) {
+        printLine(`CRITICAL ERROR: ${e.message}`, 'system', false);
+        return;
+    }
 
     if (StorageManager.hasSave()) {
         gameState.step = 'main_menu';
@@ -163,7 +214,9 @@ async function init() {
             printLine("[1] RESUME SYNCHRONIZATION", 'story', false);
             printLine("[2] INITIATE NEW TIMELINE", 'story', false);
         }, 500);
-    } else { triggerNewGameMenu(); }
+    } else {
+        triggerNewGameMenu();
+    }
 }
 
 function triggerNewGameMenu() {
@@ -174,33 +227,23 @@ function triggerNewGameMenu() {
     });
 }
 
-// --- 4. LOGIC ENGINE ---
+// --- INPUT LOOP ---
 input.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
         const val = input.value.trim();
+        AudioController.resume();
         
         if (gameState.isTyping) { gameState.skipTyping = true; e.preventDefault(); return; }
         if (gameState.waitingForChoice) { input.value=''; if(val) handleChoiceInput(val); return; }
         if (gameState.step === 'story_input') { if(!val) return; input.value=''; handleStoryInput(val); return; }
         if (gameState.storyActive) { input.value=''; advanceStory(); return; }
-        if (val) { input.value=''; processMenuInput(val); }
+        if (val) { input.value = ''; processMenuInput(val); }
     }
 });
 
-// Storage Manager
-const StorageManager = {
-    save: (gs, chId, scIdx) => {
-        const data = { timestamp: Date.now(), mode: gs.mode, player: gs.player, partner: gs.partner, driver: gs.driver, passenger: gs.passenger, inventory: gs.inventory, history: gs.history, currentChapterId: chId, currentSceneIndex: scIdx };
-        try { localStorage.setItem('CV_SAVE_V1', JSON.stringify(data)); } catch(e){}
-    },
-    load: () => { try { return JSON.parse(localStorage.getItem('CV_SAVE_V1')); } catch(e){ return null; } },
-    hasSave: () => !!localStorage.getItem('CV_SAVE_V1'),
-    clear: () => localStorage.removeItem('CV_SAVE_V1')
-};
-
-// ... Process Menu Input (Same as before) ...
 function processMenuInput(val) {
-    AudioController.playBlip(); // UI Sound
+    AudioController.playBlip();
+
     if (gameState.step === 'main_menu') {
         if (val === '1') loadGame();
         else if (val === '2') { StorageManager.clear(); triggerNewGameMenu(); }
@@ -208,72 +251,95 @@ function processMenuInput(val) {
     else if (gameState.step === 'mode_select') {
         if (val === '1') { gameState.mode = 'solo'; startCharCreation('player'); }
         else if (val === '2') { gameState.mode = 'coop'; startCharCreation('player'); }
-    } 
+    }
     else if (gameState.step.includes('_name')) {
         let t = gameState.step.split('_')[0];
         gameState[t].name = val;
-        // Easter Eggs
+        
         if (t === 'player' && val.toLowerCase() === 'lava') {
             printLine("... IDENTITY FLAGGED.", 'system');
-            setTimeout(() => { printLine("Is <strong>Beeth</strong> with you? [Y/N]", 'ai'); gameState.step = 'easter_egg_check'; }, 600); return;
+            setTimeout(() => { printLine("Is <strong>Beeth</strong> with you? [Y/N]", 'ai'); gameState.step = 'easter_egg_check'; }, 600);
+            return;
         }
-        if (t === 'partner' && isDuo(gameState.player.name, val)) triggerConfettiEvent();
+        if (t === 'partner') { if (isDuo(gameState.player.name, val)) triggerConfettiEvent(); }
 
         printLine(`${t.toUpperCase()} ID: ${val}`, 'story');
-        setTimeout(listClasses, 500);
+        listClasses();
         gameState.step = t + '_class';
-    } 
+    }
     else if (gameState.step === 'easter_egg_check') {
-        if (val.toLowerCase().startsWith('y')) { gameState.partner.name = 'Beeth'; triggerConfettiEvent(); gameState.mode = 'coop'; printLine(`Protagonist 1: <strong>Lava</strong>`, 'story'); setTimeout(listClasses, 1000); gameState.step = 'player_class'; } 
-        else { printLine(`Protagonist 1: <strong>Lava</strong>`, 'story'); setTimeout(listClasses, 500); gameState.step = 'player_class'; }
+        if (val.toLowerCase().startsWith('y')) {
+            gameState.partner.name = 'Beeth'; triggerConfettiEvent(); gameState.mode = 'coop';
+            printLine(`Protagonist 1: <strong>Lava</strong>`, 'story'); setTimeout(listClasses, 1000); gameState.step = 'player_class';
+        } else {
+            printLine(`Protagonist 1: <strong>Lava</strong>`, 'story'); setTimeout(listClasses, 500); gameState.step = 'player_class';
+        }
     }
     else if (gameState.step.includes('_class')) {
         let t = gameState.step.split('_')[0];
         if (applyClassSelection(val, t)) {
             const DELAY = 2000;
-            if(t==='player') {
-                if (gameState.mode === 'solo') { setTimeout(() => { printLine("Configure Secondary Asset? [Y/N]", 'system'); gameState.step = 'partner_query'; }, DELAY); } 
-                else {
-                    if (gameState.partner.name) { setTimeout(() => { printLine(`Protagonist 2: <strong>${gameState.partner.name}</strong>`, 'story'); setTimeout(() => { printLine("Select Origin Protocol:", 'system'); listClasses(); }, 500); gameState.step = 'partner_class'; }, DELAY); } 
-                    else { setTimeout(() => startCharCreation('partner'), DELAY); }
+            if (t === 'player') {
+                if (gameState.mode === 'solo') {
+                    setTimeout(() => { printLine("Configure Secondary Asset? [Y/N]", 'system'); gameState.step = 'partner_query'; }, DELAY);
+                } else {
+                    if (gameState.partner.name) {
+                        setTimeout(() => {
+                            printLine(`Protagonist 2: <strong>${gameState.partner.name}</strong>`, 'story');
+                            setTimeout(() => { printLine("Select Origin Protocol:", 'system'); listClasses(); }, 500);
+                            gameState.step = 'partner_class';
+                        }, DELAY);
+                    } else {
+                        setTimeout(() => startCharCreation('partner'), DELAY);
+                    }
                 }
-            } else { setTimeout(() => startGame(), DELAY); }
+            } else {
+                setTimeout(() => startGame(), DELAY);
+            }
         }
-    } 
+    }
     else if (gameState.step === 'partner_query') {
-        if(val.toLowerCase().startsWith('y')) startCharCreation('partner'); else { autoAssignPartner(); startGame(); }
+        if (val.toLowerCase().startsWith('y')) startCharCreation('partner');
+        else { autoAssignPartner(); startGame(); }
     }
 }
 
-// ... Story Engine ...
+// --- STORY ENGINE ---
 let currentSceneIndex = 0;
 let currentChapterData = null;
 
 async function loadStoryChapter(chapterId, resetIndex = true) {
-    if(!gameState.story) return;
+    if (!gameState.story) return;
     currentChapterData = gameState.story[chapterId];
-    if(currentChapterData) {
+    
+    if (currentChapterData) {
         if (resetIndex || gameState.step === 'main_menu') {
-            if(currentChapterData.telemetry) renderTelemetry(currentChapterData);
-            if(currentChapterData.show_synergy) showSynergyCard();
+            if (currentChapterData.telemetry) renderTelemetry(currentChapterData);
+            if (currentChapterData.show_synergy) showSynergyCard();
         }
-        if(resetIndex) currentSceneIndex = 0; else currentSceneIndex = gameState.currentSceneIndex;
+        currentSceneIndex = resetIndex ? 0 : gameState.currentSceneIndex;
         playNextScene(false);
     } else {
-        printLine(">> END OF ARCHIVE.", 'system'); gameState.storyActive = false;
+        printLine(">> END OF ARCHIVE.", 'system');
+        gameState.storyActive = false;
     }
 }
 
 function playNextScene(saveHistory = true) {
     if (gameState.isTyping) return;
+
     if (!currentChapterData || currentSceneIndex >= currentChapterData.scenes.length) {
         if (currentChapterData.sources && !gameState.citationsShown) {
             printLine("<br><strong style='color:var(--accent); letter-spacing:1px;'>>> HISTORICAL ARCHIVE:</strong>", 'system', false);
             currentChapterData.sources.forEach(src => printLine(`<a href="${src.link}" target="_blank" class="source-link">[📄] ${src.title}</a>`, 'system', false));
-            gameState.citationsShown = true; printLine("<i>(Press Enter to continue...)</i>", 'system', false); return;
+            gameState.citationsShown = true;
+            printLine("<i>(Press Enter to continue...)</i>", 'system', false);
+            return;
         }
         gameState.citationsShown = false;
-        if (currentChapterData.next_chapter) loadStoryChapter(currentChapterData.next_chapter); else { printLine(">> TO BE CONTINUED...", 'system'); gameState.storyActive = false; }
+        
+        if (currentChapterData.next_chapter) loadStoryChapter(currentChapterData.next_chapter);
+        else { printLine(">> TO BE CONTINUED...", 'system'); gameState.storyActive = false; }
         return;
     }
 
@@ -281,14 +347,19 @@ function playNextScene(saveHistory = true) {
     if (currentChapterData.id) StorageManager.save(gameState, currentChapterData.id, currentSceneIndex);
     if (saveHistory) gameState.history.push({ chapterId: currentChapterData.id, index: currentSceneIndex });
 
-    if (scene.mode_req && scene.mode_req !== gameState.mode) { if(saveHistory) gameState.history.pop(); currentSceneIndex++; playNextScene(saveHistory); return; }
+    if (scene.mode_req && scene.mode_req !== gameState.mode) {
+        if(saveHistory) gameState.history.pop();
+        currentSceneIndex++; playNextScene(saveHistory); return;
+    }
 
     if (scene.input_prompt) {
         let promptText = resolveTextVariant(scene.text_blocks, scene.focus);
         printLine(replacePlaceholders(promptText), scene.focus === 'ai' ? 'ai' : 'story').then(() => {
-            gameState.step = 'story_input'; gameState.currentInputType = scene.input_prompt;
+            gameState.step = 'story_input';
+            gameState.currentInputType = scene.input_prompt;
             input.placeholder = scene.input_prompt === 'height' ? "E.g. 5'11" : `Enter ${scene.input_prompt}...`;
-        }); return;
+        });
+        return;
     }
 
     if (scene.choices) {
@@ -313,28 +384,27 @@ function playNextScene(saveHistory = true) {
             scrollToBottom();
         }
         currentSceneIndex++;
-        if (currentSceneIndex <= currentChapterData.scenes.length || currentChapterData.next_chapter) { printLine("<i>(Press Enter...)</i>", 'system', false); }
+        if (currentSceneIndex <= currentChapterData.scenes.length || currentChapterData.next_chapter) {
+             printLine("<i>(Press Enter...)</i>", 'system', false);
+        }
         gameState.waitingForEnter = false;
     });
 }
 
-// ... (InputProcessor & Helpers) ...
-const InputProcessor = { processBio(t, v) { 
-    v=v.toLowerCase().trim(); if(t==='height'){ let m=v.match(/(\d+)'?(\d*)?/); let cm=parseFloat(v); if(m&&v.includes("'")){ cm=(parseInt(m[1])*30.48)+(parseInt(m[2]||0)*2.54); } if(cm>190) return {response:"Wow. A tower. 🦒", formattedVal:Math.round(cm)+"cm"}; if(cm<160) return {response:"Compact format. Stealth bonus. 🐁", formattedVal:Math.round(cm)+"cm"}; return {response:"Standard displacement. ✅", formattedVal:Math.round(cm)+"cm"}; }
-    if(t==='origin'){ if(v.includes('india')) return {response:"India? Excellent. Loading Sanskrit subroutines. 🌶️"}; if(v.includes('uk')) return {response:"UK? Tea synthesis engaged. ☕"}; if(v.includes('usa')) return {response:"USA? Metric conversion active. 🦅"}; return {response:`${v}? Exotic. Downloading database... 🌍`}; }
-    return null;
-}};
-
 function handleStoryInput(val) {
-    const type = gameState.currentInputType; let response = null;
-    if (type === 'shotgun') { 
-        let p1=gameState.player.name.toLowerCase(), inp=val.toLowerCase();
-        if (inp.includes(p1)) { gameState.passenger = gameState.player.name; gameState.driver = gameState.partner.name; } 
+    const type = gameState.currentInputType;
+    let response = null;
+    if (type === 'shotgun') {
+        let p1Name = gameState.player.name.toLowerCase();
+        let inName = val.toLowerCase();
+        if (inName.includes(p1Name)) { gameState.passenger = gameState.player.name; gameState.driver = gameState.partner.name; }
         else { gameState.passenger = gameState.partner.name; gameState.driver = gameState.player.name; }
         printLine(`>> DRIVER DESIGNATED: ${gameState.driver.toUpperCase()}`, 'system');
     } else {
-        let res = InputProcessor.processBio(type, val);
-        if (res && res.response) { response = res.response; if(res.formattedVal) val = res.formattedVal; }
+        if (typeof InputProcessor !== 'undefined') {
+            let res = InputProcessor.processBio(type, val);
+            if (res && res.response) { response = res.response; if(res.formattedVal) val = res.formattedVal; }
+        }
         if (gameState.mode === 'solo' || currentSceneIndex < 10) gameState.player[type] = val;
         printLine(`>> DATA LOGGED: ${val.toUpperCase()}`, 'system');
     }
@@ -342,10 +412,13 @@ function handleStoryInput(val) {
     if (response) { printLine(response, 'ai').then(() => { setTimeout(playNextScene, 1000); }); } else { playNextScene(); }
 }
 
+// --- UTILS ---
 function typeWriter(element, html, speed) {
     return new Promise((resolve) => {
+        AccessibilityManager.speak(html);
         gameState.isTyping = true; gameState.skipTyping = false; element.classList.add('typing');
-        const tempDiv = document.createElement('div'); tempDiv.innerHTML = html; const nodes = Array.from(tempDiv.childNodes);
+        const tempDiv = document.createElement('div'); tempDiv.innerHTML = html;
+        const nodes = Array.from(tempDiv.childNodes);
         element.innerHTML = ""; let nodeIndex = 0;
         function typeNode() {
             if (gameState.skipTyping) { element.innerHTML = html; finishTyping(); resolve(); return; }
@@ -356,10 +429,13 @@ function typeWriter(element, html, speed) {
                 function typeChar() {
                     if (gameState.skipTyping) { typeNode(); return; }
                     liveTextNode.nodeValue += text.charAt(charIndex); charIndex++;
-                    if(charIndex % 2 === 0) { if(element.classList.contains('ai')) AudioController.playAI(); else AudioController.playType(); }
+                    if(charIndex % 3 === 0) {
+                        if(element.classList.contains('ai')) AudioController.playAI(); else AudioController.playType();
+                    }
                     output.scrollTop = output.scrollHeight;
                     if (charIndex < text.length) setTimeout(typeChar, speed); else { nodeIndex++; typeNode(); }
-                } typeChar();
+                }
+                typeChar();
             } else { element.appendChild(node.cloneNode(true)); nodeIndex++; setTimeout(typeNode, speed); }
         }
         function finishTyping() { element.classList.remove('typing'); element.classList.add('typed-done'); gameState.isTyping = false; output.scrollTop = output.scrollHeight; }
@@ -367,25 +443,26 @@ function typeWriter(element, html, speed) {
     });
 }
 function printLine(text, type, animate = true, fxClass = '') { const p = document.createElement('div'); p.classList.add('msg'); if (type) p.classList.add(type); if(fxClass) p.classList.add(fxClass); output.appendChild(p); if (animate) return typeWriter(p, text, (type === 'ai' ? 40 : 25)); else { p.innerHTML = text; p.classList.add('typed-done'); return Promise.resolve(); } }
-
-// Utils (Compressed)
 function startCharCreation(target) { printLine(target === 'player' ? "ENTER NAME (PROTAGONIST 1):" : "ENTER NAME (PROTAGONIST 2):", 'system'); gameState.step = target + '_name'; }
-function applyClassSelection(val, target) { const choice=parseInt(val)-1; if(gameState.rules.backgrounds[choice]) { const s=gameState.rules.backgrounds[choice]; const t=(target==='player'?gameState.player:gameState.partner); t.class=s.id; for(let[k,v] of Object.entries(s.bonus))t.stats[k]+=v; showStatCard(s.name,t.stats,t.name); return true; } return false; }
+function applyClassSelection(val, target) { const choice=parseInt(val)-1; if(gameState.rules.backgrounds[choice]) { const selected = gameState.rules.backgrounds[choice]; const targetObj = (target === 'player') ? gameState.player : gameState.partner; targetObj.class = selected.id; for (let [key, value] of Object.entries(selected.bonus)) { if(targetObj.stats[key] !== undefined) targetObj.stats[key] += value; } showStatCard(selected.name, targetObj.stats, targetObj.name); return true; } return false; }
 function autoAssignPartner() { gameState.partner.class = 'adventurer'; gameState.partner.name = "The Other"; }
 function showStatCard(c,s,n) { let h=`<div class="stats-card"><div style="text-align:center; margin-bottom:20px; font-family:var(--font-head); font-size:1.4em; color:var(--text-primary)">${n}<div style="font-size:0.6em; color:var(--accent); text-transform:uppercase;">${c}</div></div><div class="stats-grid">`; for(let[k,v] of Object.entries(s)){ let p=(v/10)*100; h+=`<div class="stat-row"><div class="stat-label"><span>${k}</span><span>${v}/10</span></div><div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${p}%"></div></div></div>`; } h+=`</div></div>`; printLine(h, 'system', false); }
 function showSynergyCard() { const p1=gameState.player.stats; const p2=gameState.partner.stats; let s={}; for(let k in p1) s[k]=p1[k]+p2[k]; let h=`<div class="stats-card" style="border-color:var(--text-primary)"><div style="text-align:center; margin-bottom:20px; font-family:var(--font-head); font-size:1.4em; color:var(--text-primary)">TEAM SYNERGY<div style="font-size:0.6em; color:var(--text-secondary); text-transform:uppercase;">COMBINED POTENTIAL</div></div><div class="stats-grid">`; for(let[k,v] of Object.entries(s)){ let p=(v/20)*100; h+=`<div class="stat-row"><div class="stat-label"><span>${k}</span><span>${v}/20</span></div><div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${p}%; background:var(--text-primary)"></div></div></div>`; } h+=`</div></div>`; printLine(h, 'system', false); }
+function renderTelemetry(c) { const hr = `<hr style='border:0; border-top:1px solid var(--accent); opacity:0.3; margin:40px 0;'>`; let html = `${hr}<div style="text-align:center; margin-bottom:30px; letter-spacing:1px;"><div style="font-family:var(--font-head); font-size:1.5em; color:var(--accent); margin-bottom:10px;">${c.title}</div><div style="font-size:0.75em; color:var(--text-secondary); text-transform:uppercase;">LOC: ${c.telemetry.loc} // DATE: ${c.telemetry.time}</div></div>`; const div = document.createElement('div'); div.innerHTML = html; output.appendChild(div); }
 function renderChoices(choices) { gameState.waitingForChoice=true; gameState.currentChoices=choices; let html=`<div style="margin-top:20px; display:flex; flex-direction:column; gap:10px;">`; choices.forEach((c,i)=>{ let disabled=false; if(c.req){ let statVal=gameState.player.stats[c.req.stat]||0; if(statVal<c.req.val) disabled=true; } html+=`<button onclick="window.engine.makeChoice(${i})" ${disabled?'disabled':''} class="class-card" style="width:100%; text-align:left; cursor:pointer;"><strong style="color:var(--accent)">[${i+1}]</strong> ${c.text}</button>`; }); html+=`</div>`; const div=document.createElement('div'); div.innerHTML=html; output.appendChild(div); scrollToBottom(); }
-function makeChoice(i) { AudioController.playBlip(); if(!gameState.waitingForChoice) return; const c=gameState.currentChoices[i]; if(c.loot){ if(!gameState.inventory) gameState.inventory=[]; gameState.inventory.push(c.loot); printLine(`>> ACQUIRED: ${c.loot.name.toUpperCase()}`, 'system'); updateUI(); } if(output.lastChild.innerHTML.includes('<button')) output.removeChild(output.lastChild); printLine(`>> SELECTED: ${c.text}`, 'system'); gameState.waitingForChoice=false; if(c.target) loadStoryChapter(c.target); else { currentSceneIndex++; playNextScene(); } }
+function makeChoice(i) { if(!gameState.waitingForChoice) return; const c=gameState.currentChoices[i]; if(c.loot){ if(!gameState.inventory) gameState.inventory=[]; gameState.inventory.push(c.loot); printLine(`>> ACQUIRED: ${c.loot.name.toUpperCase()}`, 'system'); updateUI(); } if(output.lastChild.innerHTML.includes('<button')) output.removeChild(output.lastChild); printLine(`>> SELECTED: ${c.text}`, 'system'); gameState.waitingForChoice=false; if(c.target) loadStoryChapter(c.target); else { currentSceneIndex++; playNextScene(); } }
 function handleChoiceInput(val) { const idx = parseInt(val) - 1; if (gameState.currentChoices && gameState.currentChoices[idx]) makeChoice(idx); }
 function updateUI() { if (invBtn && gameState.inventory.length > 0) { invBtn.style.display = 'block'; invBtn.innerText = `VAULT [${gameState.inventory.length}]`; } else if (invBtn) { invBtn.style.display = 'none'; } }
 function toggleInventory() { const m=document.getElementById('inventory-modal'); const l=document.getElementById('inventory-list'); if (m.classList.contains('active')) { m.classList.remove('active'); } else { renderInventory(l); m.classList.add('active'); } }
 function renderInventory(c) { c.innerHTML=''; if(!gameState.inventory||gameState.inventory.length===0){ c.innerHTML='<div class="empty-msg">VAULT IS EMPTY</div>'; return; } gameState.inventory.forEach(i=>{ const d=document.createElement('div'); d.classList.add('inv-item'); d.innerHTML=`<div class="inv-item-name">${i.name}</div><div class="inv-item-desc">${i.desc}</div>`; c.appendChild(d); }); }
+function triggerConfettiEvent() { printLine("WE HAVE BEEN WAITING FOR YOU! ✨", 'ai'); if (typeof confetti === 'function') { var duration = 2000; var end = Date.now() + duration; (function frame() { confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 } }); confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 } }); if (Date.now() < end) requestAnimationFrame(frame); }()); } }
 function goBack() { if (!gameState.storyActive || gameState.isTyping) return; let rem = false; while(output.lastChild && !rem) { const el = output.lastChild; output.removeChild(el); if(el.classList.contains('story') || el.classList.contains('ai')) rem = true; } if (currentSceneIndex > 0) { currentSceneIndex--; gameState.history.pop(); } gameState.step = 'reading'; gameState.currentInputType = null; gameState.waitingForChoice = false; gameState.currentChoices = null; input.placeholder = "Write your response..."; gameState.waitingForEnter = false; playNextScene(false); }
 function advanceStory() { if(!gameState.waitingForEnter && !gameState.isTyping) playNextScene(); }
 function formatText(text) { return text ? text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') : ""; }
 function replacePlaceholders(t) { if(!t)return ""; t=t.replace(/{player}/g,gameState.player.name); t=t.replace(/{partner}/g,gameState.partner.name); t=t.replace(/{driver}/g,gameState.driver||gameState.player.name); t=t.replace(/{passenger}/g,gameState.passenger||gameState.partner.name); return t; }
+function resolveTextVariant(blocks, focus) { let bestBlock = null; let highestPriority = -1; let target = (focus === 'partner') ? gameState.partner : gameState.player; const checkCondition = (cond) => { if (cond === 'default') return 0; if (cond === target.class) return 10; if (cond.startsWith('origin:') && target.origin?.toLowerCase().includes(cond.split(':')[1])) return 8; if (cond.startsWith('gender:') && target.gender?.toLowerCase().includes(cond.split(':')[1])) return 7; if (cond.startsWith('synergy:')) { const [s1, s2] = cond.split(':')[1].split('_'); const map = { tech:'Tech', arts:'Arts', guts:'Guts', social:'Social', bio:'Bio', lore:'Lore' }; if (target.stats[map[s1]] >= 5 && target.stats[map[s2]] >= 5) return 9; } return -1; }; blocks.forEach(block => { let p = checkCondition(block.condition); if (p > highestPriority) { highestPriority = p; bestBlock = block; } }); return bestBlock ? bestBlock.text : "Data Corrupted."; }
 function isDuo(n1, n2) { n1=n1.toLowerCase(); n2=n2.toLowerCase(); return (n1==='beeth' && n2==='lava') || (n1==='lava' && n2==='beeth'); }
-function triggerConfettiEvent() { printLine("WE HAVE BEEN WAITING FOR YOU! ✨", 'ai'); if (typeof confetti === 'function') { var duration = 2000; var end = Date.now() + duration; (function frame() { confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 } }); confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 } }); if (Date.now() < end) requestAnimationFrame(frame); }()); } }
+function listClasses() { let h='<div style="margin-bottom:20px;">'; gameState.rules.backgrounds.forEach((b,i)=>{ h+=`<div class="class-card"><strong>[${i+1}] ${b.name}</strong><span>${b.desc}</span></div>`; }); h+='</div>'; printLine(h,'system',false); }
 function scrollToBottom() { setTimeout(() => output.scrollTop = output.scrollHeight, 50); }
 
 init();
