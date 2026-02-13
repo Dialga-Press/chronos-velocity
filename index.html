@@ -5,6 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chronos Velocity</title>
     <link rel="stylesheet" href="style.css">
+    
+    <!-- 1. SAFETY NET: Catches errors before the game starts -->
+    <script>
+        window.onerror = function(msg, url, line, col, error) {
+            document.body.innerHTML += `
+                <div style="background:black; color:red; padding:20px; font-family:monospace; z-index:9999; position:fixed; top:0; left:0; width:100%;">
+                    <strong>CRITICAL ERROR:</strong> ${msg}<br>
+                    <small>Line: ${line} | Col: ${col}</small>
+                </div>`;
+            console.error("Global Error:", error);
+        };
+    </script>
+
+    <!-- 2. EXTERNAL LIBS -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
     <!-- Analytics -->
     <script data-goatcounter="https://diagla-press.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
@@ -17,7 +33,6 @@
             </div>
             
             <div class="header-controls" style="display: flex; gap: 15px; align-items: center;">
-                <!-- AUDIO TOGGLE -->
                 <button id="audio-toggle" class="icon-btn" aria-label="Toggle Sound">
                     <span id="audio-icon">🔇</span>
                 </button>
@@ -32,39 +47,31 @@
         </header>
         
         <main id="game-output">
-            <!-- Story content -->
+            <!-- Story content flows here -->
         </main>
-
-        <!-- THE TRIBUTE FOOTER 
-        <footer style="text-align: center; padding: 10px; font-size: 0.7em; opacity: 0.6; font-family: var(--font-body);">
-            We are delighted to be Honouring our first reader 📖 🍀u/Shot-Manager-7012 ✨💎 - Author of Chronos Velocity
-        </footer>
-        -->
 
         <div id="input-area">
             <div class="input-wrapper">
+                <!-- FIX: Direct call to goBack(), no window.engine needed -->
                 <button onclick="goBack()" class="back-btn" aria-label="Go Back">↺</button>
                 <input type="text" id="player-input" autocomplete="off" autofocus placeholder="Write your response...">
-            </div>
-        </div>
-
-        <!-- INVENTORY MODAL -->
-        <div id="inventory-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>VOID VAULT STORAGE</h2>
-                    <button class="close-btn" onclick="toggleInventory()">×</button>
-                </div>
-                <div id="inventory-list" class="inventory-grid">
-                    <!-- Items will be injected here by JS -->
-                </div>
+                <div id="input-status" class="status-dot"></div>
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script src="background.js"></script>
-    <script src="input_handler.js"></script>
-    <script src="storage.js"></script>
+
+    <!-- INVENTORY MODAL -->
+    <div id="inventory-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>VOID VAULT STORAGE</h2>
+                <button class="close-btn" onclick="toggleInventory()">×</button>
+            </div>
+            <div id="inventory-list" class="inventory-grid"></div>
+        </div>
+    </div>
+
+    <!-- 3. THE ENGINE (Standard Script, NOT Module) -->
     <script src="script.js"></script>
 </body>
 </html>
